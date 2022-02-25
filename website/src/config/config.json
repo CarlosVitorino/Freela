@@ -1,0 +1,5 @@
+{
+    "api": {
+        "services": "http://[::1]:9000/services/"
+    }
+}

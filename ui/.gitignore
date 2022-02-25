@@ -1,19 +1,18 @@
 
 node_modules/
+
 .DS_Store
 *.log
 .idea/
 .metadata/
 .vscode
 package-lock.json
-
-/trash/*
+yarn.lock
 
 .Trash
 
 *~*
 *#*
 
-config/_development.json
-config/_production.json
-/.history/**/*
+
+
