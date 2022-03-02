@@ -28,7 +28,7 @@ export default function Register(props) {
         const { username, password, mail, name } = values;
         _service({
             method: 'POST',
-            url: 'client',
+            url: 'user',
             data: {
                 name,
                 username,
@@ -66,7 +66,7 @@ export default function Register(props) {
     }
 
     if (_auth.isLogged()) {
-        return <Redirect to="/reserved-area" />;
+        return <Redirect to="/dashboard" />;
     }
     else if (ready) {
         return <Redirect to="/login" />;
@@ -154,7 +154,7 @@ export default function Register(props) {
                     </div>
                 </Content>
                 <Sider width={'50%'}>
-                    <span class="helper" /><img alt="sider-register" src={"/images/sider-register.png"} />
+                    <span className="helper" /><img alt="sider-register" src={"/images/sider-register.png"} />
                 </Sider>
             </Layout>
         );

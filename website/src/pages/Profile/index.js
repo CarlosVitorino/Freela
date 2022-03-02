@@ -31,7 +31,7 @@ export default function Profile(props) {
         setLoading(true);
         _service({
             method: 'GET',
-            url: 'client',
+            url: 'user',
             success: (response) => {
                 setLoading(false);
                 if (response.json.result) {
@@ -63,7 +63,7 @@ export default function Profile(props) {
         const { name, username, password, mail } = values;
         _service({
             method: 'PUT',
-            url: 'client',
+            url: 'user',
             data: {
                 name,
                 username,
@@ -127,7 +127,7 @@ export default function Profile(props) {
         return (
             <div>
                 <div className="content-title">
-                    <Button className="go-back-btn" type="link" onClick={() => props.history.goBack()}><ArrowLeftOutlined /> Voltar atrás</Button>
+                    <Button className="go-back-btn" type="link" onClick={() => props.history.goBack()}><ArrowLeftOutlined /> Back</Button>
                 </div>
                 <div className="content-title">
                     <Title level={2}>Editar Perfil</Title>

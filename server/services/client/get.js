@@ -1,11 +1,8 @@
-const user = _db.queryFirst(`
-    SELECT * FROM client
-    WHERE client.client_user_id = ?::int
+const clients = _db.query(`
+    SELECT client.*, session_type.text as default_session_type FROM client
+    LEFT JOIN session_type ON client.default_session_type_id = session_type.id
+    WHERE client.user != ?::int
 `, _val.list().add(_user.id));
-
-const userData = _val.map()
-    .set("name", user.getString("name"))
-    .set("email", user.getString("email"))
-    .set("username", _user.get(_user.id()).getString("user"));
-
-_out.json(_val.map().set("result", true).set("data", _val.list().add(userData)));
+    
+_log.debug(`user id ${_user.id}`);
+_out.json(_val.map().set("result", true).set("data", clients));

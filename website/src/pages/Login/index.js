@@ -56,7 +56,7 @@ export default function Login(props) {
     }
 
     if (_auth.isLogged()) {
-        return <Redirect to="/reserved-area" />;
+        return <Redirect to="/dashboard" />;
     } else {
         return (
             <Layout>
@@ -116,7 +116,7 @@ export default function Login(props) {
 
                 </Content>
                 <Sider width={'50%'}>
-                    <span class="helper" /><img alt="sider-login" src={"/images/sider-login.png"} />
+                    <span className="helper" /><img alt="sider-login" src={"/images/sider-login.png"} />
                 </Sider>
             </Layout>
         );

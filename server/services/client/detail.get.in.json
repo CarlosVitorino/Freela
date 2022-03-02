@@ -1,0 +1,12 @@
+{
+    "summary": "carrega detalhe do client",
+    "type": "object",
+    "properties": {
+        "clientId": {
+            "type": "string-not-empty"
+        }
+    },
+    "required": [
+        "clientId"
+    ]
+}

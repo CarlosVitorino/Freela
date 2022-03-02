@@ -1,0 +1,12 @@
+{
+    "summary": "carrega as sessions apontadas",
+    "type": "object",
+    "properties": {
+        "sessionIds": {
+            "type": "string-not-empty"
+        }
+    },
+    "required": [
+        "sessionIds"
+    ]
+}
