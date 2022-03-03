@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { ArrowLeftOutlined } from '@ant-design/icons';
-import { Typography, Form, Table, Input, InputNumber, DatePicker, Button, notification, Spin, Select, Row, Col, Card, Space, Switch, Popconfirm, Checkbox } from 'antd';
+import { Typography, Form, Table, DatePicker, Button, notification, Spin, Select, Row, Col, Card, Space} from 'antd';
 import moment from 'moment'
 import _service from '@netuno/service-client';
 
@@ -124,13 +124,6 @@ export default function Invoice(props) {
             }
         });
     }
-
-    const handleDelete = (key) => {
-        const sessionsData = [...this.state.sessionsData];
-        this.setState({
-            sessionsData: sessionsData.filter((item) => item.key !== key),
-        });
-    };
 
     const onFinish = (values) => {
         setSubmitting(true);

@@ -201,14 +201,15 @@ class Session extends React.Component {
             sessionsData: [],
             sessionsDataFiltered: [],
             originalSessionData: [],
-            clientData: [],
+            clientsData: [],
             sessionTypesData: [],
             selectedSessions: [],
             loading: false,
             count: 0,
             datesFilter: [],
             typeFilter: false,
-            queryFilter: false
+            queryFilter: false,
+            clientFilter: false
         };
     }
 
@@ -436,10 +437,9 @@ class Session extends React.Component {
          });
     }
 
-    filter = (datesFilter, typeFilter, queryFilter) => {
-        const { sessionsData, sessionTypesData } = this.state;
+    filter = (datesFilter, typeFilter, clientFilter, queryFilter) => {
+        const { sessionsData, sessionTypesData, clientsData } = this.state;
         let newFilteredData = sessionsData;
-
 
         if(queryFilter){
             newFilteredData = newFilteredData.filter((sessionData) => {
@@ -459,7 +459,12 @@ class Session extends React.Component {
                 return typeFilter === sessionType.value;
             });
         }
-
+        if(clientFilter) {
+            newFilteredData = newFilteredData.filter((sessionData) => {
+                const client = clientsData.find( clientData => clientData.name === sessionData.client_name);
+                return clientFilter === client.id.toString();
+            });
+        }
         if(datesFilter && datesFilter[0] && datesFilter[1]) {
             newFilteredData = newFilteredData.filter((sessionData) => {
                 return moment(sessionData.date).isBetween(datesFilter[0], datesFilter[1]) || moment(sessionData.date).isSame(datesFilter[0]) || moment(sessionData.date).isSame(datesFilter[1]);
@@ -468,7 +473,7 @@ class Session extends React.Component {
         
         }
 
-        this.setState({ sessionsDataFiltered: newFilteredData, datesFilter: datesFilter, typeFilter: typeFilter, queryFilter: queryFilter  });
+        this.setState({ sessionsDataFiltered: newFilteredData, datesFilter, typeFilter, clientFilter, queryFilter  });
 
     }
 
@@ -487,7 +492,7 @@ class Session extends React.Component {
 
     render() {
         const { Title } = Typography;
-        const { sessionsDataFiltered, sessionsData, selectedSessions, originalSessionData, sessionTypesData, clientsData, datesFilter, typeFilter, queryFilter } = this.state;
+        const { sessionsDataFiltered, sessionsData, selectedSessions, originalSessionData, sessionTypesData, clientsData, datesFilter, typeFilter, clientFilter, queryFilter } = this.state;
         const components = {
             body: {
                 row: EditableRow,
@@ -543,13 +548,18 @@ class Session extends React.Component {
                         <div className="actions-n-filters">
                             <Space style={{ marginBottom: 16 }}>
                                 <Button type="primary" icon={<PlusOutlined />} onClick={this.handleAdd}>Add Session</Button>
-                                <RangePicker onChange={(dates, dateStrings) => {this.filter(dateStrings, typeFilter, queryFilter);}}/>
-                                <Select placeholder="Type filter" allowClear style={{ width: 120 }} onChange={(type) => {this.filter(datesFilter, type, queryFilter);}}>
+                                <RangePicker onChange={(dates, dateStrings) => {this.filter(dateStrings, typeFilter, clientFilter, queryFilter);}}/>
+                                <Select placeholder="Type filter" allowClear style={{ width: 120 }} onChange={(type) => {this.filter(datesFilter, type, clientFilter, queryFilter);}}>
                                     {sessionTypesData.map(sessionType => (
                                         <Option key={sessionType.value}>{sessionType.text}</Option>
                                     ))}
                                 </Select>
-                                <Input placeholder="Search..." onChange={(q) => {this.filter(datesFilter, typeFilter, q.target.value);}} />
+                                <Select placeholder="Client filter" allowClear style={{ width: 120 }} onChange={(client) => {this.filter(datesFilter, typeFilter, client, queryFilter);}}>
+                                    {clientsData.map(clientData => (
+                                        <Option key={clientData.id}>{clientData.name}</Option>
+                                    ))}
+                                </Select>
+                                <Input placeholder="Search..." onChange={(q) => {this.filter(datesFilter, typeFilter, clientFilter, q.target.value);}} />
                             </Space>
                         </div>
                         <div className="content-table">

@@ -266,7 +266,7 @@ export default function Detail(props) {
                                         </Select>
                                     </Form.Item>
                                     <Form.Item label="Age" name="age" rules={[{ type: 'number' }]} >
-                                        <InputNumber disabled={submitting || !active} maxLength={250} addonAfter="min" />
+                                        <InputNumber disabled={submitting || !active} maxLength={250} />
                                     </Form.Item>
                                     <Space>
                                         <Form.Item label="Weight" name="weight" rules={[{ type: 'number' }]}>

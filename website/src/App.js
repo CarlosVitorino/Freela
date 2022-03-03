@@ -12,15 +12,17 @@ import './common/Config';
 
 import LoginPage from './pages/Login';
 import RegisterPage from './pages/Register';
+import Dashboard from './pages/Dashboard';
 import Clients from './pages/Clients';
 import Sessions from './pages/Sessions';
 import Invoice from './pages/Finance/Invoice';
+import Expense from './pages/Finance/Expense';
 import Finance from './pages/Finance';
 import Detail from './pages/Clients/Detail';
 import RecoveryPage from './pages/Recovery';
 import Profile from './pages/Profile';
 import NotFoundPage from './pages/NotFound';
-import Dashboard from './pages/ReservedArea';
+import ReservedArea from './pages/ReservedArea';
 
 import './styles/App.less';
 
@@ -65,13 +67,16 @@ export default function App(props) {
           >
             <div className="logo-container"><img alt="logo" src="/images/logo.png" /></div>
             <Menu defaultSelectedKeys={['1']} mode="inline">
-              <Menu.Item key="1" icon={<TeamOutlined />}>
+              <Menu.Item key="1" icon={<PieChartOutlined />}>
+                <Link to="/clients">Dashboard</Link>
+              </Menu.Item>
+              <Menu.Item key="2" icon={<TeamOutlined />}>
                 <Link to="/clients">Clients</Link>
               </Menu.Item>
-              <Menu.Item key="2" icon={<SkinOutlined />}>
+              <Menu.Item key="3" icon={<SkinOutlined />}>
                 <Link to="/sessions">Sessions</Link>
               </Menu.Item>              
-              <Menu.Item key="3" icon={<WalletOutlined />}>
+              <Menu.Item key="4" icon={<WalletOutlined />}>
                 <Link to="/Finance">Finance</Link>
               </Menu.Item>
             </Menu>
@@ -118,12 +123,13 @@ export default function App(props) {
                   <Redirect to="/login" />
                 }
               </Route>
+              <Route path="/dashboard" component={Dashboard} />
               <Route path="/clients" component={Clients} />
               <Route path="/sessions" component={Sessions} />
-              <Route path="/dashboard" component={Dashboard} />
               <Route path="/detail/:id" component={Detail} />
               <Route path="/detail" component={Detail} />
               <Route path="/finance/invoice" component={Invoice} />
+              <Route path="/finance/expense" component={Expense} />
               <Route path="/finance" component={Finance} />
               <Route path="/profile" component={Profile} />
               <Route path="/login" component={LoginPage} />

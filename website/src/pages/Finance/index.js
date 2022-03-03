@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Redirect, useLocation, useHistory, Link } from "react-router-dom";
 
-import { Typography, Space, Button, Input, Table, notification, Spin } from 'antd';
+import { Typography, Space, Button, Input, Table, notification, Spin, Popconfirm } from 'antd';
 
 import _auth from '@netuno/auth-client';
 import _service from '@netuno/service-client';
@@ -22,14 +22,14 @@ export default function Finance(props) {
 
     const columns = [
         {
-            title: 'Client',
-            dataIndex: 'client_name',
-            key: 'client_name',
+            title: 'Intervener',
+            dataIndex: 'name',
+            key: 'name',
         },
         {
-            title: 'Billing Period',
-            dataIndex: 'billing_period',
-            key: 'billing_period',
+            title: 'Billing Info',
+            dataIndex: 'description',
+            key: 'description',
         },
         {
             title: 'Created At',
@@ -56,8 +56,8 @@ export default function Finance(props) {
             dataIndex: 'operation',
             render: (_, record) =>
                 financeData.length >= 1 ? (
-                    <Popconfirm title="Are you sure, you want to change the status?" onConfirm={() => handleStatusChange(record.key)}>
-                        {status_code === 'waiting_payment' ? <a>Set as Paid</a> : <a>Set as Waiting Payment</a>}
+                    <Popconfirm title="Are you sure, you want to change the status?" onConfirm={() => handleStatusChange(record)}>
+                        {record.status_code === 'waiting_payment' ? <a>Set as Paid</a> : <a>Cancel Payment</a>}
                     </Popconfirm>
                 ) : null,
         },
@@ -95,13 +95,14 @@ export default function Finance(props) {
         });
     }
 
-    const handleStatusChange = (key) => {
+    const handleStatusChange = (record) => {
         setLoading(true);
         _service({
             method: 'PUT',
             url: 'finance/toggle',
             data: {
-                "invoice": id
+                "status":  record.status_code === 'waiting_payment' ? 'paid' : 'waiting_payment',
+                "invoiceId": record.id
             },
             success: (response) => {
                 if (response.json.result) {
@@ -163,8 +164,8 @@ export default function Finance(props) {
                 <div className="finance-layout-content">
                     <div className="actions-n-filters">
                         <Space style={{ marginBottom: 16 }}>
-                            <Button> 
-                                <Link to="detail">Add Client</Link> 
+                            <Button  type="primary" > 
+                                <Link to="/finance/expense">Add Expense</Link> 
                             </Button>
                             <Input placeholder="Search..." onChange={ filter }/>
                         </Space>
@@ -173,11 +174,6 @@ export default function Finance(props) {
                         <Table 
                             dataSource={financeDataFiltered} 
                             columns={columns} 
-                            onRow={(record, rowIndex) => {
-                                return {
-                                  onClick: event => {history.push(`/detail/${record.id}`);}
-                                };
-                              }}
                         />
                     </div>
                 </div>

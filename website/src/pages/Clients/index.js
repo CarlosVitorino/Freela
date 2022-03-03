@@ -130,7 +130,7 @@ export default function Clients(props) {
                 <div className="clients-layout-content">
                     <div className="actions-n-filters">
                         <Space style={{ marginBottom: 16 }}>
-                            <Button> 
+                            <Button type="primary" > 
                                 <Link to="detail">Add Client</Link> 
                             </Button>
                             <Input placeholder="Search..." onChange={ filter }/>
