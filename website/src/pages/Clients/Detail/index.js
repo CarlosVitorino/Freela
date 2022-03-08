@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, useParams } from "react-router-dom";
 import { ArrowLeftOutlined } from '@ant-design/icons';
-import { Typography, Form, Input, InputNumber, DatePicker, Button, notification, Spin, Select, Row, Col, Card, Space, Switch} from 'antd';
+import { Typography, Form, Input, InputNumber, DatePicker, Button, notification, Spin, Select, Row, Col, Card, Space, Switch, Popconfirm } from 'antd';
 import moment from 'moment'
 import _service from '@netuno/service-client';
 
@@ -14,9 +14,10 @@ export default function Detail(props) {
     const [loading, setLoading] = useState(false);
     const [submitting, setSubmitting] = useState(false);
     const [sessionType, setSessionType] = useState(false);
+    const [sessionSubType, setSessionSubType] = useState(false);
+    const [sessionSubTypeOptions, setSessionSubTypeOptions] = useState(false);
     const [active, setActive] = useState(true);
     const { id } = useParams();
-
     const location = useLocation();
     const clientForm = useRef(null);
 
@@ -26,22 +27,26 @@ export default function Detail(props) {
         wrapperCol: { xs: { span: 12 }, sm: { span: 12 }, md: { span: 24 }, lg: { span: 24 } }
     };
 
+    const colStyle = { padding: '8px 10px' };
+
     useEffect(() => {
         if (clientForm.current && id) onFetchDetail();
         onFetchSessionType();
+        onFetchSessionSubType();
     }, [location]);
 
-    function onFetchDetail() {
+    const onFetchDetail = () => {
+
         setLoading(true);
         _service({
             method: 'GET',
             url: 'client/detail',
-            data: { clientId: parseInt(id)},
+            data: { clientId: parseInt(id) },
             success: (response) => {
                 setLoading(false);
                 if (response.json.result && response.json.data.length == 1) {
                     let data = response.json.data[0];
-                    if(data['start_date']) {
+                    if (data['start_date']) {
                         data['start_date'] = moment(data['start_date']);
                     }
 
@@ -65,7 +70,7 @@ export default function Detail(props) {
         });
     }
 
-    function onFetchSessionType() {
+    const onFetchSessionType = () => {
         setLoading(true);
         _service({
             method: 'GET',
@@ -92,9 +97,36 @@ export default function Detail(props) {
         });
     }
 
-    function onFinish(values) {
+    const onFetchSessionSubType = () => {
+        setLoading(true);
+        _service({
+            method: 'GET',
+            url: 'sessionSubType',
+            success: (response) => {
+                setLoading(false);
+                if (response.json.result) {
+                    setSessionSubType(response.json.data);
+                } else {
+                    notification["warning"]({
+                        message: 'There was an error loading data',
+                        description: response.json.error,
+                    });
+                    setLoading(false);
+                }
+            },
+            fail: (error) => {
+                setLoading(false);
+                notification["error"]({
+                    message: 'Error!',
+                    description: 'There was an error, please contact your boyfriend.'
+                });
+            }
+        });
+    }
+
+    const onFinish = (values) => {
         setSubmitting(true);
-        if(values['start_date']) {
+        if (values['start_date']) {
             values['start_date'] = values['start_date'].format('YYYY-MM-DD');
         }
         _service({
@@ -127,16 +159,16 @@ export default function Detail(props) {
         });
     }
 
-    function onFinishFailed(errorInfo) {
+    const onFinishFailed = (errorInfo) => {
         console.log('Failed:', errorInfo);
     }
 
-    function toggleActivation(){
+    const toggleActivation = () => {
         _service({
             method: 'PUT',
             url: 'client/toggle',
             data: {
-                "active" : !active,
+                "active": !active,
                 "clientId": id
             },
             success: (response) => {
@@ -166,6 +198,58 @@ export default function Detail(props) {
         });
     }
 
+    const handleDeleteRecord = () => {
+        setLoading(true);
+        _service({
+            method: 'DELETE',
+            url: 'client',
+            data: {
+                "id": id
+            },
+            success: (response) => {
+                if (response.json.result) {
+                    notification["success"]({
+                        message: 'Status updated!',
+                        description: 'Status updated successfully.',
+                    });
+                    props.history.goBack();
+                    setLoading(false);
+                } else {
+                    notification["warning"]({
+                        message: 'Status toggle error!',
+                        description: response.json.error,
+                    });
+                    setLoading(false);
+
+                }
+            },
+            fail: () => {
+                setLoading(false);
+                notification["error"]({
+                    message: 'Error!',
+                    description: 'There was an error, please contact your boyfriend.'
+                });
+            }
+        });
+    }
+
+    const handleTypeChange = (value) => {
+        const sessionTypeObj = sessionType.find( (item) => item.value === value);
+        if(sessionTypeObj) {
+            setSessionSubTypeOptions(sessionSubType.filter((item) => {
+                return sessionTypeObj.id == item.type_id;
+            }));
+        }
+    }
+
+    const deleteDisclamer = (
+        <div>
+          <p>Content</p>
+          <p>Content</p>
+        </div>
+      );
+
+
     if (loading) {
         return (
             <div className="loading-wrapper">
@@ -181,7 +265,7 @@ export default function Detail(props) {
                     <Button className="go-back-btn" type="link" onClick={() => props.history.goBack()}><ArrowLeftOutlined /> Back</Button>
                 </div>
                 <div className="content-title">
-                    {id && <Switch className="switch-client"   checkedChildren="Active" unCheckedChildren="Inactive" checked={active} onChange={toggleActivation} />}
+                    {id && <Switch className="switch-client" checkedChildren="Active" unCheckedChildren="Inactive" checked={active} onChange={toggleActivation} />}
                     <Title level={2}>New Client</Title>
                 </div>
                 <div className="content-body">
@@ -195,68 +279,85 @@ export default function Detail(props) {
                         onFinishFailed={onFinishFailed}
                     >
                         <Row>
-                            <Col span={12}>
+                            <Col xs={{ span: 24 }} lg={{ span: 12 }} style={colStyle}>
                                 <Card className="client-card-left" title="General Info" bordered={false}>
-                                    <Form.Item
-                                        label="Name"
-                                        name="name"
-                                        rules={[
-                                            { required: true, message: 'Insert Client\'s name' },
-                                            { type: 'string', message: 'Invalid name, please use only letters.', pattern: "^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$" }
-                                        ]}
-                                    >
-                                        <Input disabled={submitting || !active} maxLength={25} />
-                                    </Form.Item>
-                                    <Form.Item
-                                        label="E-mail"
-                                        name="email"
-                                        rules={[
-                                            { required: true, message: 'Insert the e-mail.' },
-                                            { type: 'email', message: 'Email not valid.' }
-                                        ]}
-                                    >
-                                        <Input disabled={submitting || !active} maxLength={250} />
-                                    </Form.Item>
-                                    <Form.Item
-                                        label="Phone"
-                                        name="phone_number"
-                                        rules={[
-                                            { required: true, message: 'Insert the phone number.' },
-                                        ]}
-                                    >
-                                        <Input disabled={submitting || !active} maxLength={250} />
-                                    </Form.Item>
-                                    <Space>
-                                        <Form.Item label="Price" name="default_price" rules={[{ type: 'number' }]}>
-                                            <InputNumber disabled={submitting || !active} maxLength={250} addonAfter="€" />
-                                        </Form.Item>
-                                        <Form.Item label="Session Duration" name="session_duration" rules={[{ type: 'number' }]}>
-                                            <InputNumber disabled={submitting || !active} maxLength={250} addonAfter="min" />
-                                        </Form.Item>
-                                    </Space>
-                                    <Space>
-                                        <Form.Item label="Start Date" name="start_date" rules={[{ type: 'date' }]}>
-                                            <DatePicker disabled={submitting || !active}  />
-                                        </Form.Item>
-                                        <Form.Item label="Session/Month" name="sessions_per_month" rules={[{ type: 'number' }]}>
-                                            <InputNumber disabled={submitting || !active} maxLength={250} />
-                                        </Form.Item>
-                                        <Form.Item label="Session Type" name="default_session_type"> 
-                                            <Select 
-                                                disabled={submitting || !active} 
-                                                placeholder="Select a option"
-                                                allowClear 
-                                                options={sessionType} 
-                                            />
-                                        </Form.Item>
-                                    </Space>
+                                    <Row>
+                                        <Col span={24}>
+                                            <Form.Item
+                                                label="Name"
+                                                name="name"
+                                                rules={[
+                                                    { required: true, message: 'Insert Client\'s name' },
+                                                    { type: 'string', message: 'Invalid name, please use only letters.', pattern: "^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$" }
+                                                ]}
+                                            >
+                                                <Input disabled={submitting || !active} maxLength={25} />
+                                            </Form.Item>
+                                            <Form.Item
+                                                label="E-mail"
+                                                name="email"
+                                                rules={[
+                                                    { required: true, message: 'Insert the e-mail.' },
+                                                    { type: 'email', message: 'Email not valid.' }
+                                                ]}
+                                            >
+                                                <Input disabled={submitting || !active} maxLength={250} />
+                                            </Form.Item>
+                                            <Form.Item
+                                                label="Phone"
+                                                name="phone_number"
+                                                rules={[
+                                                    { required: true, message: 'Insert the phone number.' },
+                                                ]}
+                                            >
+                                                <Input disabled={submitting || !active} maxLength={250} />
+                                            </Form.Item>
+                                        </Col>
+                                        <Col span={12}>
+                                            <Form.Item label="Price" name="default_price" rules={[{ type: 'number' }]}>
+                                                <InputNumber disabled={submitting || !active} maxLength={10} addonAfter="€" />
+                                            </Form.Item>
+                                        </Col>
+                                        <Col span={12}>
+                                            <Form.Item label="Session Duration" name="session_duration" rules={[{ type: 'number' }]}>
+                                                <InputNumber disabled={submitting || !active} maxLength={10} addonAfter="min" />
+                                            </Form.Item>
+                                        </Col>
+                                        <Col span={24}>
+                                            <Space>
+                                                <Form.Item label="Start Date" name="start_date" rules={[{ type: 'date' }]}>
+                                                    <DatePicker disabled={submitting || !active} />
+                                                </Form.Item>
+                                                <Form.Item label="Session/Month" name="sessions_per_month" rules={[{ type: 'number' }]}>
+                                                    <InputNumber disabled={submitting || !active} maxLength={250} />
+                                                </Form.Item>
+                                                <Form.Item label="Session Type" name="default_session_type">
+                                                    <Select
+                                                        disabled={submitting || !active}
+                                                        placeholder="Select a option"
+                                                        allowClear
+                                                        options={sessionType}
+                                                        onChange={handleTypeChange}
+                                                    />
+                                                </Form.Item>
+                                                <Form.Item label="Session Sub Type" name="default_session_sub_type">
+                                                    <Select
+                                                        disabled={submitting || !active}
+                                                        placeholder="Select a option"
+                                                        allowClear
+                                                        options={sessionSubTypeOptions}
+                                                    />
+                                                </Form.Item>
+                                            </Space>
+                                        </Col>
+                                    </Row>
                                 </Card>
                             </Col>
-                            <Col span={12}>
+                            <Col xs={{ span: 24 }} lg={{ span: 12 }} style={colStyle}>
                                 <Card className="client-card-right" title="Bio Data" bordered={false} >
-                                    <Form.Item name="gender" label="Gender" rules={[{ required: true }]}>
+                                    <Form.Item name="gender" label="Gender">
                                         <Select
-                                            disabled={submitting || !active} 
+                                            disabled={submitting || !active}
                                             placeholder="Select a option"
                                             allowClear
                                         >
@@ -279,19 +380,19 @@ export default function Detail(props) {
 
                                 </Card>
                             </Col>
-                            <Col span={24}>
+                            <Col xs={{ span: 24 }} lg={{ span: 24 }} style={colStyle}>
                                 <Card className="client-card-big" title="Preferences" bordered={false} >
                                     <Form.Item label="Goals" name="goals" >
-                                            <TextArea disabled={submitting || !active} rows={4} />
+                                        <TextArea disabled={submitting || !active} rows={4} />
                                     </Form.Item>
                                     <Form.Item label="Likes" name="likes" >
-                                            <TextArea disabled={submitting || !active} rows={4} />
+                                        <TextArea disabled={submitting || !active} rows={4} />
                                     </Form.Item>
                                     <Form.Item label="Dislikes" name="dislikes" >
-                                            <TextArea disabled={submitting || !active} rows={4} />
+                                        <TextArea disabled={submitting || !active} rows={4} />
                                     </Form.Item>
                                     <Form.Item label="Injuries/ Conditions" name="injuries_conditions" >
-                                            <TextArea disabled={submitting || !active} rows={4} />
+                                        <TextArea disabled={submitting || !active} rows={4} />
                                     </Form.Item>
                                 </Card>
                             </Col>
@@ -299,11 +400,18 @@ export default function Detail(props) {
 
 
                         <Form.Item>
-                            <Button type="primary" htmlType="submit" loading={submitting} disabled={!active}>
-                                Save
-                            </Button>
+                            <Space>
+                                <Button type="primary" htmlType="submit" loading={submitting} disabled={!active}>
+                                    Save
+                                </Button>
+                                <Popconfirm title="This action will permanently delete this CLIENT, all SESSIONS and INVOICES associated. Are you sure?"  onConfirm={() => handleDeleteRecord()}>
+                                    <Button danger>Delete</Button>
+                                </Popconfirm>
+                            </Space>
                         </Form.Item>
+                        
                     </Form>
+
                 </div>
             </div>
         );

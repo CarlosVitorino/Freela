@@ -1,6 +1,11 @@
 const sessionsToCreate = _req.hasKey("toCreate") ? _req.getList("toCreate") : null;
 const sessionsToDelete = _req.hasKey("toDelete") ? _req.getList("toDelete") : null;
 
+for(const session of sessionsToCreate) {
+    _log.info(session.toJSON());
+
+}
+
 if (sessionsToCreate) {
    const sessionIds =  _db.insertMany(
         "session",

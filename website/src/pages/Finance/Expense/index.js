@@ -9,12 +9,13 @@ import './index.less';
 
 const { Title } = Typography;
 const { RangePicker } = DatePicker;
+const { Option } = Select;
 
 export default function Detail(props) {
 
     const [loading, setLoading] = useState(false);
     const [submitting, setSubmitting] = useState(false);
-    const [providers, setProviders] = useState(false);
+    const [companiesData, setCompaniesData] = useState(false);
     const { id } = useParams();
 
     const location = useLocation();
@@ -36,11 +37,11 @@ export default function Detail(props) {
         setLoading(true);
         _service({
             method: 'GET',
-            url: 'provider',
+            url: 'company',
             success: (response) => {
                 setLoading(false);
                 if (response.json.result) {
-                    setProviders(response.json.data);
+                    setCompaniesData(response.json.data);
                 } else {
                     notification["warning"]({
                         message: 'Ocorreu um erro a carregar os dados',
@@ -63,6 +64,7 @@ export default function Detail(props) {
     const onFinish = (values) => {
         setSubmitting(true);
 
+        values['date'] = values['date'].format('YYYY-MM-DD');
         values['created_at'] = moment().format('YYYY-MM-DD');
         values['total_amount'] = Number(values['total_amount'] * -1);
         _service({
@@ -153,12 +155,15 @@ export default function Detail(props) {
                                 <Card className="invoice-card-right" title="Invoice" bordered={false} >
                                     <Row>
                                         <Col span={12} style={colStyle}>
-                                            <Form.Item label="Providers" name="provider" rules={[{ required: true }]}>
+                                            <Form.Item label="Companies" name="company" rules={[{ required: true }]}>
                                                 <Select
-                                                    placeholder="Select client"
+                                                    placeholder="Select company"
                                                     allowClear
-                                                    options={providers}
-                                                />
+                                                >
+                                                    {companiesData ? companiesData.map(companyData => (
+                                                            <Option key={companyData.id}>{companyData.name}</Option>
+                                                        )) : ''}
+                                                </Select>
                                             </Form.Item>
                                         </Col>
                                         <Col span={12} style={colStyle}>

@@ -1,6 +1,7 @@
 @import './variables.less';
 
 .page {
+
   padding-top: @layout-header-height;
   min-height: 100vh;
 
@@ -43,17 +44,36 @@
 
     .logo-container {
       max-width: 200px;
-      height: @layout-header-height;
+      height: 100px;
       line-height: @layout-header-height;
       display: inline-block;
       text-align: center;
 
-      img {
-        max-width: 90%;
-        margin-top: -5px;
+      .logo {
+        width: 140px;
+        margin: 15px 40px;
+      }
+      .logo-small {
+        width: 30px;
+        margin-left: 25px;
+      }
+      @media screen and (max-width: @mobile-width) {
+        max-width: 50%;
       }
     }
   }
+
+  .ant-table {
+    .ant-table-thead > tr > th {
+      background: #5c8052;
+      color: white;
+      font-weight: bold;
+    }
+    .ant-table-tbody > tr > td {
+      background: #91c48338;
+    }
+  }
+
 
   .go-back-btn {
     padding: 4px 0;
@@ -107,16 +127,21 @@
 
         .logo-container {
           max-width: 200px;
-          height: 100%;
+          height: @layout-header-height;
+          line-height: @layout-header-height;
           display: inline-block;
-
+          text-align: center;
+    
+          .logo {
+            width: 160px;
+            margin: 20px 0px;
+          }
+          .logo-small {
+            width: 30px;
+            margin-left: 25px;
+          }
           @media screen and (max-width: @mobile-width) {
             max-width: 50%;
-          }
-
-          img {
-            max-width: 100%;
-            margin-top: -5px;
           }
         }
       }
@@ -124,7 +149,7 @@
       &-content {
         position: relative;
         &.auth {
-          background-color: #F0F2F5;
+          background-color: #EEEEEE;
           padding: 40px 0;
           @media screen and (max-width: @mobile-width) {
             padding: 20px 0;
@@ -180,6 +205,16 @@
       padding: 0 40px 5px;
     }
   }
+
+}
+
+.page-login {
+  background: url('../images/background.jpg') no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  height: calc(100vh - ((100vw - 1200px)/2) - 22px);
 }
 
 #profile\$Menu {
@@ -190,4 +225,6 @@
   .anticon {
     margin: 0 0 1em;
   }
+
+
 }

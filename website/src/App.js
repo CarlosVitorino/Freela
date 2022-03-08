@@ -3,8 +3,9 @@ import { Switch, Route, useLocation, Link, Redirect } from "react-router-dom";
 
 import { ConfigProvider, Layout, Menu, Button } from 'antd';
 import { PieChartOutlined, UserOutlined, LogoutOutlined, MenuOutlined, EditOutlined, TeamOutlined, SkinOutlined, WalletOutlined } from '@ant-design/icons';
-import antLocale_ptPT from 'antd/lib/locale/pt_PT';
+import { ReactSVG } from 'react-svg'
 
+import antLocale_ptPT from 'antd/lib/locale/pt_PT';
 import classNames from 'classnames';
 
 import _auth from '@netuno/auth-client';
@@ -35,10 +36,14 @@ export default function App(props) {
 
   const [headerButtonMode, setHeaderButtonMode] = useState('login');
   const [collapsed, setCollapsed] = useState(false);
+  const [menu, setMenu] = useState('dashboard');
+  const [logo, setLogo] = useState(false);
   const [sideMenuMobileMode, setSideMenuMobileMode] = useState(false);
 
   useEffect(() => {
     setHeaderButtonMode(location.pathname);
+    setMenu(location.pathname);
+    !logo &&  setLogo(<ReactSVG  className="logo" alt="logo"  src="images/mytime-logo-3.svg" />)
   }, [location]);
 
   function onLogout() {
@@ -46,12 +51,17 @@ export default function App(props) {
   }
 
   function onCollapse() {
+    if(!collapsed) {
+      setLogo(<ReactSVG  className="logo logo-small" alt="logo"  src="images/mytime-logo-mini-3.svg" />)
+    } else {
+      setLogo(<ReactSVG  className="logo" alt="logo"  src="images/mytime-logo-3.svg" />)
+    }
     setCollapsed(!collapsed)
   }
 
   return (
     <ConfigProvider locale={antLocale_ptPT}>
-      <Layout className={'page ' + classNames({ 'auth ': _auth.isLogged() }) + classNames({ 'collapsed ': collapsed })}>
+      <Layout className={'page ' + classNames({ 'auth ': _auth.isLogged()}) + classNames({ 'collapsed ': collapsed }, !_auth.isLogged() && ' page-login') }>
         {_auth.isLogged() &&
           <Sider
             onBreakpoint={mobile => {
@@ -62,36 +72,41 @@ export default function App(props) {
             collapsible
             collapsed={collapsed}
             onCollapse={onCollapse}
+            onBreakpoint={broken => {
+              console.log(broken);
+            }}
             trigger={<MenuOutlined />}
             theme="light"
           >
-            <div className="logo-container"><img alt="logo" src="/images/logo.png" /></div>
-            <Menu defaultSelectedKeys={['1']} mode="inline">
-              <Menu.Item key="1" icon={<PieChartOutlined />}>
-                <Link to="/clients">Dashboard</Link>
+            <div className="logo-container">
+              {logo}
+            </div>
+            <Menu selectedKeys={[menu]} mode="inline">
+              <Menu.Item key="/dashboard" icon={<PieChartOutlined />}>
+                <Link to="/dashboard">Dashboard</Link>
               </Menu.Item>
-              <Menu.Item key="2" icon={<TeamOutlined />}>
+              <Menu.Item key="/clients" icon={<TeamOutlined />}>
                 <Link to="/clients">Clients</Link>
               </Menu.Item>
-              <Menu.Item key="3" icon={<SkinOutlined />}>
+              <Menu.Item key="/sessions" icon={<SkinOutlined />}>
                 <Link to="/sessions">Sessions</Link>
               </Menu.Item>              
-              <Menu.Item key="4" icon={<WalletOutlined />}>
-                <Link to="/Finance">Finance</Link>
+              <Menu.Item key="/finance" icon={<WalletOutlined />}>
+                <Link to="/finance">Finance</Link>
               </Menu.Item>
             </Menu>
           </Sider>
         }
         <Layout>
-          <Header className={classNames({ 'auth ': _auth.isLogged() }) + classNames({ 'collapsed ': collapsed })}>
-            {!_auth.isLogged() &&
-              <Link to="/" className="logo-container"><img alt="logo" src="/images/logo.png" /></Link>
+          <Header className={classNames({ 'auth ': _auth.isLogged() }, { 'collapsed ': collapsed }, !_auth.isLogged() ? 'login-page': '')}>
+            { !_auth.isLogged() &&
+              <div className="logo-container">
+                {logo}
+              </div>
             }
             <Menu mode="horizontal">
               {headerButtonMode === '/login' ?
-                <Link to="/register">
-                  <Button type="primary">Criar conta</Button>
-                </Link>
+                ""
                 : headerButtonMode === '/register' ?
                   <Link to="/login">
                     <Button type="primary">Iniciar sessão</Button>

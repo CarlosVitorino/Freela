@@ -3,6 +3,7 @@ import { Redirect, Link } from "react-router-dom";
 import { Layout, Typography, Form, Input, Button, Checkbox, notification } from 'antd';
 import _auth from '@netuno/auth-client';
 import RecoverModal from './RecoverModal';
+import { ReactSVG } from 'react-svg'
 
 import './index.less';
 
@@ -59,7 +60,7 @@ export default function Login(props) {
         return <Redirect to="/dashboard" />;
     } else {
         return (
-            <Layout>
+            <Layout className="layout">
                 <Content className="login-container">
                     <div className="content-title">
                         <Title>Iniciar sessão.</Title>
@@ -116,7 +117,7 @@ export default function Login(props) {
 
                 </Content>
                 <Sider width={'50%'}>
-                    <span className="helper" /><img alt="sider-login" src={"/images/sider-login.png"} />
+                    <img className="sider-login" alt="sider-login" src="/images/login.png" />
                 </Sider>
             </Layout>
         );

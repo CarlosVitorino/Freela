@@ -5,6 +5,7 @@ node_modules/
 .idea/
 .metadata/
 .vscode
+/images
 package-lock.json
 
 /trash/*

@@ -57,9 +57,14 @@ export default function Clients(props) {
             key: 'sessions_per_month',
         },
         {
-            title: 'Type',
+            title: 'Default Type',
             dataIndex: 'default_session_type',
             key: 'default_session_type',
+        },
+        {
+            title: 'Default Sub Type',
+            dataIndex: 'default_session_sub_type',
+            key: 'default_session_sub_type',
         },
       ];
 
@@ -111,10 +116,7 @@ export default function Clients(props) {
             });
             setClientsDataFiltered(filteredData);
         }
-
     }
-
-
 
     if (_auth.isLogged()) {
         if (loading) {

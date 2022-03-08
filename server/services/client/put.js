@@ -6,6 +6,7 @@ const session_duration = _req.hasKey("session_duration") ? _req.getInt("session_
 const start_date = _req.hasKey("start_date") ? _req.getString("start_date") : null;
 const sessions_per_month = _req.hasKey("sessions_per_month") ? _req.getInt("sessions_per_month") : null;
 const default_session_type = _req.hasKey("default_session_type") ? _req.getString("default_session_type") : null;
+const default_session_sub_type = _req.hasKey("default_session_sub_type") ? _req.getString("default_session_sub_type") : null;
 
 const age = _req.hasKey("age") ? _req.getInt("age") : null;
 const dislikes = _req.hasKey("dislikes") ?  _req.getString("dislikes") : null;
@@ -16,7 +17,6 @@ const injuries_conditions = _req.hasKey("injuries_conditions") ? _req.getString(
 const likes = _req.hasKey("likes") ? _req.getString("likes") : null;
 const weight = _req.hasKey("weight") ? _req.getInt("weight") : null;
 
-_log.info(default_session_type)
 const dbClient = _db.queryFirst(`
     SELECT * FROM client WHERE email = ?
 `, _val.list().add(email));
@@ -26,6 +26,13 @@ if(default_session_type) {
     dbSessionType = _db.queryFirst(`
     SELECT * FROM session_type WHERE value = ?
 `, _val.list().add(default_session_type));  
+}
+
+let dbSessionSubType = null;
+if(default_session_sub_type) {
+    dbSessionSubType = _db.queryFirst(`
+    SELECT * FROM session_sub_type WHERE value = ?
+`, _val.list().add(default_session_sub_type));  
 }
 
 
@@ -42,6 +49,7 @@ if (dbClient) {
             .set("sessions_per_month", sessions_per_month)
             .set("start_date", start_date)
             .set("default_session_type_id", default_session_type ? dbSessionType.getInt("id") : null)
+            .set("default_session_sub_type_id", default_session_sub_type ? dbSessionSubType.getInt("id") : null)
     );
 
     const dbFitnessData = _db.queryFirst(`
@@ -76,6 +84,8 @@ if (dbClient) {
             .set("sessions_per_month", sessions_per_month)
             .set("start_date", start_date)
             .set("default_session_type_id", default_session_type ? dbSessionType.getInt("id") : null)
+            .set("default_session_sub_type_id", default_session_sub_type ? dbSessionSubType.getInt("id") : null)
+
     );
 
     _db.insert(

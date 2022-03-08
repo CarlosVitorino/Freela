@@ -3,11 +3,22 @@
 .invoice-card-left {
     margin-right: 10px;
     min-height: 220px;    
+
+    @media screen and (max-width: @mobile-width) {
+        margin-right: 0px;
+    }
+
 }
 
 .invoice-card-right {
     margin-left: 10px;
     min-height: 220px;
+
+    @media screen and (max-width: @mobile-width) {
+        margin-left: 0px;
+        margin: 20px 0;
+
+    }
 }
 
 .invoice-card-big {

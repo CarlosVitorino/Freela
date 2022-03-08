@@ -1,8 +1,9 @@
 const query = `
-    SELECT session.*, client.name as client_name, session_type.text as session_type, session.id as key 
+    SELECT session.*, client.name as client_name, session_type.label as session_type, session_sub_type.label as session_sub_type, session.id as key 
     FROM session
     INNER JOIN client ON session.client_id = client.id
     INNER JOIN session_type ON session.type_id = session_type.id
+    LEFT JOIN session_sub_type ON session.sub_type_id = session_sub_type.id
     order by session.date desc
 `;
 

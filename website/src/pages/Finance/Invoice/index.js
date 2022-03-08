@@ -17,6 +17,7 @@ export default function Invoice(props) {
     const [submitting, setSubmitting] = useState(false);
     const [sessionsData, setSessionsData] = useState(false);
     const [clientsData, setClientsData] = useState(false);
+    const [companiesData, setCompaniesData] = useState(false);
     const [totalValue, setTotalValue] = useState(false);
 
     const location = useLocation();
@@ -57,11 +58,12 @@ export default function Invoice(props) {
     const layout = {
         wrapperCol: { xs: { span: 12 }, sm: { span: 12 }, md: { span: 24 }, lg: { span: 24 } }
     };
-    const colStyle = { padding: '8px 10px' }
+    const colStyle = { padding: '8px 10px' };
 
     useEffect(() => {
         if (location.ids) onFetchSessions();
         onFetchClients();
+        onFetchCompanies();
     }, [location]);
 
 
@@ -124,6 +126,32 @@ export default function Invoice(props) {
             }
         });
     }
+    const onFetchCompanies = () => {
+        setLoading(true);
+        _service({
+            method: 'GET',
+            url: 'company',
+            success: (response) => {
+                setLoading(false);
+                if (response.json.result) {
+                    setCompaniesData(response.json.data);
+                } else {
+                    notification["warning"]({
+                        message: 'Ocorreu um erro a carregar os dados',
+                        description: response.json.error,
+                    });
+                    setLoading(false);
+                }
+            },
+            fail: () => {
+                setLoading(false);
+                notification["error"]({
+                    message: 'Ocorreu um erro a carregar os dados',
+                    description: 'Ocorreu um erro a carregar os dados, por favor tente novamente.',
+                });
+            }
+        });
+    }
 
     const onFinish = (values) => {
         setSubmitting(true);
@@ -133,6 +161,7 @@ export default function Invoice(props) {
         values['billing_period'] = values['billing_period'][0].format('YYYY-MM-DD') + " - " + values['billing_period'][1].format('YYYY-MM-DD');
         values['sessions'] = JSON.stringify(location.ids);
         values['total_amount'] = Number(totalValue.replace(/\€/g, ''));
+
         _service({
             method: 'PUT',
             url: 'invoice',
@@ -197,27 +226,32 @@ export default function Invoice(props) {
                     >
                         <div className="extra--invoice-fields">
                             <Row>
-                                <Col span={12}>
+                                <Col xs={{ span: 24}} lg={{ span: 12}}>
                                     <Card className="invoice-card-left" title="Billing Information" bordered={false}>
                                         <Row>
-                                            <Col span={12} style={colStyle}>
+                                            <Col xs={{ span: 24}} lg={{ span: 12}} style={colStyle}>
                                                 <Form.Item label="Billing Period" name="billing_period" rules={[{ type: 'array', required: true, message: 'Please select time!' }]}>
                                                     <RangePicker />
                                                 </Form.Item>
                                             </Col>
-                                            <Col span={12} style={colStyle}>
+                                            <Col xs={{ span: 12}} lg={{ span: 7}}  style={colStyle}>
                                                 <Form.Item label="Invoice Pay Day" name="pay_day" rules={[{ type: 'date', required: true }]}>
                                                     <DatePicker />
+                                                </Form.Item>
+                                            </Col>
+                                            <Col xs={{ span: 12}} lg={{ span: 5}}  style={colStyle}>
+                                                <Form.Item label="Total Amount" name="total_amount" >
+                                                    <Title level={3} className="total-value" strong>{totalValue ? totalValue : " - "}</Title>
                                                 </Form.Item>
                                             </Col>
                                         </Row>
                                     </Card>
                                 </Col>
-                                <Col span={12}>
-                                    <Card className="invoice-card-right" title="Invoice" bordered={false} >
+                                <Col xs={{ span: 24}} lg={{ span: 12}}>
+                                    <Card className="invoice-card-right" title="Invoice Destination" bordered={false} >
                                         <Row>
-                                            <Col span={12} style={colStyle}>
-                                                <Form.Item label="Client" name="client" rules={[{ required: true }]}>
+                                            <Col span={11} style={colStyle}>
+                                                <Form.Item label="Client" name="client">
                                                     <Select
                                                         placeholder="Select client"
                                                         allowClear
@@ -228,10 +262,20 @@ export default function Invoice(props) {
                                                     </Select>
                                                 </Form.Item>
                                             </Col>
-                                            <Col span={12} style={colStyle}>
-                                                <Form.Item label="Total Amount" name="total_amount" >
-                                                    <Title level={3} className="total-value" strong>{totalValue ? totalValue : " - "}</Title>
-                                                </Form.Item>
+                                            <Col span={2} style={colStyle}>
+                                                <p style={{marginTop: 20}}> OR </p>
+                                            </Col>
+                                            <Col span={11} style={colStyle}>
+                                                <Form.Item label="Company" name="company">
+                                                    <Select
+                                                        placeholder="Select client"
+                                                        allowClear
+                                                    >
+                                                        {companiesData ? companiesData.map(companyData => (
+                                                            <Option key={companyData.id}>{companyData.name}</Option>
+                                                        )) : ''}
+                                                    </Select>
+                                                </Form.Item> 
                                             </Col>
                                         </Row>
                                     </Card>

@@ -38,8 +38,8 @@ export default function Finance(props) {
         },
         {
             title: 'Pay Day',
-            dataIndex: 'pay_day',
-            key: 'pay_day',
+            dataIndex: 'date',
+            key: 'date',
         },
         {
             title: 'Amount',
@@ -56,9 +56,14 @@ export default function Finance(props) {
             dataIndex: 'operation',
             render: (_, record) =>
                 financeData.length >= 1 ? (
-                    <Popconfirm title="Are you sure, you want to change the status?" onConfirm={() => handleStatusChange(record)}>
-                        {record.status_code === 'waiting_payment' ? <a>Set as Paid</a> : <a>Cancel Payment</a>}
-                    </Popconfirm>
+                    <Space>
+                        <Popconfirm title="Are you sure, you want to change the status?" onConfirm={() => handleStatusChange(record)}>
+                            {record.status_code === 'waiting_payment' ? <a>Set as Paid</a> : <a>Cancel Payment</a>}
+                        </Popconfirm>
+                        <Popconfirm title="Are you sure, you want to DELETE this record?" onConfirm={() => handleDeleteRecord(record)}>
+                            <a>Delete</a>
+                        </Popconfirm>
+                    </Space>
                 ) : null,
         },
       ];
@@ -103,6 +108,41 @@ export default function Finance(props) {
             data: {
                 "status":  record.status_code === 'waiting_payment' ? 'paid' : 'waiting_payment',
                 "invoiceId": record.id
+            },
+            success: (response) => {
+                if (response.json.result) {
+                    notification["success"]({
+                        message: 'Status updated!',
+                        description: 'Status updated successfully.',
+                    });
+                    onFetchFinance();
+                    setLoading(false);
+                } else {
+                    notification["warning"]({
+                        message: 'Status toggle error!',
+                        description: response.json.error,
+                    });
+                    setLoading(false);
+
+                }
+            },
+            fail: () => {
+                setLoading(false);
+                notification["error"]({
+                    message: 'Error!',
+                    description: 'There was an error, please contact your boyfriend.'
+                });
+            }
+        });
+    }
+
+    const handleDeleteRecord = (record) => {
+        setLoading(true);
+        _service({
+            method: 'DELETE',
+            url: 'finance',
+            data: {
+                "id": record.id
             },
             success: (response) => {
                 if (response.json.result) {

@@ -49,7 +49,7 @@ const EditableCell = ({
 
     const toggleEdit = () => {
         setEditing(!editing);
-        if(dataIndex === 'date') {
+        if (dataIndex === 'date') {
             form.setFieldsValue({
                 [dataIndex]: moment(record[dataIndex]),
             });
@@ -65,7 +65,7 @@ const EditableCell = ({
         try {
             const values = await form.validateFields();
             toggleEdit();
-            handleSave({ ...record, ...values });
+            handleSave({ ...record, ...values, dataIndex });
         } catch (errInfo) {
             console.log('Save failed:', errInfo);
         }
@@ -73,7 +73,7 @@ const EditableCell = ({
 
     const customSave = async (value) => {
         try {
-            if(dataIndex === 'date') {
+            if (dataIndex === 'date') {
                 form.setFieldsValue({ [dataIndex]: moment(value) })
 
             } else {
@@ -82,7 +82,7 @@ const EditableCell = ({
             }
             const values = await form.validateFields();
             toggleEdit();
-            onChange ? onChange({ ...record, ...values }) : handleSave({ ...record, ...values });
+            onChange ? onChange({ ...record, ...values, dataIndex }) : handleSave({ ...record, ...values, dataIndex });
         } catch (errInfo) {
             console.log('Save failed:', errInfo);
         }
@@ -108,7 +108,7 @@ const EditableCell = ({
                 </div>
             )
         }
-        if(inputType === 'date') {
+        if (inputType === 'date') {
             input = <DatePicker ref={inputRef} onPressEnter={save} onBlur={save} />
         }
 
@@ -187,6 +187,14 @@ class Session extends React.Component {
                 inputType: 'select'
             },
             {
+                title: 'Sub Type',
+                dataIndex: 'session_sub_type',
+                key: 'session_sub_type',
+                width: 130,
+                editable: true,
+                inputType: 'select'
+            },
+            {
                 title: 'operation',
                 dataIndex: 'operation',
                 render: (_, record) =>
@@ -203,6 +211,8 @@ class Session extends React.Component {
             originalSessionData: [],
             clientsData: [],
             sessionTypesData: [],
+            sessionSubTypesData: [],
+            sessionSubTypesOptions: [],
             selectedSessions: [],
             loading: false,
             count: 0,
@@ -217,6 +227,7 @@ class Session extends React.Component {
         this.onFetchSessions();
         this.onFetchClients();
         this.onFetchSessionType();
+        this.onFetchSessionSubType();
     }
 
     onFetchSessions = () => {
@@ -283,7 +294,33 @@ class Session extends React.Component {
                 this.setLoading(false);
                 if (response.json.result) {
                     this.setState({ sessionTypesData: response.json.data });
-                    this.onFetchSessions();
+                } else {
+                    notification["warning"]({
+                        message: 'There was an error loading data',
+                        description: response.json.error,
+                    });
+                    this.setLoading(false);
+                }
+            },
+            fail: (error) => {
+                this.setLoading(false);
+                notification["error"]({
+                    message: 'Error!',
+                    description: 'There was an error, please contact your boyfriend.'
+                });
+            }
+        });
+    }
+
+    onFetchSessionSubType = () => {
+        this.setLoading(true);
+        _service({
+            method: 'GET',
+            url: 'sessionSubType',
+            success: (response) => {
+                this.setLoading(false);
+                if (response.json.result) {
+                    this.setState({ sessionSubTypesData: response.json.data });
                 } else {
                     notification["warning"]({
                         message: 'There was an error loading data',
@@ -304,7 +341,7 @@ class Session extends React.Component {
 
     handlePersistData = () => {
         this.setLoading(true);
-        const { originalSessionData, clientsData, sessionTypesData } = this.state;
+        const { originalSessionData, clientsData, sessionTypesData, sessionSubTypesData } = this.state;
         const sessionsData = [...this.state.sessionsData];
 
         const toCreate = this.onlyInLeft(sessionsData, originalSessionData, this.isSameKey);
@@ -314,14 +351,19 @@ class Session extends React.Component {
             let session = toCreate[key];
             if (session) {
                 const client = clientsData.filter(clientData => clientData.name === session['client_name'])[0];
-                const sessionType = sessionTypesData.filter(sessionType => sessionType.value === session['session_type'])[0];
+                const sessionType = sessionTypesData.filter(sessionType => sessionType.label === session['session_type'])[0];
+                const sessionSubType = sessionSubTypesData.filter(sessionSubType => sessionSubType.label === session['session_sub_type'])[0];
                 if (client) {
                     session['client_id'] = client.id;
                 }
                 if (sessionType) {
                     session['type_id'] = sessionType.id;
                 }
+                if (sessionSubType) {
+                    session['sub_type_id'] = sessionSubType.id;
+                }
                 session['date'] = moment(session['date']).format('YYYY-MM-DD HH:mm:ss')
+                session['price'] = parseFloat(session['price']).toFixed(2);
             }
         }
 
@@ -329,7 +371,7 @@ class Session extends React.Component {
         _service({
             method: 'POST',
             url: 'session',
-            data: { toCreate: toCreate, toDelete: toDelete },
+            data: { toCreate, toDelete },
             success: (response) => {
                 if (response.json.result) {
                     notification["success"]({
@@ -393,31 +435,48 @@ class Session extends React.Component {
     handleSave = (row) => {
         const newDataFiltered = [...this.state.sessionsDataFiltered];
         const newData = [...this.state.sessionsData];
+        const { sessionTypesData, sessionSubTypesData, sessionSubTypesOptions } = this.state;
         const index = newDataFiltered.findIndex((item) => row.key === item.key);
         const item = newDataFiltered[index];
+        let sessionSubTypeOptionsNew = [];
 
-        if(row.date && moment.isMoment(row.date)) {
-            const tempRow = {...row};
+        if (row.dataIndex === 'date' && moment.isMoment(row.date)) {
+            const tempRow = { ...row };
             const newDate = tempRow.date.format('YYYY-MM-DD');
             row['date'] = newDate;
-        }  
+        
+        }else if (row.dataIndex === 'session_type') {
+            const sessionType = sessionTypesData.find(sessionType => sessionType.value === row.session_type);
+            sessionSubTypeOptionsNew = sessionSubTypesData.filter((item) => {
+                return item.type_id == sessionType.id;
+            });
+            const tempRow = { ...row };
+            row['session_type'] = sessionType.label;
+        }
+        else if(row.dataIndex === 'session_sub_type') {
+            const sessionSubType = sessionSubTypesData.find(sessionSubType => sessionSubType.value === row.session_sub_type);
+            row['session_sub_type'] = sessionSubType.label;
+        }
+
         newDataFiltered.splice(index, 1, { ...item, ...row });
         newData.find((item) => row.key === item.key) ? newData.splice(index, 1, { ...item, ...row }) : newData.splice(index, 0, { ...item, ...row });
         this.setState({
             sessionsDataFiltered: newDataFiltered,
-            sessionsData: newData
+            sessionsData: newData,
+            sessionSubTypesOptions: (sessionSubTypeOptionsNew ? sessionSubTypeOptionsNew : sessionSubTypesOptions)
         });
     };
 
     handleClientChange = (row) => {
         const newDataFiltered = [...this.state.sessionsDataFiltered];
         const newData = [...this.state.sessionsData];
-        let { clientsData, sessionTypesData } = this.state;
+        let { clientsData, sessionTypesData, sessionSubTypesData } = this.state;
 
         const index = newDataFiltered.findIndex((item) => row.key === item.key);
         let item = newDataFiltered[index];
         const client = clientsData.filter(clientData => clientData.id === Number(row.client_name))[0];
         const sessionType = sessionTypesData.filter(sessionType => sessionType.id === client.default_session_type_id)[0];
+        const sessionSubType = sessionSubTypesData.filter(sessionSubType => sessionSubType.id === client.default_session_sub_type_id)[0];
 
         row = {
             key: item.key,
@@ -425,23 +484,24 @@ class Session extends React.Component {
             date: moment().format('YYYY-MM-DD'),
             duration: client.session_duration,
             price: client.default_price,
-            session_type: sessionType ? sessionType.value : client.default_session_type_id
+            session_type: sessionType ? sessionType.label : client.default_session_type_id,
+            session_sub_type: sessionSubType ? sessionSubType.label : client.default_session_sub_type_id
         }
-        
+
         newDataFiltered.splice(index, 1, { ...item, ...row });
         newData.find((item) => row.key === item.key) ? newData.splice(index, 1, { ...item, ...row }) : newData.splice(index, 0, { ...item, ...row });
 
-        this.setState({ 
+        this.setState({
             sessionsDataFiltered: newDataFiltered,
             sessionsData: newData
-         });
+        });
     }
 
     filter = (datesFilter, typeFilter, clientFilter, queryFilter) => {
         const { sessionsData, sessionTypesData, clientsData } = this.state;
         let newFilteredData = sessionsData;
 
-        if(queryFilter){
+        if (queryFilter) {
             newFilteredData = newFilteredData.filter((sessionData) => {
                 let exist = false;
                 for (var prop in sessionData) {
@@ -453,27 +513,27 @@ class Session extends React.Component {
                 return exist;
             });
         }
-        if(typeFilter) {
+        if (typeFilter) {
             newFilteredData = newFilteredData.filter((sessionData) => {
-                const sessionType = sessionTypesData.find( sessionTypeData => sessionTypeData.id == sessionData.type_id);
-                return typeFilter === sessionType.value;
+                const sessionType = sessionTypesData.find(sessionTypeData => sessionTypeData.id == sessionData.type_id);
+                return typeFilter === sessionType.label;
             });
         }
-        if(clientFilter) {
+        if (clientFilter) {
             newFilteredData = newFilteredData.filter((sessionData) => {
-                const client = clientsData.find( clientData => clientData.name === sessionData.client_name);
+                const client = clientsData.find(clientData => clientData.name === sessionData.client_name);
                 return clientFilter === client.id.toString();
             });
         }
-        if(datesFilter && datesFilter[0] && datesFilter[1]) {
+        if (datesFilter && datesFilter[0] && datesFilter[1]) {
             newFilteredData = newFilteredData.filter((sessionData) => {
                 return moment(sessionData.date).isBetween(datesFilter[0], datesFilter[1]) || moment(sessionData.date).isSame(datesFilter[0]) || moment(sessionData.date).isSame(datesFilter[1]);
 
             });
-        
+
         }
 
-        this.setState({ sessionsDataFiltered: newFilteredData, datesFilter, typeFilter, clientFilter, queryFilter  });
+        this.setState({ sessionsDataFiltered: newFilteredData, datesFilter, typeFilter, clientFilter, queryFilter });
 
     }
 
@@ -484,15 +544,15 @@ class Session extends React.Component {
 
     rowSelection = {
         onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
-          console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-          this.setState({selectedSessions: selectedRowKeys})
+            console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+            this.setState({ selectedSessions: selectedRowKeys })
         }
-      };
+    };
 
 
     render() {
         const { Title } = Typography;
-        const { sessionsDataFiltered, sessionsData, selectedSessions, originalSessionData, sessionTypesData, clientsData, datesFilter, typeFilter, clientFilter, queryFilter } = this.state;
+        const { sessionsDataFiltered, sessionSubTypesOptions, selectedSessions, originalSessionData, sessionTypesData, clientsData, datesFilter, typeFilter, clientFilter, queryFilter } = this.state;
         const components = {
             body: {
                 row: EditableRow,
@@ -517,7 +577,12 @@ class Session extends React.Component {
                     }
                     if (col.key === 'session_type' && sessionTypesData) {
                         dataSource = sessionTypesData.map(sessionType => (
-                            <Option key={sessionType.value}>{sessionType.text}</Option>
+                            <Option key={sessionType.value}>{sessionType.label}</Option>
+                        ));
+                    }
+                    if (col.key === 'session_sub_type' && sessionSubTypesOptions) {
+                        dataSource = sessionSubTypesOptions.map(sessionSubType => (
+                            <Option key={sessionSubType.value}>{sessionSubType.label}</Option>
                         ));
                     }
                     return ({
@@ -548,18 +613,18 @@ class Session extends React.Component {
                         <div className="actions-n-filters">
                             <Space style={{ marginBottom: 16 }}>
                                 <Button type="primary" icon={<PlusOutlined />} onClick={this.handleAdd}>Add Session</Button>
-                                <RangePicker onChange={(dates, dateStrings) => {this.filter(dateStrings, typeFilter, clientFilter, queryFilter);}}/>
-                                <Select placeholder="Type filter" allowClear style={{ width: 120 }} onChange={(type) => {this.filter(datesFilter, type, clientFilter, queryFilter);}}>
+                                <RangePicker onChange={(dates, dateStrings) => { this.filter(dateStrings, typeFilter, clientFilter, queryFilter); }} />
+                                <Select placeholder="Type filter" allowClear style={{ width: 120 }} onChange={(type) => { this.filter(datesFilter, type, clientFilter, queryFilter); }}>
                                     {sessionTypesData.map(sessionType => (
-                                        <Option key={sessionType.value}>{sessionType.text}</Option>
+                                        <Option key={sessionType.value}>{sessionType.label}</Option>
                                     ))}
                                 </Select>
-                                <Select placeholder="Client filter" allowClear style={{ width: 120 }} onChange={(client) => {this.filter(datesFilter, typeFilter, client, queryFilter);}}>
+                                <Select placeholder="Client filter" allowClear style={{ width: 120 }} onChange={(client) => { this.filter(datesFilter, typeFilter, client, queryFilter); }}>
                                     {clientsData.map(clientData => (
                                         <Option key={clientData.id}>{clientData.name}</Option>
                                     ))}
                                 </Select>
-                                <Input placeholder="Search..." onChange={(q) => {this.filter(datesFilter, typeFilter, clientFilter, q.target.value);}} />
+                                <Input placeholder="Search..." onChange={(q) => { this.filter(datesFilter, typeFilter, clientFilter, q.target.value); }} />
                             </Space>
                         </div>
                         <div className="content-table">
@@ -579,7 +644,7 @@ class Session extends React.Component {
                                 <Popconfirm title="Any change you made, will be lost, you want to continue?" onConfirm={() => { this.setState({ sessionsDataFiltered: originalSessionData }) }}>
                                     <Button icon={<ReloadOutlined />}>Reset</Button>
                                 </Popconfirm>
-                                <Button type="primary" icon={<FileTextOutlined />} disabled={!selectedSessions.length} onClick= { event => {this.props.history.push({pathname: '/finance/invoice', ids: selectedSessions});}}>Create Invoice</Button>
+                                <Button type="primary" icon={<FileTextOutlined />} disabled={!selectedSessions.length} onClick={event => { this.props.history.push({ pathname: '/finance/invoice', ids: selectedSessions }); }}>Create Invoice</Button>
                             </Space>
                         </div>
                     </div>
