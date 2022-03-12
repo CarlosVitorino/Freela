@@ -12,7 +12,7 @@ if (_env.is("dev")) {
  if (_service.path == '_auth') {
     _service.allow()
 }
-
+_log.info(_service.path);
 if (_service.path == 'Index.netuno?action=login') {
     _service.allow()
 }
