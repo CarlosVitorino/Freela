@@ -405,7 +405,7 @@ export default function Detail(props) {
 
 
                                     </Space>
-                                    <Text> <blockquote>Default information - The date entered in the following fields will be used for automatic filling of sessions. The same customer may have sessions in other parameters and these can be perfectly entered manually.</blockquote></Text>
+                                    <Text> <blockquote>Default information - The data entered in these fields will be used for automatic filling. The same customer may have sessions with varying information which can be changed manually.</blockquote></Text>
                                 </Card>
                             </Col>
                             <Col xs={{ span: 24 }} lg={{ span: 24 }}>
