@@ -154,7 +154,7 @@ export default function Register(props) {
                     </div>
                 </Content>
                 <Sider width={'50%'}>
-                    <span className="helper" /><img alt="sider-register" src={"/images/login.png"} />
+                    <img className="sider-login" alt="sider-login" src="/images/login.png" />
                 </Sider>
             </Layout>
         );
