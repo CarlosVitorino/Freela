@@ -41,7 +41,7 @@ export default function Register(props) {
                         message: 'Account Created',
                         description: 'The account has been successfully created, you can log in now.',
                     });
-                    setSubmitting(false);
+                    login(values);
                     setReady(true);
                 } else {
                     notification["warning"]({
@@ -60,6 +60,27 @@ export default function Register(props) {
             }
         });
     }
+
+    function login(values) {
+        const { username, password } = values;
+        _auth.login({
+            username,
+            password,
+            success: () => {
+                setSubmitting(false);
+                props.history.push("/dashboard");
+            },
+            fail: () => {
+                setSubmitting(false);
+                notification["error"]({
+                    message: 'Login Inválido',
+                    description:
+                        'Por favor verifique as credenciais inseridas.',
+                });
+            }
+        });
+    }
+
 
     function onFinishFailed(errorInfo) {
         console.log('Failed:', errorInfo);

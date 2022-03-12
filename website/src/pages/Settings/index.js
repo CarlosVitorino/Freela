@@ -41,9 +41,12 @@ export default function Settings(props) {
 
     const [loading, setLoading] = useState(false);
     const [submitting, setSubmitting] = useState(false);
-    const [companiesData, setSuppliersData] = useState([]);
+    const [suppliersData, setSuppliersData] = useState([]);
     const [typesData, setTypesData] = useState([]);
     const [subTypesData, setSubTypesData] = useState([]);
+    const supplierForm = useRef(null);
+    const typeForm = useRef(null);
+    const subTypeForm = useRef(null);
 
     const location = useLocation();
 
@@ -60,9 +63,9 @@ export default function Settings(props) {
             success: (response) => {
                 setLoading(false);
                 if (response.json.result) {
-                    if(response.json.data.suppliers) setSuppliersData(response.json.data.suppliers);
-                    if(response.json.data.types) setTypesData(response.json.data.types);
-                    if(response.json.data.subTypes) setSubTypesData(response.json.data.subTypes);
+                    if (response.json.data.suppliers) setSuppliersData(response.json.data.suppliers);
+                    if (response.json.data.types) setTypesData(response.json.data.types);
+                    if (response.json.data.subTypes) setSubTypesData(response.json.data.subTypes);
                 } else {
                     notification["warning"]({
                         message: 'Ocorreu um erro a carregar os dados',
@@ -87,13 +90,17 @@ export default function Settings(props) {
         _service({
             method: 'PUT',
             url: 'settings',
-            data: {...values, type: type},
+            data: { ...values, type: type },
             success: (response) => {
                 if (response.json.result) {
                     notification["success"]({
                         message: 'Status updated!',
                         description: 'Status updated successfully.',
                     });
+
+                    supplierForm.current && supplierForm.current.resetFields();
+                    typeForm.current && typeForm.current.resetFields();
+                    subTypeForm.current && subTypeForm.current.resetFields();
                     onFetchSettings();
                     setLoading(false);
                 } else {
@@ -119,7 +126,7 @@ export default function Settings(props) {
         _service({
             method: 'DELETE',
             url: 'settings',
-            data: {...item, type: type},
+            data: { ...item, type: type },
             success: (response) => {
                 if (response.json.result) {
                     notification["success"]({
@@ -146,7 +153,7 @@ export default function Settings(props) {
         });
     }
 
-    const callback = (key) =>{
+    const callback = (key) => {
         console.log(key);
     }
 
@@ -166,10 +173,11 @@ export default function Settings(props) {
                                     <Col xs={{ span: 24 }} lg={{ span: 12 }}>
                                         <Title level={4} style={{ marginBottom: 20 }}>Add new Supplier</Title>
                                         <Form
+                                            ref={supplierForm}
                                             name="basic"
                                             labelCol={{ span: 4 }}
                                             wrapperCol={{ span: 16 }}
-                                            onFinish={(values) => {addRecord(values, 'supplier')}}
+                                            onFinish={(values) => { addRecord(values, 'supplier') }}
                                             autoComplete="off"
                                         >
                                             <Form.Item
@@ -215,9 +223,9 @@ export default function Settings(props) {
                                         <Title level={4} style={{ marginBottom: 20 }}>List of Suppliers</Title>
                                         <List
                                             itemLayout="vertical"
-                                            dataSource={companiesData}
+                                            dataSource={suppliersData}
                                             renderItem={item => (
-                                                <List.Item className = "row-wrapper">
+                                                <List.Item className="row-wrapper">
                                                     <List.Item.Meta
                                                         title={<Text strong>{item.name}</Text>}
                                                         description={
@@ -271,10 +279,11 @@ export default function Settings(props) {
                                     <Col xs={{ span: 24 }} lg={{ span: 12 }}>
                                         <Title level={4} style={{ marginBottom: 20 }}>Add new Type</Title>
                                         <Form
+                                            ref={typeForm}
                                             name="basic"
                                             labelCol={{ span: 4 }}
                                             wrapperCol={{ span: 16 }}
-                                            onFinish={(values) => {addRecord(values, 'type')}}
+                                            onFinish={(values) => { addRecord(values, 'type') }}
                                             autoComplete="off"
                                         >
                                             <Form.Item
@@ -303,7 +312,7 @@ export default function Settings(props) {
                                             itemLayout="vertical"
                                             dataSource={typesData}
                                             renderItem={item => (
-                                                <List.Item className = "row-wrapper">
+                                                <List.Item className="row-wrapper">
                                                     <List.Item.Meta
                                                         title={<Text strong>{item.label}</Text>}
                                                         description={item.description}
@@ -324,10 +333,11 @@ export default function Settings(props) {
                                     <Col xs={{ span: 24 }} lg={{ span: 12 }}>
                                         <Title level={4} style={{ marginBottom: 20 }}>Add new Sub Type</Title>
                                         <Form
+                                            ref={subTypeForm}
                                             name="basic"
                                             labelCol={{ span: 4 }}
                                             wrapperCol={{ span: 16 }}
-                                            onFinish={(values) => {addRecord(values, 'subType')}}
+                                            onFinish={(values) => { addRecord(values, 'subType') }}
                                             autoComplete="off"
                                         >
                                             <Form.Item
@@ -338,12 +348,12 @@ export default function Settings(props) {
                                                 <Input />
                                             </Form.Item>
                                             <Form.Item label="Session Type" name="type_value">
-                                                    <Select
-                                                        placeholder="Select a option"
-                                                        allowClear
-                                                        options={typesData}
-                                                    />
-                                                </Form.Item>
+                                                <Select
+                                                    placeholder="Select a option"
+                                                    allowClear
+                                                    options={typesData}
+                                                />
+                                            </Form.Item>
                                             <Form.Item
                                                 label="Description"
                                                 name="description"
@@ -363,9 +373,9 @@ export default function Settings(props) {
                                             itemLayout="vertical"
                                             dataSource={subTypesData}
                                             renderItem={item => {
-                                                const typeName = typesData.find( (type) =>  type.id === item.type_id);
+                                                const typeName = typesData.find((type) => type.id === item.type_id);
                                                 return (
-                                                    <List.Item className = "row-wrapper">
+                                                    <List.Item className="row-wrapper">
                                                         <List.Item.Meta
                                                             title={<><Text strong>{item.label}</Text><Text> {typeName && ` (${typeName.label})`}</Text></>}
                                                             description={item.description}

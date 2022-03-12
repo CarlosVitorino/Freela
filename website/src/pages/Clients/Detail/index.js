@@ -7,7 +7,7 @@ import _service from '@netuno/service-client';
 
 import './index.less';
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 export default function Detail(props) {
 
@@ -286,9 +286,9 @@ export default function Detail(props) {
                             <Col xs={{ span: 24 }} lg={{ span: 12 }} className="gutter-row" >
                                 <Card title="General Info" className="two-col" bordered={false}>
                                     <Form.Item
-                                            name="is_company"
-                                        >
-                                                    <Checkbox disabled={submitting || !active} checked={isCompany} onChange={() => setIsCompany(!isCompany)}>This client is a company</Checkbox>
+                                        name="is_company"
+                                    >
+                                        <Checkbox disabled={submitting || !active} checked={isCompany} onChange={() => setIsCompany(!isCompany)}>This client is a company</Checkbox>
                                     </Form.Item>
                                     <Form.Item
                                         label="Name"
@@ -313,9 +313,6 @@ export default function Detail(props) {
                                     <Form.Item
                                         label="Phone"
                                         name="phone_number"
-                                        rules={[
-                                            { required: true, message: 'Insert the phone number.' },
-                                        ]}
                                     >
                                         <Input disabled={submitting || !active} maxLength={250} />
                                     </Form.Item>
@@ -323,70 +320,58 @@ export default function Detail(props) {
                             </Col>
                             <Col xs={{ span: 24 }} lg={{ span: 12 }} className="gutter-row" >
                                 {!isCompany ?
-                                <Card title="Bio Data" className="two-col" bordered={false} >
-                                    <Form.Item name="gender" label="Gender">
-                                        <Select
-                                            disabled={submitting || !active}
-                                            placeholder="Select a option"
-                                            allowClear
-                                        >
-                                            <Option value="male">male</Option>
-                                            <Option value="female">female</Option>
-                                            <Option value="other">other</Option>
-                                        </Select>
-                                    </Form.Item>
-                                    <Space wrap>
-                                        <Form.Item label="Age" name="age" rules={[{ type: 'number' }]} >
-                                            <InputNumber disabled={submitting || !active} maxLength={250} />
+                                    <Card title="Bio Data" className="two-col" bordered={false} >
+                                        <Form.Item name="gender" label="Gender">
+                                            <Select
+                                                disabled={submitting || !active}
+                                                placeholder="Select a option"
+                                                allowClear
+                                            >
+                                                <Option value="male">male</Option>
+                                                <Option value="female">female</Option>
+                                                <Option value="other">other</Option>
+                                            </Select>
                                         </Form.Item>
-                                        <Form.Item label="Weight" name="weight" rules={[{ type: 'number' }]}>
-                                            <InputNumber disabled={submitting || !active} maxLength={250} />
-                                        </Form.Item>
-                                        <Form.Item label="Height" name="height" rules={[{ type: 'number' }]}>
-                                            <InputNumber disabled={submitting || !active} maxLength={250} />
-                                        </Form.Item>
-                                    </Space>
+                                        <Space wrap>
+                                            <Form.Item label="Age" name="age" rules={[{ type: 'number' }]} >
+                                                <InputNumber disabled={submitting || !active} maxLength={250} />
+                                            </Form.Item>
+                                            <Form.Item label="Weight" name="weight" rules={[{ type: 'number' }]}>
+                                                <InputNumber disabled={submitting || !active} maxLength={250} />
+                                            </Form.Item>
+                                            <Form.Item label="Height" name="height" rules={[{ type: 'number' }]}>
+                                                <InputNumber disabled={submitting || !active} maxLength={250} />
+                                            </Form.Item>
+                                        </Space>
                                     </Card>
-                                : 
-                                <Card title="Company Info" className="two-col" bordered={false} >
-                                            <Form.Item
-                                                label="Legal Name"
-                                                name="legal_name"
-                                            >
-                                                <Input />
-                                            </Form.Item>
-                                            <Form.Item
-                                                label="VAT Number"
-                                                name="vat"
-                                            >
-                                                <InputNumber style={{ width: '100%' }} />
-                                            </Form.Item>
-                                            <Form.Item
-                                                label="Website"
-                                                name="website"
-                                                rules={[{ type: 'url', warningOnly: true }, { type: 'string', min: 6 }]}
-                                            >
-                                                <Input />
-                                            </Form.Item>
-                                </Card>
+                                    :
+                                    <Card title="Company Info" className="two-col" bordered={false} >
+                                        <Form.Item
+                                            label="Legal Name"
+                                            name="legal_name"
+                                        >
+                                            <Input />
+                                        </Form.Item>
+                                        <Form.Item
+                                            label="VAT Number"
+                                            name="vat"
+                                        >
+                                            <InputNumber style={{ width: '100%' }} />
+                                        </Form.Item>
+                                        <Form.Item
+                                            label="Website"
+                                            name="website"
+                                            rules={[{ type: 'url', warningOnly: true }, { type: 'string', min: 6 }]}
+                                        >
+                                            <Input />
+                                        </Form.Item>
+                                    </Card>
                                 }
                             </Col>
 
                             <Col xs={{ span: 24 }} lg={{ span: 24 }}>
-                                <Card title="Session Info" bordered={false} >
+                                <Card title="Default Session Info" bordered={false} >
                                     <Space size={24} wrap>
-                                        <Form.Item label="Price" name="default_price" rules={[{ type: 'number' }]}>
-                                            <InputNumber disabled={submitting || !active} maxLength={10} addonAfter="€" />
-                                        </Form.Item>
-                                        <Form.Item label="Session Duration" name="session_duration" rules={[{ type: 'number' }]}>
-                                            <InputNumber disabled={submitting || !active} maxLength={10} addonAfter="min" />
-                                        </Form.Item>
-                                        <Form.Item label="Start Date" name="start_date" rules={[{ type: 'date' }]}>
-                                            <DatePicker disabled={submitting || !active} />
-                                        </Form.Item>
-                                        <Form.Item label="No. Session/Month" name="sessions_per_month"  rules={[{ type: 'number' }]}>
-                                            <InputNumber disabled={submitting || !active} style={{width:  120}}/>
-                                        </Form.Item>
                                         <Form.Item label="Session Type" name="default_session_type">
                                             <Select
                                                 disabled={submitting || !active}
@@ -404,8 +389,23 @@ export default function Detail(props) {
                                                 options={sessionSubTypeOptions}
                                             />
                                         </Form.Item>
-                                    </Space>
+                                        <Form.Item label="Session Duration" name="session_duration" rules={[{ type: 'number' }]}>
+                                            <InputNumber disabled={submitting || !active} maxLength={10} addonAfter="min" />
+                                        </Form.Item>
+                                        <Form.Item label="Price" name="default_price" rules={[{ type: 'number' }]}>
+                                            <InputNumber disabled={submitting || !active} maxLength={10} addonAfter="€" />
+                                        </Form.Item>
+                                        <Form.Item label="No. Session/Month" name="sessions_per_month" rules={[{ type: 'number' }]}>
+                                            <InputNumber disabled={submitting || !active} style={{ width: 120 }} />
+                                        </Form.Item>
+                                        <Form.Item label="Start Date" name="start_date" rules={[{ type: 'date' }]}>
+                                            <DatePicker disabled={submitting || !active} />
+                                        </Form.Item>
 
+
+
+                                    </Space>
+                                    <Text> <blockquote>Default information - The date entered in the following fields will be used for automatic filling of sessions. The same customer may have sessions in other parameters and these can be perfectly entered manually.</blockquote></Text>
                                 </Card>
                             </Col>
                             <Col xs={{ span: 24 }} lg={{ span: 24 }}>

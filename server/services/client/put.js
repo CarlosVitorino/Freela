@@ -1,7 +1,7 @@
 const is_company =  _req.getString("is_company");
 const name = _req.getString("name");
 const email = _req.getString("email");
-const phone_number = _req.getString("phone_number");
+const phone_number = _req.hasKey("phone_number") ? _req.getString("phone_number") : null;
 const default_price = _req.hasKey("default_price") ? _req.getFloat("default_price") : null;
 const session_duration = _req.hasKey("session_duration") ? _req.getInt("session_duration") : null;
 const start_date = _req.hasKey("start_date") ? _req.getString("start_date") : null;
