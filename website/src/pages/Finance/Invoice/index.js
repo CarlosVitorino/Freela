@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from "react-router-dom";
 import { ArrowLeftOutlined } from '@ant-design/icons';
-import { Typography, Form, Table, DatePicker, Button, notification, Spin, Select, Row, Col, Card, Space} from 'antd';
+import { Typography, Form, Table, DatePicker, Button, notification, Spin, Select, Row, Col, Card, Space } from 'antd';
 import moment from 'moment'
 import _service from '@netuno/service-client';
 
@@ -17,7 +17,6 @@ export default function Invoice(props) {
     const [submitting, setSubmitting] = useState(false);
     const [sessionsData, setSessionsData] = useState(false);
     const [clientsData, setClientsData] = useState(false);
-    const [companiesData, setCompaniesData] = useState(false);
     const [totalValue, setTotalValue] = useState(false);
 
     const location = useLocation();
@@ -63,7 +62,6 @@ export default function Invoice(props) {
     useEffect(() => {
         if (location.ids) onFetchSessions();
         onFetchClients();
-        onFetchCompanies();
     }, [location]);
 
 
@@ -126,36 +124,10 @@ export default function Invoice(props) {
             }
         });
     }
-    const onFetchCompanies = () => {
-        setLoading(true);
-        _service({
-            method: 'GET',
-            url: 'company',
-            success: (response) => {
-                setLoading(false);
-                if (response.json.result) {
-                    setCompaniesData(response.json.data);
-                } else {
-                    notification["warning"]({
-                        message: 'Ocorreu um erro a carregar os dados',
-                        description: response.json.error,
-                    });
-                    setLoading(false);
-                }
-            },
-            fail: () => {
-                setLoading(false);
-                notification["error"]({
-                    message: 'Ocorreu um erro a carregar os dados',
-                    description: 'Ocorreu um erro a carregar os dados, por favor tente novamente.',
-                });
-            }
-        });
-    }
 
     const onFinish = (values) => {
         setSubmitting(true);
-        
+
         values['pay_day'] = values['pay_day'].format('YYYY-MM-DD');
         values['created_at'] = moment().format('YYYY-MM-DD');
         values['billing_period'] = values['billing_period'][0].format('YYYY-MM-DD') + " - " + values['billing_period'][1].format('YYYY-MM-DD');
@@ -175,7 +147,7 @@ export default function Invoice(props) {
                     setSubmitting(false);
                     props.history.goBack();
 
-                    
+
                 } else {
                     notification["warning"]({
                         message: 'Invoice not created',
@@ -210,10 +182,10 @@ export default function Invoice(props) {
         );
     } else {
         return (
-            <div>
+            <div className="invoice">
                 <div className="content-title">
                     <Button className="go-back-btn" type="link" onClick={() => props.history.goBack()}><ArrowLeftOutlined /> Back</Button>
-                    <Title level={2}>Invoice</Title>
+                    <Title className="big-title"><span>Invoice</span></Title>
                 </div>
                 <div className="content-body">
                     <Form
@@ -226,20 +198,20 @@ export default function Invoice(props) {
                     >
                         <div className="extra--invoice-fields">
                             <Row>
-                                <Col xs={{ span: 24}} lg={{ span: 12}}>
+                                <Col xs={{ span: 24 }} lg={{ span: 12 }}>
                                     <Card className="invoice-card-left" title="Billing Information" bordered={false}>
                                         <Row>
-                                            <Col xs={{ span: 24}} lg={{ span: 12}} style={colStyle}>
+                                            <Col xs={{ span: 24 }} lg={{ span: 12 }} style={colStyle}>
                                                 <Form.Item label="Billing Period" name="billing_period" rules={[{ type: 'array', required: true, message: 'Please select time!' }]}>
                                                     <RangePicker />
                                                 </Form.Item>
                                             </Col>
-                                            <Col xs={{ span: 12}} lg={{ span: 7}}  style={colStyle}>
+                                            <Col xs={{ span: 12 }} lg={{ span: 7 }} style={colStyle}>
                                                 <Form.Item label="Invoice Pay Day" name="pay_day" rules={[{ type: 'date', required: true }]}>
                                                     <DatePicker />
                                                 </Form.Item>
                                             </Col>
-                                            <Col xs={{ span: 12}} lg={{ span: 5}}  style={colStyle}>
+                                            <Col xs={{ span: 12 }} lg={{ span: 5 }} style={colStyle}>
                                                 <Form.Item label="Total Amount" name="total_amount" >
                                                     <Title level={3} className="total-value" strong>{totalValue ? totalValue : " - "}</Title>
                                                 </Form.Item>
@@ -247,37 +219,18 @@ export default function Invoice(props) {
                                         </Row>
                                     </Card>
                                 </Col>
-                                <Col xs={{ span: 24}} lg={{ span: 12}}>
+                                <Col xs={{ span: 24 }} lg={{ span: 12 }}>
                                     <Card className="invoice-card-right" title="Invoice Destination" bordered={false} >
-                                        <Row>
-                                            <Col span={11} style={colStyle}>
-                                                <Form.Item label="Client" name="client">
-                                                    <Select
-                                                        placeholder="Select client"
-                                                        allowClear
-                                                    >
-                                                        {clientsData ? clientsData.map(clientData => (
-                                                            <Option key={clientData.id}>{clientData.name}</Option>
-                                                        )) : ''}
-                                                    </Select>
-                                                </Form.Item>
-                                            </Col>
-                                            <Col span={2} style={colStyle}>
-                                                <p style={{marginTop: 20}}> OR </p>
-                                            </Col>
-                                            <Col span={11} style={colStyle}>
-                                                <Form.Item label="Company" name="company">
-                                                    <Select
-                                                        placeholder="Select client"
-                                                        allowClear
-                                                    >
-                                                        {companiesData ? companiesData.map(companyData => (
-                                                            <Option key={companyData.id}>{companyData.name}</Option>
-                                                        )) : ''}
-                                                    </Select>
-                                                </Form.Item> 
-                                            </Col>
-                                        </Row>
+                                        <Form.Item label="Client" name="client">
+                                            <Select
+                                                placeholder="Select client"
+                                                allowClear
+                                            >
+                                                {clientsData ? clientsData.map(clientData => (
+                                                    <Option key={clientData.id}>{clientData.name}</Option>
+                                                )) : ''}
+                                            </Select>
+                                        </Form.Item>
                                     </Card>
                                 </Col>
                             </Row>
@@ -287,6 +240,7 @@ export default function Invoice(props) {
                             <Table
                                 dataSource={sessionsData}
                                 columns={columns}
+                                scroll={{ x: '' }}
                                 summary={pageData => {
                                     let totalValue = 0;
 

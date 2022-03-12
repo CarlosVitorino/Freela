@@ -1,6 +1,6 @@
 const mail = _req.getString("mail");
 const dbClient = _db.findFirst(
-    "client",
+    "client_user",
     _val.map()
         .set(
             "where",
@@ -13,7 +13,7 @@ if (dbClient != null && dbClient.getBoolean("active")) {
     const recoveryKey = _crypto.sha512(_uid.generate());
     const recoveryLimit = _time.localDateTime().plusDays(1);
     _db.update(
-        "client",
+        "client_user",
         dbClient.getInt("id"),
         _val.map()
             .set("recovery_key", recoveryKey)

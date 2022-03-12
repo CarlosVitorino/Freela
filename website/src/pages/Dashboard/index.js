@@ -1,22 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { Redirect } from "react-router-dom";
-import { Typography, Statistic, Row, Col, Space, Card, notification } from 'antd';
+import { Typography, Statistic, Row, Col, Space, Card, notification, Divider } from 'antd';
 import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
 import { Column, Pie, Sunburst } from '@ant-design/plots';
 
 import moment from 'moment';
+import classNames from 'classnames';
 
 import _auth from '@netuno/auth-client';
 import _service from '@netuno/service-client';
 
 import './index.less';
 
-const { Title } = Typography;
+const { Title, Paragraph, Text, Link } = Typography;
 const layout = {
     wrapperCol: { xs: { span: 12 }, sm: { span: 12 }, md: { span: 24 }, lg: { span: 24 } },
-    style: { margin: 20 }
+    style: { marginBotton: 10, marginTop: 10 }
 };
-const colStyle = { padding: '8px 10px' };
+const colStyle = { padding: '8px 0px' };
 
 
 export default function Dashboard(props) {
@@ -131,7 +132,7 @@ export default function Dashboard(props) {
         tooltip: {
             customItems: (originalItems: TooltipItem[]) => {
                 // process originalItems,
-                console.log(originalItems); 
+                console.log(originalItems);
                 originalItems.forEach(item => {
                     //item.data.revenue = item.data.revenue.toString().includes("€") ? item.data.revenue : item.data.revenue + " €";
                 });
@@ -166,137 +167,183 @@ export default function Dashboard(props) {
         data: sunburstData,
         innerRadius: 0.3,
         interactions: [
-          {
-            type: 'element-active',
-          },
+            {
+                type: 'element-active',
+            },
         ],
-      };
+    };
 
     if (_auth.isLogged()) {
+        if (monthData && monthData.totalMoney == -1) {
+            const settings = "Don't forget to have a look at the settings menu for additional parameterization."
+            return (
+                <div className="dashboard">
+                    <div className="content-title">
+                        <Title className="big-title"><span>Dashboard</span></Title>
+                    </div>
+                    <div className={classNames("content-body", "empty-dashboard")}>
+                        <Row {...layout}>
+                            <Col className="empty-text" xs={{ span: 24 }} lg={{ span: 14 }}>
+                                <article>
+                                    <Title level={2} style={{paddingTop: 20, paddingBottom: 20}}>Yes, it's empty...</Title>
+                                    <Paragraph >To have data in your's dashboard you need to create:</Paragraph>
+                                    <Paragraph>
+                                        <ul>
+                                            <li>
+                                                <Link href="/clients">Clients</Link>
+                                            </li>
+                                            <li>
+                                                <Link href="/sessions">Sessions</Link>
+                                            </li>
+                                            <li>
+                                                <Link href="/finance">Invoices</Link>
+                                            </li>
+                                        </ul>
+                                    </Paragraph>
+                                    <Divider />
+                                    <Title level={4}>Settings:</Title>
+                                    <p>
+                                        {`Don't forget to give a look at the settings menu for additional parameterization.\n
+                                            There, you will find Session types, subtypes, suppliers and more.`}
+                                    </p>
+                                </article>
+                            </Col>
+                            <Col className="empty-data" xs={{ span: 24 }} lg={{ span: 10 }}>
+                                <img alt="empty-data" src={"/images/empty-image-2.svg"} />
+                            </Col>
+                        </Row>
+                    </div>
+                </div>
+            )
+        }
         return (
-            <div className="dashboard-layout-content">
-                <Title level={3}>Dashboard View</Title>
-                <Row {...layout}>
-                    <Col xs={{ span: 24}} lg={{ span: 12}} style={colStyle}>
-                        <Card>
-                            <Title level={4}>Made in {moment().format('MMMM')}</Title>
-                            <Row {...layout}>
-                                <Col span={12} style={colStyle}>
-                                    <Statistic title="Revenue" value={monthData.totalMoney} precision={2} suffix="€" loading={monthLoading} />
-                                </Col>
-                                <Col span={12} style={colStyle}>
-                                    <Statistic title="Time Worked " value={`${moment.duration(monthData.totalTime, "minutes").hours()} h  ${moment.duration(monthData.totalTime, "minutes").minutes()} min`} loading={monthLoading} />
-                                </Col>
-                                <Col span={12} style={colStyle}>
-                                    <Statistic
-                                        title="You Made"
-                                        value={monthData.diffMoney}
-                                        precision={2}
-                                        valueStyle={monthData.diffMoney > 0 ? { color: '#3f8600' } : { color: '#cf1322' }}
-                                        prefix={monthData.diffMoney > 0 ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
-                                        suffix="€"
-                                        loading={monthLoading}
-                                    /><p className="statistic-suffix">than last month</p>
-                                </Col>
-                                <Col span={12} style={colStyle}>
-                                    <Statistic title={`Total ${moment().format('MMMM')} Estimated`} value={monthData.estimatedMoney} precision={2} suffix="€" loading={monthLoading} />
-                                </Col>
-                            </Row>
-                        </Card>
-                    </Col>
+            <div className="dashboard">
+                <div className="content-title">
+                    <Title className="big-title"><span>Dashboard</span></Title>
+                </div>
+                <div className="content-body">
+                    <Row {...layout}>
+                        <Col xs={{ span: 24 }} lg={{ span: 12 }} style={colStyle}>
+                            <Card className="card-left">
+                                <Title level={4}>Made in {moment().format('MMMM')}</Title>
+                                <Row {...layout}>
+                                    <Col span={12} style={colStyle}>
+                                        <Statistic title="Revenue" value={monthData.totalMoney} precision={2} suffix="€" loading={monthLoading} />
+                                    </Col>
+                                    <Col span={12} style={colStyle}>
+                                        <Statistic title="Time Worked " value={`${moment.duration(monthData.totalTime, "minutes").hours()} h  ${moment.duration(monthData.totalTime, "minutes").minutes()} min`} loading={monthLoading} />
+                                    </Col>
+                                    <Col span={12} style={colStyle}>
+                                        <Statistic
+                                            title="You Made"
+                                            value={monthData.diffMoney}
+                                            precision={2}
+                                            valueStyle={monthData.diffMoney > 0 ? { color: '#3f8600' } : { color: '#cf1322' }}
+                                            prefix={monthData.diffMoney > 0 ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
+                                            suffix="€"
+                                            loading={monthLoading}
+                                        /><p className="statistic-suffix">than last month</p>
+                                    </Col>
+                                    <Col span={12} style={colStyle}>
+                                        <Statistic title={`Total ${moment().format('MMMM')} Estimated`} value={monthData.estimatedMoney} precision={2} suffix="€" loading={monthLoading} />
+                                    </Col>
+                                </Row>
+                            </Card>
+                        </Col>
 
-                    <Col xs={{ span: 24}} lg={{ span: 12}} style={colStyle}>
-                        <Card>
-                            <Title level={4}>Received in {moment().format('MMMM')}</Title>
-                            <Row {...layout}>
-                                <Col span={12} style={colStyle}>
-                                    <Statistic title="Received" value={monthData.received} precision={2} suffix="€" loading={monthLoading} />
-                                </Col>
-                                <Col span={12} style={colStyle}>
-                                    <Statistic title="Spent" value={monthData.paid * -1} precision={2} suffix="€" loading={monthLoading} />
-                                </Col>
-                                <Col span={12} style={colStyle}>
-                                    <Statistic title="Total Invoice Progress" value={`${monthData.invoicesPaid}/${monthData.invoices}`} suffix="invoices" loading={monthLoading} />
-                                </Col>
-                                <Col span={12} style={colStyle}>
-                                    <Statistic
-                                        title="You Profit"
-                                        value={monthData.diffInvoice}
-                                        precision={2}
-                                        valueStyle={monthData.diffInvoice > 0 ? { color: '#3f8600' } : { color: '#cf1322' }}
-                                        prefix={monthData.diffInvoice > 0 ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
-                                        suffix="€"
-                                        loading={monthLoading}
-                                    /><p className="statistic-suffix">than last month</p>
-                                </Col>
-                            </Row>
-                        </Card>
-                    </Col>
-                </Row>
-                <Row {...layout}>
-                    <Col xs={{ span: 24}} lg={{ span: 24}} style={colStyle}>
-                        <Card>
-                            <Title level={4}>Revenie by Month</Title>
-                            <Column {...configColumn} />
-                        </Card>
-                    </Col>
-                </Row>
-                <Row {...layout}>
-                    <Col xs={{ span: 24}} lg={{ span: 12}} style={colStyle}>
-                        <Card>
-                            <Title level={4}>Finance {moment().format('YYYY')}</Title>
-                            <Row {...layout}>
-                                <Col span={12} style={colStyle}>
-                                    <Statistic title="Billed " value={yearData.billed} precision={2} suffix="€" loading={anualLoading} />
-                                </Col>
-                                <Col span={12} style={colStyle}>
-                                    <Statistic title="Spend" value={yearData.spent * -1} precision={2} suffix="€" loading={anualLoading} />
-                                </Col>
-                                <Col span={12} style={colStyle}>
-                                    <Statistic title="Profit" value={yearData.profit} precision={2} suffix="€" loading={anualLoading} />
+                        <Col xs={{ span: 24 }} lg={{ span: 12 }} style={colStyle}>
+                            <Card className="card-right">
+                                <Title level={4}>Received in {moment().format('MMMM')}</Title>
+                                <Row {...layout}>
+                                    <Col span={12} style={colStyle}>
+                                        <Statistic title="Received" value={monthData.received} precision={2} suffix="€" loading={monthLoading} />
+                                    </Col>
+                                    <Col span={12} style={colStyle}>
+                                        <Statistic title="Spent" value={monthData.paid * -1} precision={2} suffix="€" loading={monthLoading} />
+                                    </Col>
+                                    <Col span={12} style={colStyle}>
+                                        <Statistic title="Total Invoice Progress" value={`${monthData.invoicesPaid}/${monthData.invoices}`} suffix="invoices" loading={monthLoading} />
+                                    </Col>
+                                    <Col span={12} style={colStyle}>
+                                        <Statistic
+                                            title="You Profit"
+                                            value={monthData.diffInvoice}
+                                            precision={2}
+                                            valueStyle={monthData.diffInvoice > 0 ? { color: '#3f8600' } : { color: '#cf1322' }}
+                                            prefix={monthData.diffInvoice > 0 ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
+                                            suffix="€"
+                                            loading={monthLoading}
+                                        /><p className="statistic-suffix">than last month</p>
+                                    </Col>
+                                </Row>
+                            </Card>
+                        </Col>
+                    </Row>
+                    <Row {...layout}>
+                        <Col xs={{ span: 24 }} lg={{ span: 24 }} style={colStyle}>
+                            <Card>
+                                <Title level={4}>Revenie by Month</Title>
+                                <Column {...configColumn} />
+                            </Card>
+                        </Col>
+                    </Row>
+                    <Row {...layout}>
+                        <Col xs={{ span: 24 }} lg={{ span: 12 }} style={colStyle}>
+                            <Card className="card-left">
+                                <Title level={4}>Finance {moment().format('YYYY')}</Title>
+                                <Row {...layout}>
+                                    <Col span={12} style={colStyle}>
+                                        <Statistic title="Billed " value={yearData.billed} precision={2} suffix="€" loading={anualLoading} />
+                                    </Col>
+                                    <Col span={12} style={colStyle}>
+                                        <Statistic title="Spend" value={yearData.spent * -1} precision={2} suffix="€" loading={anualLoading} />
+                                    </Col>
+                                    <Col span={12} style={colStyle}>
+                                        <Statistic title="Profit" value={yearData.profit} precision={2} suffix="€" loading={anualLoading} />
 
-                                </Col>
-                                <Col span={12} style={colStyle}>
-                                    <Statistic title={`Estimated Profit ${moment().format('YYYY')}`} value={yearData.estimatedProfitYear} precision={2} suffix="€" loading={anualLoading} />
-                                </Col>
-                            </Row>
-                        </Card>
-                    </Col>
-                    <Col xs={{ span: 24}} lg={{ span: 12}} style={colStyle}>
-                        <Card>
-                            <Title level={4}>Sessions {moment().format('YYYY')}</Title>
-                            <Row {...layout}>
-                                <Col span={12} style={colStyle}>
-                                    <Statistic title="Total hours" value={`${moment.duration(yearData.totalMinutes, "minutes").hours()} h  ${moment.duration(yearData.totalMinutes, "minutes").minutes()} min`} loading={anualLoading} />
-                                </Col>
-                                <Col span={12} style={colStyle}>
-                                    <Statistic title="Atendance" value={yearData.atendance} suffix="%" loading={anualLoading} />
-                                </Col>
-                                <Col span={12} style={colStyle}>
-                                    <Statistic title="Medium Price/Hour" value={yearData.mediumPriceHour} precision={2} suffix="€" loading={anualLoading} />
-                                </Col>
-                                <Col span={12} style={colStyle}>
-                                    <Statistic title="Medium Session Duration" value={moment.duration(yearData.mediumSessionDuration, "minutes").minutes()} suffix="min" loading={anualLoading} />
-                                </Col>
+                                    </Col>
+                                    <Col span={12} style={colStyle}>
+                                        <Statistic title={`Estimated Profit ${moment().format('YYYY')}`} value={yearData.estimatedProfitYear} precision={2} suffix="€" loading={anualLoading} />
+                                    </Col>
+                                </Row>
+                            </Card>
+                        </Col>
+                        <Col xs={{ span: 24 }} lg={{ span: 12 }} style={colStyle}>
+                            <Card className="card-right">
+                                <Title level={4}>Sessions {moment().format('YYYY')}</Title>
+                                <Row {...layout}>
+                                    <Col span={12} style={colStyle}>
+                                        <Statistic title="Total hours" value={`${moment.duration(yearData.totalMinutes, "minutes").hours()} h  ${moment.duration(yearData.totalMinutes, "minutes").minutes()} min`} loading={anualLoading} />
+                                    </Col>
+                                    <Col span={12} style={colStyle}>
+                                        <Statistic title="Atendance" value={yearData.atendance} suffix="%" loading={anualLoading} />
+                                    </Col>
+                                    <Col span={12} style={colStyle}>
+                                        <Statistic title="Medium Price/Hour" value={yearData.mediumPriceHour} precision={2} suffix="€" loading={anualLoading} />
+                                    </Col>
+                                    <Col span={12} style={colStyle}>
+                                        <Statistic title="Medium Session Duration" value={moment.duration(yearData.mediumSessionDuration, "minutes").minutes()} suffix="min" loading={anualLoading} />
+                                    </Col>
 
-                            </Row>
-                        </Card>
-                    </Col>
-                </Row>
-                <Row {...layout}>
-                    <Col xs={{ span: 24}} lg={{ span: 12}} style={colStyle}>
-                        <Card>
-                            <Title level={4}>Revenue / Type</Title>
-                            <Sunburst {...configSunburst} />
-                        </Card>
-                    </Col>
-                    <Col xs={{ span: 24}} lg={{ span: 12}} style={colStyle}>
-                        <Card>
-                            <Title level={4}>Top 5 Clients</Title>
-                            <Pie {...configPie} />
-                        </Card>
-                    </Col>
-                </Row>
+                                </Row>
+                            </Card>
+                        </Col>
+                    </Row>
+                    <Row {...layout}>
+                        <Col xs={{ span: 24 }} lg={{ span: 12 }} style={colStyle}>
+                            <Card className="card-left">
+                                <Title level={4}>Revenue / Type</Title>
+                                <Sunburst {...configSunburst} />
+                            </Card>
+                        </Col>
+                        <Col xs={{ span: 24 }} lg={{ span: 12 }} style={colStyle}>
+                            <Card className="card-right">
+                                <Title level={4}>Top 5 Clients</Title>
+                                <Pie {...configPie} />
+                            </Card>
+                        </Col>
+                    </Row>
+                </div>
             </div>
         );
     } else {

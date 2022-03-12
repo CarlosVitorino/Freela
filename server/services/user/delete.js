@@ -1,16 +1,16 @@
 
 const dbClient = _db.queryFirst(`
-    SELECT * FROM client WHERE client_user_id = ?::int
+    SELECT * FROM client_user WHERE client_user_id = ?::int
 `, _val.list().add( _user.id ));
 
 if (dbClient) {
 
     /**_db.execute(`
-        DELETE FROM domain WHERE client_id = ?::int
+        DELETE FROM domain WHERE client_user_id = ?::int
     `, _val.list().add(dbClient.getInt("id")));*/
 
     _db.delete(
-        "client",
+        "client_user",
         dbClient.getInt("id")
     );
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, useParams } from "react-router-dom";
 import { ArrowLeftOutlined } from '@ant-design/icons';
-import { Typography, Form, Input, InputNumber, DatePicker, Button, notification, Spin, Select, Row, Col, Card, Space, Switch, Popconfirm } from 'antd';
+import { Typography, Form, Input, InputNumber, DatePicker, Button, notification, Spin, Select, Row, Col, Card, Space, Switch, Popconfirm, Checkbox } from 'antd';
 import moment from 'moment'
 import _service from '@netuno/service-client';
 
@@ -17,6 +17,7 @@ export default function Detail(props) {
     const [sessionSubType, setSessionSubType] = useState(false);
     const [sessionSubTypeOptions, setSessionSubTypeOptions] = useState(false);
     const [active, setActive] = useState(true);
+    const [isCompany, setIsCompany] = useState(false);
     const { id } = useParams();
     const location = useLocation();
     const clientForm = useRef(null);
@@ -27,7 +28,7 @@ export default function Detail(props) {
         wrapperCol: { xs: { span: 12 }, sm: { span: 12 }, md: { span: 24 }, lg: { span: 24 } }
     };
 
-    const colStyle = { padding: '8px 10px' };
+    const colStyle = { padding: '8px 0px' };
 
     useEffect(() => {
         if (clientForm.current && id) onFetchDetail();
@@ -49,7 +50,7 @@ export default function Detail(props) {
                     if (data['start_date']) {
                         data['start_date'] = moment(data['start_date']);
                     }
-
+                    response.json.data[0].is_company && setIsCompany(true);
                     setActive(data['active']);
                     clientForm.current.setFieldsValue(data);
                 } else {
@@ -129,6 +130,7 @@ export default function Detail(props) {
         if (values['start_date']) {
             values['start_date'] = values['start_date'].format('YYYY-MM-DD');
         }
+        values['is_company'] = isCompany;
         _service({
             method: 'PUT',
             url: 'client',
@@ -139,6 +141,7 @@ export default function Detail(props) {
                         message: 'Client Created',
                         description: 'New client created successfully.',
                     });
+                    props.history.goBack();
                     setSubmitting(false);
                 } else {
                     notification["warning"]({
@@ -234,8 +237,8 @@ export default function Detail(props) {
     }
 
     const handleTypeChange = (value) => {
-        const sessionTypeObj = sessionType.find( (item) => item.value === value);
-        if(sessionTypeObj) {
+        const sessionTypeObj = sessionType.find((item) => item.value === value);
+        if (sessionTypeObj) {
             setSessionSubTypeOptions(sessionSubType.filter((item) => {
                 return sessionTypeObj.id == item.type_id;
             }));
@@ -244,10 +247,10 @@ export default function Detail(props) {
 
     const deleteDisclamer = (
         <div>
-          <p>Content</p>
-          <p>Content</p>
+            <p>Content</p>
+            <p>Content</p>
         </div>
-      );
+    );
 
 
     if (loading) {
@@ -260,14 +263,15 @@ export default function Detail(props) {
         );
     } else {
         return (
-            <div>
+            <div className="client">
                 <div className="content-title">
-                    <Button className="go-back-btn" type="link" onClick={() => props.history.goBack()}><ArrowLeftOutlined /> Back</Button>
+                    <div >
+                        <Button className="go-back-btn" type="link" onClick={() => props.history.goBack()}><ArrowLeftOutlined /> Back</Button>
+                        {id && <Switch className="switch-client" checkedChildren="Active" unCheckedChildren="Inactive" checked={active} onChange={toggleActivation} />}
+                    </div>
+                    <Title className="big-title"><span>Client</span></Title>
                 </div>
-                <div className="content-title">
-                    {id && <Switch className="switch-client" checkedChildren="Active" unCheckedChildren="Inactive" checked={active} onChange={toggleActivation} />}
-                    <Title level={2}>New Client</Title>
-                </div>
+
                 <div className="content-body">
                     <Form
                         {...layout}
@@ -278,83 +282,48 @@ export default function Detail(props) {
                         onFinish={onFinish}
                         onFinishFailed={onFinishFailed}
                     >
-                        <Row>
-                            <Col xs={{ span: 24 }} lg={{ span: 12 }} style={colStyle}>
-                                <Card className="client-card-left" title="General Info" bordered={false}>
-                                    <Row>
-                                        <Col span={24}>
-                                            <Form.Item
-                                                label="Name"
-                                                name="name"
-                                                rules={[
-                                                    { required: true, message: 'Insert Client\'s name' },
-                                                    { type: 'string', message: 'Invalid name, please use only letters.', pattern: "^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$" }
-                                                ]}
-                                            >
-                                                <Input disabled={submitting || !active} maxLength={25} />
-                                            </Form.Item>
-                                            <Form.Item
-                                                label="E-mail"
-                                                name="email"
-                                                rules={[
-                                                    { required: true, message: 'Insert the e-mail.' },
-                                                    { type: 'email', message: 'Email not valid.' }
-                                                ]}
-                                            >
-                                                <Input disabled={submitting || !active} maxLength={250} />
-                                            </Form.Item>
-                                            <Form.Item
-                                                label="Phone"
-                                                name="phone_number"
-                                                rules={[
-                                                    { required: true, message: 'Insert the phone number.' },
-                                                ]}
-                                            >
-                                                <Input disabled={submitting || !active} maxLength={250} />
-                                            </Form.Item>
-                                        </Col>
-                                        <Col span={12}>
-                                            <Form.Item label="Price" name="default_price" rules={[{ type: 'number' }]}>
-                                                <InputNumber disabled={submitting || !active} maxLength={10} addonAfter="€" />
-                                            </Form.Item>
-                                        </Col>
-                                        <Col span={12}>
-                                            <Form.Item label="Session Duration" name="session_duration" rules={[{ type: 'number' }]}>
-                                                <InputNumber disabled={submitting || !active} maxLength={10} addonAfter="min" />
-                                            </Form.Item>
-                                        </Col>
-                                        <Col span={24}>
-                                            <Space>
-                                                <Form.Item label="Start Date" name="start_date" rules={[{ type: 'date' }]}>
-                                                    <DatePicker disabled={submitting || !active} />
-                                                </Form.Item>
-                                                <Form.Item label="Session/Month" name="sessions_per_month" rules={[{ type: 'number' }]}>
-                                                    <InputNumber disabled={submitting || !active} maxLength={250} />
-                                                </Form.Item>
-                                                <Form.Item label="Session Type" name="default_session_type">
-                                                    <Select
-                                                        disabled={submitting || !active}
-                                                        placeholder="Select a option"
-                                                        allowClear
-                                                        options={sessionType}
-                                                        onChange={handleTypeChange}
-                                                    />
-                                                </Form.Item>
-                                                <Form.Item label="Session Sub Type" name="default_session_sub_type">
-                                                    <Select
-                                                        disabled={submitting || !active}
-                                                        placeholder="Select a option"
-                                                        allowClear
-                                                        options={sessionSubTypeOptions}
-                                                    />
-                                                </Form.Item>
-                                            </Space>
-                                        </Col>
-                                    </Row>
+                        <Row className="columns-wrapper" gutter={[24, 24]}>
+                            <Col xs={{ span: 24 }} lg={{ span: 12 }} className="gutter-row" >
+                                <Card title="General Info" className="two-col" bordered={false}>
+                                    <Form.Item
+                                            name="is_company"
+                                        >
+                                                    <Checkbox disabled={submitting || !active} checked={isCompany} onChange={() => setIsCompany(!isCompany)}>This client is a company</Checkbox>
+                                    </Form.Item>
+                                    <Form.Item
+                                        label="Name"
+                                        name="name"
+                                        rules={[
+                                            { required: true, message: 'Insert Client\'s name' },
+                                            { type: 'string', message: 'Invalid name, please use only letters.', pattern: "^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$" }
+                                        ]}
+                                    >
+                                        <Input disabled={submitting || !active} maxLength={25} />
+                                    </Form.Item>
+                                    <Form.Item
+                                        label="E-mail"
+                                        name="email"
+                                        rules={[
+                                            { required: true, message: 'Insert the e-mail.' },
+                                            { type: 'email', message: 'Email not valid.' }
+                                        ]}
+                                    >
+                                        <Input disabled={submitting || !active} maxLength={250} />
+                                    </Form.Item>
+                                    <Form.Item
+                                        label="Phone"
+                                        name="phone_number"
+                                        rules={[
+                                            { required: true, message: 'Insert the phone number.' },
+                                        ]}
+                                    >
+                                        <Input disabled={submitting || !active} maxLength={250} />
+                                    </Form.Item>
                                 </Card>
                             </Col>
-                            <Col xs={{ span: 24 }} lg={{ span: 12 }} style={colStyle}>
-                                <Card className="client-card-right" title="Bio Data" bordered={false} >
+                            <Col xs={{ span: 24 }} lg={{ span: 12 }} className="gutter-row" >
+                                {!isCompany ?
+                                <Card title="Bio Data" className="two-col" bordered={false} >
                                     <Form.Item name="gender" label="Gender">
                                         <Select
                                             disabled={submitting || !active}
@@ -366,10 +335,10 @@ export default function Detail(props) {
                                             <Option value="other">other</Option>
                                         </Select>
                                     </Form.Item>
-                                    <Form.Item label="Age" name="age" rules={[{ type: 'number' }]} >
-                                        <InputNumber disabled={submitting || !active} maxLength={250} />
-                                    </Form.Item>
-                                    <Space>
+                                    <Space wrap>
+                                        <Form.Item label="Age" name="age" rules={[{ type: 'number' }]} >
+                                            <InputNumber disabled={submitting || !active} maxLength={250} />
+                                        </Form.Item>
                                         <Form.Item label="Weight" name="weight" rules={[{ type: 'number' }]}>
                                             <InputNumber disabled={submitting || !active} maxLength={250} />
                                         </Form.Item>
@@ -377,10 +346,69 @@ export default function Detail(props) {
                                             <InputNumber disabled={submitting || !active} maxLength={250} />
                                         </Form.Item>
                                     </Space>
+                                    </Card>
+                                : 
+                                <Card title="Company Info" className="two-col" bordered={false} >
+                                            <Form.Item
+                                                label="Legal Name"
+                                                name="legal_name"
+                                            >
+                                                <Input />
+                                            </Form.Item>
+                                            <Form.Item
+                                                label="VAT Number"
+                                                name="vat"
+                                            >
+                                                <InputNumber style={{ width: '100%' }} />
+                                            </Form.Item>
+                                            <Form.Item
+                                                label="Website"
+                                                name="website"
+                                                rules={[{ type: 'url', warningOnly: true }, { type: 'string', min: 6 }]}
+                                            >
+                                                <Input />
+                                            </Form.Item>
+                                </Card>
+                                }
+                            </Col>
+
+                            <Col xs={{ span: 24 }} lg={{ span: 24 }}>
+                                <Card title="Session Info" bordered={false} >
+                                    <Space size={24} wrap>
+                                        <Form.Item label="Price" name="default_price" rules={[{ type: 'number' }]}>
+                                            <InputNumber disabled={submitting || !active} maxLength={10} addonAfter="€" />
+                                        </Form.Item>
+                                        <Form.Item label="Session Duration" name="session_duration" rules={[{ type: 'number' }]}>
+                                            <InputNumber disabled={submitting || !active} maxLength={10} addonAfter="min" />
+                                        </Form.Item>
+                                        <Form.Item label="Start Date" name="start_date" rules={[{ type: 'date' }]}>
+                                            <DatePicker disabled={submitting || !active} />
+                                        </Form.Item>
+                                        <Form.Item label="No. Session/Month" name="sessions_per_month"  rules={[{ type: 'number' }]}>
+                                            <InputNumber disabled={submitting || !active} style={{width:  120}}/>
+                                        </Form.Item>
+                                        <Form.Item label="Session Type" name="default_session_type">
+                                            <Select
+                                                disabled={submitting || !active}
+                                                placeholder="Select a option"
+                                                allowClear
+                                                options={sessionType}
+                                                onChange={handleTypeChange}
+                                            />
+                                        </Form.Item>
+                                        <Form.Item label="Session Sub Type" name="default_session_sub_type">
+                                            <Select
+                                                disabled={submitting || !active}
+                                                placeholder="Select a option"
+                                                allowClear
+                                                options={sessionSubTypeOptions}
+                                            />
+                                        </Form.Item>
+                                    </Space>
 
                                 </Card>
                             </Col>
-                            <Col xs={{ span: 24 }} lg={{ span: 24 }} style={colStyle}>
+                            <Col xs={{ span: 24 }} lg={{ span: 24 }}>
                                 <Card className="client-card-big" title="Preferences" bordered={false} >
                                     <Form.Item label="Goals" name="goals" >
                                         <TextArea disabled={submitting || !active} rows={4} />
@@ -404,12 +432,12 @@ export default function Detail(props) {
                                 <Button type="primary" htmlType="submit" loading={submitting} disabled={!active}>
                                     Save
                                 </Button>
-                                <Popconfirm title="This action will permanently delete this CLIENT, all SESSIONS and INVOICES associated. Are you sure?"  onConfirm={() => handleDeleteRecord()}>
+                                <Popconfirm title="Are you sure you want to delete this CLIENT, all SESSIONS and INVOICES associated?" onConfirm={() => handleDeleteRecord()}>
                                     <Button danger>Delete</Button>
                                 </Popconfirm>
                             </Space>
                         </Form.Item>
-                        
+
                     </Form>
 
                 </div>

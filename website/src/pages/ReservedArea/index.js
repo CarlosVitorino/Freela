@@ -14,8 +14,8 @@ export default function ReservedArea(props) {
     if (_auth.isLogged()) {
         return (
             <div className="dashboard-layout-content">
-                <Title level={2}>Olá!</Title>
-                <Title level={3} style={{ marginTop: 0 }}>Bem-vindo(a) à sua Área Reservada!</Title>
+                <Title level={2}>Hi there!</Title>
+                <Title level={3} style={{ marginTop: 0 }}>Wellcome back!</Title>
                 <img alt="reserved-area" src={"/images/reserved-area.png"} />
             </div>
         );

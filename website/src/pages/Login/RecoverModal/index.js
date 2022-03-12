@@ -32,8 +32,8 @@ export default function RecoverModal(props) {
             success: (response) => {
                 if (response.json.result) {
                     notification["success"]({
-                        message: 'Alteração da Palavra-Passe ',
-                        description: 'Foi enviado um e-mail para a alteração da Palavra-Passe.',
+                        message: 'Password Change ',
+                        description: 'We sent you an email with a link to recover your password',
                     });
                     setSubmitting(false);
                     setVisible(false);
@@ -42,8 +42,8 @@ export default function RecoverModal(props) {
             fail: () => {
                 setSubmitting(false);
                 notification["error"]({
-                    message: 'Erro na Alteração da Palavra-Passe',
-                    description: 'Não foi possível alterar a palavra-passe, contacte-nos através do chat de suporte.',
+                    message: 'Password change error!',
+                    description: 'We were unable to change the password, please contact us via support chat.',
                 });
             }
         });
@@ -92,11 +92,11 @@ export default function RecoverModal(props) {
                 onFinishFailed={onFinishFailed}
             >
                 <Form.Item
-                    label="Endereço de Mail"
+                    label="Email"
                     name="mail"
                     rules={[
-                        { type: 'email', message: 'O e-mail inserido não é válido.' },
-                        { required: true, message: 'Insira o e-mail.' }
+                        { type: 'email', message: 'The e-mail entered is not valid.' },
+                        { required: true, message: 'Insert email.' }
                     ]}
                 >
                     <Input disabled={submitting} maxLength={250} />

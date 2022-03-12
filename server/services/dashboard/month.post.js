@@ -8,29 +8,30 @@ const daysInMonth = moment().daysInMonth();
 
 const data = _val.map();
 
-const totalNewDb = _db.queryFirst(`SELECT SUM(price) as money, SUM(duration) as duration FROM session WHERE date BETWEEN '${startOfMonth}' AND '${endOfMonth}';`)
-const totalLastDb = _db.queryFirst(`SELECT SUM(price) as money, SUM(duration) as duration FROM session WHERE date BETWEEN '${startOfLastMonth}' AND '${endOfLastMonth}';`)
+const totalNewDb = _db.queryFirst(`SELECT SUM(price) as money, SUM(duration) as duration FROM session WHERE date BETWEEN '${startOfMonth}' AND '${endOfMonth}' and client_user_id = ${_user.id};`)
+const totalLastDb = _db.queryFirst(`SELECT SUM(price) as money, SUM(duration) as duration FROM session WHERE date BETWEEN '${startOfLastMonth}' AND '${endOfLastMonth}' and client_user_id = ${_user.id};`)
 
 const totalNewMoney = totalNewDb ? totalNewDb.getFloat("money") : 0;
 const totalNewDuration = totalNewDb ? totalNewDb.getFloat("duration") : 0;
 const totalLast = totalLastDb ? totalLastDb.getFloat("money") : 0;
 
 // Estimate Month Money
-const estimatedMonthMoneyDb = _db.queryFirst(`SELECT SUM(sessions_per_month * default_price) as estimated FROM client where active = true;`)
+const estimatedMonthMoneyDb = _db.queryFirst(`SELECT SUM(sessions_per_month * default_price) as estimated FROM client WHERE active = true AND client_user_id = ${_user.id};;`)
 const estimatedMonthMoney = estimatedMonthMoneyDb ? estimatedMonthMoneyDb.getFloat("estimated") : 0;
 const estimatedMoneyLeft = (estimatedMonthMoney / daysInMonth) * daysUntilEndOfMonth;
 const particalEstimatedMonthMoney = totalNewMoney + estimatedMoneyLeft;
 
 // Received/Spended
-const receivedDb = _db.queryFirst(`SELECT SUM(total_amount) as money FROM finance WHERE total_amount > 0 and paid_at BETWEEN '${startOfMonth}' AND '${endOfMonth}';`)
-const paidDb = _db.queryFirst(`SELECT SUM(total_amount) as money FROM finance WHERE total_amount < 0 AND created_at BETWEEN '${startOfMonth}' AND '${endOfMonth}';`)
-const receivedLastDb = _db.queryFirst(`SELECT SUM(total_amount) as money FROM finance WHERE paid_at BETWEEN '${startOfLastMonth}' AND '${endOfLastMonth}';`)
-const paidLastDb = _db.queryFirst(`SELECT SUM(total_amount) as money FROM finance WHERE total_amount < 0 AND created_at BETWEEN '${startOfLastMonth}' AND '${endOfLastMonth}';`)
+const receivedDb = _db.queryFirst(`SELECT SUM(total_amount) as money FROM finance WHERE total_amount > 0 and paid_at BETWEEN '${startOfMonth}' AND '${endOfMonth}' and client_user_id = ${_user.id};`)
+const paidDb = _db.queryFirst(`SELECT SUM(total_amount) as money FROM finance WHERE total_amount < 0 AND created_at BETWEEN '${startOfMonth}' AND '${endOfMonth}' and client_user_id = ${_user.id};`)
+const receivedLastDb = _db.queryFirst(`SELECT SUM(total_amount) as money FROM finance WHERE paid_at BETWEEN '${startOfLastMonth}' AND '${endOfLastMonth}' and client_user_id = ${_user.id};`)
+const paidLastDb = _db.queryFirst(`SELECT SUM(total_amount) as money FROM finance WHERE total_amount < 0 AND created_at BETWEEN '${startOfLastMonth}' AND '${endOfLastMonth}' and client_user_id = ${_user.id};`)
 const invoicesPaidDb = _db.queryFirst(`SELECT SUM(1) as money 
-        FROM finance 
-        INNER JOIN payment_status ON finance.status_id = payment_status.id
-        WHERE paid_at IS NOT NULL and payment_status.code = 'paid';`)
-const invoicesDb = _db.queryFirst(`SELECT SUM(1) as money FROM finance ;`)
+                                        FROM finance 
+                                        INNER JOIN payment_status ON finance.status_id = payment_status.id
+                                        WHERE paid_at IS NOT NULL AND payment_status.code = 'paid' 
+                                        AND finance.client_user_id = ${_user.id};`)
+const invoicesDb = _db.queryFirst(`SELECT SUM(1) as money FROM finance WHERE client_user_id = ${_user.id};`)
 
 
 const received = receivedDb ? receivedDb.getFloat("money") : 0;

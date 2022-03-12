@@ -35,8 +35,8 @@ export default function Recovery(props) {
             success: (response) => {
                 if (response.json.result) {
                     notification["success"]({
-                        message: 'Alteração de Palavra-Passe',
-                        description: 'A sua palavra-passe foi alterada com sucesso.',
+                        message: 'Password change',
+                        description: 'Your password was successfully changed.',
                     });
                     setSubmitting(false);
                     setReady(true);
@@ -45,8 +45,8 @@ export default function Recovery(props) {
             fail: () => {
                 setSubmitting(false);
                 notification["error"]({
-                    message: 'Erro na alteração de Palavra-Passe',
-                    description: 'Não foi possível alterar a sua palavra-passe, por favor contacte-nos através do chat de suporte.',
+                    message: 'Password change error',
+                    description: 'Unable to change your password, please try again after doing a few dance steps.',
                 });
             }
         });

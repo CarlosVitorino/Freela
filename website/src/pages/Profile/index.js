@@ -42,7 +42,7 @@ export default function Profile(props) {
                     });
                 } else {
                     notification["warning"]({
-                        message: 'Ocorreu um erro a carregar os dados',
+                        message: 'An error has occurred while loading the data',
                         description: response.json.error,
                     });
                     setLoading(false);
@@ -51,8 +51,8 @@ export default function Profile(props) {
             fail: () => {
                 setLoading(false);
                 notification["error"]({
-                    message: 'Ocorreu um erro a carregar os dados',
-                    description: 'Ocorreu um erro a carregar os dados, por favor tente novamente.',
+                    message: 'An error has occurred while loading the data',
+                    description: 'An error has occurred while loading the data, please try again after some smart moves.',
                 });
             }
         });
@@ -73,7 +73,7 @@ export default function Profile(props) {
             success: (response) => {
                 if (response.json.result) {
                     notification["success"]({
-                        message: 'Edição do Perfil',
+                        message: 'Profile',
                         description: 'Os dados do seu perfil foram alterados com sucesso.',
                     });
                     setSubmitting(false);

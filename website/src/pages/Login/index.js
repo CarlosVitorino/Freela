@@ -63,10 +63,10 @@ export default function Login(props) {
             <Layout className="layout">
                 <Content className="login-container">
                     <div className="content-title">
-                        <Title>Iniciar sessão.</Title>
+                        <Title>Login</Title>
                     </div>
                     <div className="content-body">
-                        <p>Inicie sessão com os seus dados.</p>
+                        <p>Login with your credenciais</p>
                         <Form
                             layout="vertical"
                             name="basic"
@@ -75,41 +75,41 @@ export default function Login(props) {
                             onFinishFailed={onFinishFailed}
                         >
                             <Form.Item
-                                label="Utilizador"
+                                label="Username"
                                 name="username"
-                                rules={[{ required: true, message: 'Insira o seu utilizador.' }]}
+                                rules={[{ required: true, message: 'Insert your username.' }]}
                             >
                                 <Input loading={submitting} />
                             </Form.Item>
 
                             <Form.Item
-                                label="Palavra-passe"
+                                label="Password"
                                 name="password"
-                                rules={[{ required: true, message: 'Insira a palavra-passe.' }]}
+                                rules={[{ required: true, message: 'Insert your password.' }]}
                             >
                                 <Input.Password loading={submitting} />
                             </Form.Item>
 
                             <Form.Item name="remember" valuePropName="checked">
-                                <Checkbox>Relembrar</Checkbox>
+                                <Checkbox>Remember me</Checkbox>
                             </Form.Item>
 
                             <Form.Item>
                                 <Button loading={submitting} type="primary" className="login-btn" htmlType="submit">
-                                    Iniciar Sessão
+                                    Login
                                 </Button>
                             </Form.Item>
 
                             <Form.Item style={{ textAlign: 'center' }}>
-                                <Button type="link" onClick={() => setVisible(!visible)} >Esqueceu-se da palavra passe?</Button>
+                                <Button type="link" onClick={() => setVisible(!visible)} >Did you forgot your password?</Button>
                                 {visible && <RecoverModal onClose={() => { setVisible(false) }} />}
                             </Form.Item>
 
                             <hr />
-                            <span><p>ou</p></span>
+                            <span><p>or</p></span>
                             <Link to="/register">
                                 <Button loading={submitting} type="default" className={"register-btn"}>
-                                    Criar Conta
+                                    Create Account
                             </Button>
                             </Link>
                         </Form>

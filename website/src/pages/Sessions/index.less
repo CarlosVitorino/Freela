@@ -1,15 +1,16 @@
 @import '../../styles/variables.less';
 
-.sessions-layout-content {
-    padding: 20px;
+.sessions { 
+  .content-title .big-title{
+    span:before,  span:after {
+        width: calc((100vw - 450px)/2 - 43px);
+    }
+  }
+  .save-cancel {
+    float: right;
+  }
+} 
 
-   .actions-n-filters {
-
-   }
-   .content-table {
-    text-align: center;
-   }
-}
 
 .editable-cell {
     position: relative;

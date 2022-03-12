@@ -1,0 +1,25 @@
+@import '../../styles/variables.less';
+
+.settings { 
+    .content-title .big-title{
+        span:before,  span:after {
+            width: calc((100vw - 450px)/2 - 40px);
+        }
+    } 
+    .list {
+        overflow-y: scroll;
+        max-height: 300px;
+    }
+
+    .row-wrapper {
+        position: relative;
+
+        .float-button {
+            position: absolute;
+            top: 0;
+            right: 0;
+            margin: 20px;
+        }
+    }
+  
+}

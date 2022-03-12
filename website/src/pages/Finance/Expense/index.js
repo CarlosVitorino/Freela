@@ -15,7 +15,7 @@ export default function Detail(props) {
 
     const [loading, setLoading] = useState(false);
     const [submitting, setSubmitting] = useState(false);
-    const [companiesData, setCompaniesData] = useState(false);
+    const [suppliersData, setSuppliersData] = useState(false);
     const { id } = useParams();
 
     const location = useLocation();
@@ -30,18 +30,18 @@ export default function Detail(props) {
 
 
     useEffect(() => {
-        onFetchProviders();
+        onFetchSuppliers();
     }, [location]);
 
-    const onFetchProviders = () => {
+    const onFetchSuppliers = () => {
         setLoading(true);
         _service({
             method: 'GET',
-            url: 'company',
+            url: 'supplier',
             success: (response) => {
                 setLoading(false);
                 if (response.json.result) {
-                    setCompaniesData(response.json.data);
+                    setSuppliersData(response.json.data);
                 } else {
                     notification["warning"]({
                         message: 'Ocorreu um erro a carregar os dados',
@@ -117,12 +117,10 @@ export default function Detail(props) {
         );
     } else {
         return (
-            <div>
+            <div className="expense">
                 <div className="content-title">
                     <Button className="go-back-btn" type="link" onClick={() => props.history.goBack()}><ArrowLeftOutlined /> Back</Button>
-                </div>
-                <div className="content-title">
-                    <Title level={2}>Expense</Title>
+                    <Title className="big-title"><span>Expense</span></Title>
                 </div>
                 <div className="content-body">
                     <Form
@@ -135,7 +133,7 @@ export default function Detail(props) {
                         onFinishFailed={onFinishFailed}
                     >
                         <Row>
-                            <Col span={12}>
+                            <Col xs={{ span: 24 }} lg={{ span: 12 }}>
                                 <Card className="invoice-card-left" title="Billing Information" bordered={false}>
                                     <Row>
                                         <Col span={12} style={colStyle}>
@@ -151,18 +149,18 @@ export default function Detail(props) {
                                     </Row>
                                 </Card>
                             </Col>
-                            <Col span={12}>
+                            <Col xs={{ span: 24 }} lg={{ span: 12 }}>
                                 <Card className="invoice-card-right" title="Invoice" bordered={false} >
                                     <Row>
                                         <Col span={12} style={colStyle}>
-                                            <Form.Item label="Companies" name="company" rules={[{ required: true }]}>
+                                            <Form.Item label="Supplieres" name="supplier" rules={[{ required: true }]}>
                                                 <Select
-                                                    placeholder="Select company"
+                                                    placeholder="Select supplier"
                                                     allowClear
                                                 >
-                                                    {companiesData ? companiesData.map(companyData => (
-                                                            <Option key={companyData.id}>{companyData.name}</Option>
-                                                        )) : ''}
+                                                    {suppliersData ? suppliersData.map(supplierData => (
+                                                        <Option key={supplierData.id}>{supplierData.name}</Option>
+                                                    )) : ''}
                                                 </Select>
                                             </Form.Item>
                                         </Col>
@@ -176,7 +174,7 @@ export default function Detail(props) {
                             </Col>
                         </Row>
                         <div>
-                            <Form.Item>
+                            <Form.Item >
                                 <Space style={{ marginTop: 16 }}>
                                     <Button type="primary" htmlType="submit" loading={submitting} >
                                         Save

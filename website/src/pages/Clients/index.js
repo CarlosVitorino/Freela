@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Redirect, useLocation, useHistory, Link } from "react-router-dom";
 
-import { Typography, Space, Button, Input, Table, notification, Spin } from 'antd';
+import { Typography, Space, Button, Input, Table, notification, Spin, Card } from 'antd';
 
 import _auth from '@netuno/auth-client';
 import _service from '@netuno/service-client';
+import classNames from 'classnames';
 
 import './index.less';
 
@@ -17,24 +18,24 @@ export default function Clients(props) {
     const [clientsData, setClientsData] = useState(false);
     const [clientsDataFiltered, setClientsDataFiltered] = useState(false);
 
-    const history = useHistory();   
+    const history = useHistory();
     const location = useLocation();
 
     const columns = [
         {
-          title: 'Name',
-          dataIndex: 'name',
-          key: 'name',
+            title: 'Name',
+            dataIndex: 'name',
+            key: 'name',
         },
         {
-          title: 'Email',
-          dataIndex: 'email',
-          key: 'email',
+            title: 'Email',
+            dataIndex: 'email',
+            key: 'email',
         },
         {
-          title: 'Phone Number',
-          dataIndex: 'phone_number',
-          key: 'phone_number',
+            title: 'Phone Number',
+            dataIndex: 'phone_number',
+            key: 'phone_number',
         },
         {
             title: 'Start Date',
@@ -66,7 +67,7 @@ export default function Clients(props) {
             dataIndex: 'default_session_sub_type',
             key: 'default_session_sub_type',
         },
-      ];
+    ];
 
     useEffect(() => {
         onFetchClients();
@@ -102,14 +103,14 @@ export default function Clients(props) {
 
     function filter(e) {
         const value = e.target.value;
-        if(!value) {
+        if (!value) {
             setClientsDataFiltered(clientsData);
         } else {
-            let filteredData = clientsData.filter( (client) => {
+            let filteredData = clientsData.filter((client) => {
                 let exist = false;
                 for (var prop in client) {
                     if (Object.prototype.hasOwnProperty.call(client, prop)) {
-                        if(client[prop].toString().indexOf(value) !== -1) exist = true;
+                        if (client[prop].toString().indexOf(value) !== -1) exist = true;
                     }
                 }
                 return exist;
@@ -129,25 +130,31 @@ export default function Clients(props) {
             );
         } else {
             return (
-                <div className="clients-layout-content">
-                    <div className="actions-n-filters">
-                        <Space style={{ marginBottom: 16 }}>
-                            <Button type="primary" > 
-                                <Link to="detail">Add Client</Link> 
-                            </Button>
-                            <Input placeholder="Search..." onChange={ filter }/>
-                        </Space>
+                <div className="clients">
+                    <div className="content-title">
+                            <Title className="big-title"><span>Clients</span></Title>
                     </div>
-                    <div className="content-table">
-                        <Table 
-                            dataSource={clientsDataFiltered} 
-                            columns={columns} 
-                            onRow={(record, rowIndex) => {
-                                return {
-                                  onClick: event => {history.push(`/detail/${record.id}`);}
-                                };
-                              }}
-                        />
+                    <div className={classNames("content-body", "content-table")}>
+                        <Card >
+                        <div className="actions-n-filters">
+                                <Space style={{ marginBottom: 16 }}>
+                                    <Button type="primary" >
+                                        <Link to="detail">Add Client</Link>
+                                    </Button>
+                                    <Input placeholder="Search..." onChange={filter} />
+                                </Space>
+                            </div>
+                            <Table
+                                dataSource={clientsDataFiltered}
+                                columns={columns}
+                                scroll = {{x:''}}
+                                onRow={(record, rowIndex) => {
+                                    return {
+                                        onClick: event => { history.push(`/detail/${record.id}`); }
+                                    };
+                                }}
+                            />
+                        </Card>
                     </div>
                 </div>
             );

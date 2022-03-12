@@ -3,7 +3,7 @@ const sessionsToDelete = _req.hasKey("toDelete") ? _req.getList("toDelete") : nu
 
 for(const session of sessionsToCreate) {
     _log.info(session.toJSON());
-
+    session.set("client_user_id", _user.id)
 }
 
 if (sessionsToCreate) {

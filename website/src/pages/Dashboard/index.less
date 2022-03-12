@@ -1,7 +1,61 @@
 @import '../../styles/variables.less';
 
-.dashboard-layout-content {
+.dashboard {
+    .content-title .big-title{
+        span:before,  span:after {
+            width: calc((100vw - 450px)/2 - 70px);
+        }
+    } 
+
     .statistic-suffix {
         color: rgba(0, 0, 0, 0.45);
     }
-}
+
+    .card-left {
+        margin-right: 10px;
+        min-height: 220px;    
+    
+        @media screen and (max-width: @mobile-width) {
+            margin-right: 0px;
+        }
+    
+    }
+    
+    .card-right {
+        margin-left: 10px;
+        min-height: 220px;
+    
+        @media screen and (max-width: @mobile-width) {
+            margin-left: 0px;
+            margin: 20px 0;
+    
+        }
+    }
+
+    .empty-dashboard {
+        display: grid;
+        grid-auto-flow: column;
+        gap: 10%;
+        margin: 20px 10px;
+
+        .empty-text {
+            background-color: white;
+            border: 1px solid #f0f0f0;
+            padding: 20px;
+        }
+
+        .empty-data {
+            padding-left: 20px;
+            text-align: center;
+            img {
+                //margin-top: 20px;
+                max-width: 250px;
+        
+                @media screen and (max-width: @mobile-width) {
+                    max-width: 100%;
+                }
+            }
+        }
+    }
+   
+} 

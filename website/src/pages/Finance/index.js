@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Redirect, useLocation, useHistory, Link } from "react-router-dom";
 
-import { Typography, Space, Button, Input, Table, notification, Spin, Popconfirm } from 'antd';
+import { Typography, Space, Button, Input, Table, notification, Spin, Popconfirm, Card, Tooltip } from 'antd';
+import { DeleteFilled, CheckSquareFilled, MinusSquareFilled } from '@ant-design/icons';
 
 import _auth from '@netuno/auth-client';
 import _service from '@netuno/service-client';
+import classNames from 'classnames';
 
 import './index.less';
 
@@ -17,7 +19,7 @@ export default function Finance(props) {
     const [financeData, setFinanceData] = useState(false);
     const [financeDataFiltered, setFinanceDataFiltered] = useState(false);
 
-    const history = useHistory();   
+    const history = useHistory();
     const location = useLocation();
 
     const columns = [
@@ -58,15 +60,25 @@ export default function Finance(props) {
                 financeData.length >= 1 ? (
                     <Space>
                         <Popconfirm title="Are you sure, you want to change the status?" onConfirm={() => handleStatusChange(record)}>
-                            {record.status_code === 'waiting_payment' ? <a>Set as Paid</a> : <a>Cancel Payment</a>}
+                                { record.status_code === 'waiting_payment' ? 
+                                    <Tooltip title="Waiting Payment - click to change">
+                                        <MinusSquareFilled className="action-icon-yellow"/>
+                                    </Tooltip>
+                                    : 
+                                    <Tooltip title="Paid - click to change">
+                                        <CheckSquareFilled className="action-icon-green"/>
+                                    </Tooltip>
+                                }
                         </Popconfirm>
                         <Popconfirm title="Are you sure, you want to DELETE this record?" onConfirm={() => handleDeleteRecord(record)}>
-                            <a>Delete</a>
+                            <Tooltip title="Delete">
+                                <DeleteFilled className="action-icon"/>
+                            </Tooltip>
                         </Popconfirm>
                     </Space>
                 ) : null,
         },
-      ];
+    ];
 
     useEffect(() => {
         onFetchFinance();
@@ -106,7 +118,7 @@ export default function Finance(props) {
             method: 'PUT',
             url: 'finance/toggle',
             data: {
-                "status":  record.status_code === 'waiting_payment' ? 'paid' : 'waiting_payment',
+                "status": record.status_code === 'waiting_payment' ? 'paid' : 'waiting_payment',
                 "invoiceId": record.id
             },
             success: (response) => {
@@ -174,14 +186,14 @@ export default function Finance(props) {
 
     const filter = (e) => {
         const value = e.target.value;
-        if(!value) {
+        if (!value) {
             setFinanceDataFiltered(financeData);
         } else {
-            let filteredData = financeData.filter( (finance) => {
+            let filteredData = financeData.filter((finance) => {
                 let exist = false;
                 for (var prop in finance) {
                     if (Object.prototype.hasOwnProperty.call(finance, prop)) {
-                        if(finance[prop].toString().indexOf(value) !== -1) exist = true;
+                        if (finance[prop].toString().indexOf(value) !== -1) exist = true;
                     }
                 }
                 return exist;
@@ -201,20 +213,29 @@ export default function Finance(props) {
             );
         } else {
             return (
-                <div className="finance-layout-content">
-                    <div className="actions-n-filters">
-                        <Space style={{ marginBottom: 16 }}>
-                            <Button  type="primary" > 
-                                <Link to="/finance/expense">Add Expense</Link> 
-                            </Button>
-                            <Input placeholder="Search..." onChange={ filter }/>
-                        </Space>
+                <div className="finance">
+                    <div className="content-title">
+                        <Title className="big-title"><span>Finance</span></Title>
+ 
                     </div>
-                    <div className="content-table">
-                        <Table 
-                            dataSource={financeDataFiltered} 
-                            columns={columns} 
-                        />
+                    <div className={classNames("content-body", "content-table")}>
+                        <Card >
+                            <div className="actions-n-filters">
+                                <Space style={{ marginBottom: 16 }}>
+                                    <Button type="primary" >
+                                        <Link to="/finance/expense">Add Expense</Link>
+                                    </Button>
+                                    <Input placeholder="Search..." onChange={filter} />
+                                </Space>
+                            </div>
+                            <div className="content-table">
+                                <Table
+                                    dataSource={financeDataFiltered}
+                                    columns={columns}
+                                    scroll = {{x:''}}
+                                />
+                            </div>
+                        </Card>
                     </div>
                 </div>
             );

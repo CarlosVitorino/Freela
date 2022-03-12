@@ -1,12 +1,13 @@
 import React, { useContext, useState, useEffect, useRef } from 'react';
 import { Redirect, withRouter } from "react-router-dom";
 
-import { Typography, Table, Space, Input, InputNumber, Button, Popconfirm, Form, notification, Spin, Select, DatePicker } from 'antd';
-import { PlusOutlined, SaveOutlined, ReloadOutlined, FileTextOutlined } from '@ant-design/icons';
+import { Typography, Table, Space, Input, InputNumber, Button, Popconfirm, Form, notification, Spin, Select, DatePicker, Card, Tooltip } from 'antd';
+import { PlusOutlined, SaveOutlined, ReloadOutlined, FileTextOutlined, DeleteOutlined } from '@ant-design/icons';
 import moment from 'moment'
 
 import _auth from '@netuno/auth-client';
 import _service from '@netuno/service-client';
+import classNames from 'classnames';
 
 import './index.less';
 
@@ -153,7 +154,7 @@ class Session extends React.Component {
                 title: 'Client',
                 dataIndex: 'client_name',
                 key: 'client_name',
-                width: 230,
+                width: 200,
                 inputType: 'select',
                 editable: true,
             },
@@ -161,6 +162,7 @@ class Session extends React.Component {
                 title: 'Date',
                 dataIndex: 'date',
                 key: 'date',
+                width: 150,
                 editable: true,
                 inputType: 'date'
             },
@@ -168,6 +170,7 @@ class Session extends React.Component {
                 title: 'Duration',
                 dataIndex: 'duration',
                 key: 'duration',
+                width: 120,
                 editable: true,
                 inputType: 'number'
             },
@@ -175,6 +178,7 @@ class Session extends React.Component {
                 title: 'Price',
                 dataIndex: 'price',
                 key: 'price',
+                width: 120,
                 editable: true,
                 inputType: 'number'
             },
@@ -182,7 +186,7 @@ class Session extends React.Component {
                 title: 'Type',
                 dataIndex: 'session_type',
                 key: 'session_type',
-                width: 130,
+                width: 150,
                 editable: true,
                 inputType: 'select'
             },
@@ -190,17 +194,20 @@ class Session extends React.Component {
                 title: 'Sub Type',
                 dataIndex: 'session_sub_type',
                 key: 'session_sub_type',
-                width: 130,
+                width: 150,
                 editable: true,
                 inputType: 'select'
             },
             {
                 title: 'operation',
                 dataIndex: 'operation',
+                width: 150,
                 render: (_, record) =>
                     this.state.sessionsDataFiltered.length >= 1 ? (
                         <Popconfirm title="Sure to delete?" onConfirm={() => this.handleDelete(record.key)}>
-                            <a>Delete</a>
+                            <Tooltip title="Delete">
+                                <DeleteOutlined className="action-icon"/>
+                            </Tooltip>
                         </Popconfirm>
                     ) : null,
             },
@@ -214,6 +221,7 @@ class Session extends React.Component {
             sessionSubTypesData: [],
             sessionSubTypesOptions: [],
             selectedSessions: [],
+            isChanged: false,
             loading: false,
             count: 0,
             datesFilter: [],
@@ -239,7 +247,7 @@ class Session extends React.Component {
                 this.setLoading(false);
                 if (response.json.result) {
                     const data = response.json.data;
-                    this.setState({ sessionsData: data, sessionsDataFiltered: data, originalSessionData: data, count: data.length > 0 ? data[data.length - 1].key : 0 });
+                    this.setState({ sessionsData: data, sessionsDataFiltered: data, originalSessionData: data, count: data.length > 0 ? data[data.length - 1].key : 0, isChanged: false });
                 } else {
                     notification["warning"]({
                         message: 'There was an error loading data',
@@ -420,8 +428,10 @@ class Session extends React.Component {
         this.setState({
             sessionsDataFiltered: sessionsDataFiltered.filter((item) => item.key !== key),
             sessionsData: sessionsData.filter((item) => item.key !== key),
+            isChanged: true
         });
     };
+
     handleAdd = () => {
         const { count, sessionsDataFiltered } = this.state;
         const newData = {
@@ -430,8 +440,10 @@ class Session extends React.Component {
         this.setState({
             sessionsDataFiltered: [newData, ...sessionsDataFiltered],
             count: count + 1,
+            isChanged: true
         });
     };
+
     handleSave = (row) => {
         const newDataFiltered = [...this.state.sessionsDataFiltered];
         const newData = [...this.state.sessionsData];
@@ -444,8 +456,8 @@ class Session extends React.Component {
             const tempRow = { ...row };
             const newDate = tempRow.date.format('YYYY-MM-DD');
             row['date'] = newDate;
-        
-        }else if (row.dataIndex === 'session_type') {
+
+        } else if (row.dataIndex === 'session_type') {
             const sessionType = sessionTypesData.find(sessionType => sessionType.value === row.session_type);
             sessionSubTypeOptionsNew = sessionSubTypesData.filter((item) => {
                 return item.type_id == sessionType.id;
@@ -453,7 +465,7 @@ class Session extends React.Component {
             const tempRow = { ...row };
             row['session_type'] = sessionType.label;
         }
-        else if(row.dataIndex === 'session_sub_type') {
+        else if (row.dataIndex === 'session_sub_type') {
             const sessionSubType = sessionSubTypesData.find(sessionSubType => sessionSubType.value === row.session_sub_type);
             row['session_sub_type'] = sessionSubType.label;
         }
@@ -516,7 +528,7 @@ class Session extends React.Component {
         if (typeFilter) {
             newFilteredData = newFilteredData.filter((sessionData) => {
                 const sessionType = sessionTypesData.find(sessionTypeData => sessionTypeData.id == sessionData.type_id);
-                return typeFilter === sessionType.label;
+                return typeFilter === sessionType.value;
             });
         }
         if (clientFilter) {
@@ -548,7 +560,6 @@ class Session extends React.Component {
             this.setState({ selectedSessions: selectedRowKeys })
         }
     };
-
 
     render() {
         const { Title } = Typography;
@@ -609,43 +620,53 @@ class Session extends React.Component {
                 );
             } else {
                 return (
-                    <div className="sessions-layout-content">
-                        <div className="actions-n-filters">
-                            <Space style={{ marginBottom: 16 }}>
-                                <Button type="primary" icon={<PlusOutlined />} onClick={this.handleAdd}>Add Session</Button>
-                                <RangePicker onChange={(dates, dateStrings) => { this.filter(dateStrings, typeFilter, clientFilter, queryFilter); }} />
-                                <Select placeholder="Type filter" allowClear style={{ width: 120 }} onChange={(type) => { this.filter(datesFilter, type, clientFilter, queryFilter); }}>
-                                    {sessionTypesData.map(sessionType => (
-                                        <Option key={sessionType.value}>{sessionType.label}</Option>
-                                    ))}
-                                </Select>
-                                <Select placeholder="Client filter" allowClear style={{ width: 120 }} onChange={(client) => { this.filter(datesFilter, typeFilter, client, queryFilter); }}>
-                                    {clientsData.map(clientData => (
-                                        <Option key={clientData.id}>{clientData.name}</Option>
-                                    ))}
-                                </Select>
-                                <Input placeholder="Search..." onChange={(q) => { this.filter(datesFilter, typeFilter, clientFilter, q.target.value); }} />
-                            </Space>
+                    <div className="sessions">
+                        <div className="content-title">
+                                <Title className="big-title"><span>Sessions</span></Title>   
                         </div>
-                        <div className="content-table">
-                            <Table
-                                components={components}
-                                rowClassName={() => 'editable-row'}
-                                bordered
-                                dataSource={sessionsDataFiltered}
-                                columns={columns}
-                                pagination={{ pageSize: 10 }}
-                                rowSelection={this.rowSelection}
-                            />
-                        </div>
-                        <div className="save-n-reset">
-                            <Space style={{ marginTop: 16 }}>
-                                <Button type="primary" icon={<SaveOutlined />} onClick={this.handlePersistData}>Save</Button>
-                                <Popconfirm title="Any change you made, will be lost, you want to continue?" onConfirm={() => { this.setState({ sessionsDataFiltered: originalSessionData }) }}>
-                                    <Button icon={<ReloadOutlined />}>Reset</Button>
-                                </Popconfirm>
-                                <Button type="primary" icon={<FileTextOutlined />} disabled={!selectedSessions.length} onClick={event => { this.props.history.push({ pathname: '/finance/invoice', ids: selectedSessions }); }}>Create Invoice</Button>
-                            </Space>
+                        <div className={classNames("content-body", "content-table")}>
+                            <Card >
+                            <div className="actions-n-filters">
+                                    <Space style={{ marginBottom: 16 }} wrap>
+                                        <Button type="primary" icon={<PlusOutlined />} onClick={this.handleAdd}>Add Session</Button>
+                                        <RangePicker onChange={(dates, dateStrings) => { this.filter(dateStrings, typeFilter, clientFilter, queryFilter); }} />
+                                        <Select placeholder="Type filter" allowClear style={{ width: 120 }} onChange={(type) => { this.filter(datesFilter, type, clientFilter, queryFilter); }}>
+                                            {sessionTypesData.map(sessionType => (
+                                                <Option key={sessionType.value}>{sessionType.label}</Option>
+                                            ))}
+                                        </Select>
+                                        <Select placeholder="Client filter" allowClear style={{ width: 120 }} onChange={(client) => { this.filter(datesFilter, typeFilter, client, queryFilter); }}>
+                                            {clientsData.map(clientData => (
+                                                <Option key={clientData.id}>{clientData.name}</Option>
+                                            ))}
+                                        </Select>
+                                        <Input placeholder="Search..." onChange={(q) => { this.filter(datesFilter, typeFilter, clientFilter, q.target.value); }} />
+                                    </Space>
+                                    <div className="save-cancel" style={{display:  this.state.isChanged ? 'block' : 'none' }}>
+                                        <Space wrap>
+                                            <Button type="primary" icon={<SaveOutlined />} onClick={this.handlePersistData}>Save</Button>
+                                            <Popconfirm title="Any change you made, will be lost, you want to continue?" onConfirm={() => { this.setState({ sessionsDataFiltered: originalSessionData }) }}>
+                                                <Button icon={<ReloadOutlined />}>Reset</Button>
+                                            </Popconfirm>
+                                        </Space>
+                                    </div>
+                                </div>
+                                <Table
+                                    components={components}
+                                    rowClassName={() => 'editable-row'}
+                                    bordered
+                                    dataSource={sessionsDataFiltered}
+                                    columns={columns}
+                                    pagination={{ pageSize: 10 }}
+                                    rowSelection={this.rowSelection}
+                                    scroll = {{x:''}}
+                                />
+                                <div className="save-n-reset">
+                                    <Space style={{ marginTop: 16 }}>
+                                        <Button type="primary" icon={<FileTextOutlined />} disabled={!selectedSessions.length} onClick={event => { this.props.history.push({ pathname: '/finance/invoice', ids: selectedSessions }); }}>Create Invoice</Button>
+                                    </Space>
+                                </div>
+                            </Card>
                         </div>
                     </div>
                 );

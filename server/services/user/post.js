@@ -14,17 +14,17 @@ if (userEmailExists || usernameExists) {
 } else {
     const dbNetunoGroup = _group.firstByCode("client");
 
-    const clientData = _val.map().set("name", name)
+    const appUserData = _val.map().set("name", name)
         .set("user", username)
         .set("pass", password)
         .set("mail", mail)
         .set("active", true)
         .set("group_id", dbNetunoGroup.getInt("id"));
 
-    const user_id = _user.create(clientData);
+    const user_id = _user.create(appUserData);
 
     _db.insertIfNotExists(
-        'client',
+        'client_user',
         _val.map().set("name", name)
             .set("email", mail)
             .set("client_user_id", user_id)

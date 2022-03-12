@@ -1,15 +1,28 @@
 @import '../../../styles/variables.less';
 
-.client-card-left {
-    margin-right: 10px;
-}
+.client { 
+    .content-title .big-title{
+        span:before,  span:after {
+            width: calc((100vw - 450px)/2 - 30px);
+        }
+    }
 
-.client-card-right {
-    margin-left: 10px;
+    .columns-wrapper{
+        display: flex;
+
+        .two-col {
+            height: 100%;
+          }
+    }
+} 
+
+
+.content-title{
+    margin: 20px 0;
 }
 
 .client-card-big {
-    margin: 20px 0;
+    margin-bottom: 20px;
 }
 
 .switch-client{

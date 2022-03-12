@@ -1,7 +1,8 @@
 @import './variables.less';
+@import './fonts.less';
 
 .page {
-
+  font-family: 'Fira Sans', sans-serif;
   padding-top: @layout-header-height;
   min-height: 100vh;
 
@@ -15,6 +16,16 @@
       }
     }
   }
+
+  .menu-side {
+    background-color: transparent !important;
+    background: url('../images/background.jpg') no-repeat center bottom fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+  }
+
 
   >.ant-layout-sider {
     margin-top: -64px;
@@ -51,28 +62,26 @@
 
       .logo {
         width: 140px;
-        margin: 15px 40px;
+        margin: 15px 30px;
       }
+
+      .login-logo{
+        width: 140px;
+        margin: 15px 0px;        
+      }
+
       .logo-small {
-        width: 30px;
-        margin-left: 25px;
+        width: 40px;
+        margin-left: 20px;
       }
+
       @media screen and (max-width: @mobile-width) {
         max-width: 50%;
       }
     }
   }
 
-  .ant-table {
-    .ant-table-thead > tr > th {
-      background: #5c8052;
-      color: white;
-      font-weight: bold;
-    }
-    .ant-table-tbody > tr > td {
-      background: #91c48338;
-    }
-  }
+
 
 
   .go-back-btn {
@@ -131,15 +140,22 @@
           line-height: @layout-header-height;
           display: inline-block;
           text-align: center;
-    
+
           .logo {
-            width: 160px;
-            margin: 20px 0px;
+            width: 140px;
+            margin: 15px 30px;
           }
+
+          .login-logo{
+            width: 140px;
+            margin: 15px 0px;        
+          }    
+
           .logo-small {
-            width: 30px;
-            margin-left: 25px;
+            width: 40px;
+            margin-left: 20px;
           }
+
           @media screen and (max-width: @mobile-width) {
             max-width: 50%;
           }
@@ -148,11 +164,14 @@
 
       &-content {
         position: relative;
+
         &.auth {
           background-color: #EEEEEE;
-          padding: 40px 0;
+          padding: 20px 0;
+
           @media screen and (max-width: @mobile-width) {
             padding: 20px 0;
+            margin-left: 80px;
           }
         }
       }
@@ -196,7 +215,26 @@
         }
       }
     }
+
+    &-menu-item a {
+      color: rgba(0, 0, 0, 0.65);
+      font-weight: 600;
+    }
+
+    &-table {
+      .ant-table-thead>tr>th {
+        background: #81ad74;
+        color: white;
+        font-weight: bold;
+      }
+
+      .ant-table-tbody>tr>td {
+        background: #91c48338;
+      }
+    }
   }
+
+
 
   .content {
 
@@ -206,16 +244,64 @@
     }
   }
 
+  .big-title {
+    line-height: 0.5;
+    text-align: center;
+    font-family: 'Ultra', serif;
+    color: #4b4848;
+    padding: 20px 10px 10px 10px;
+    margin-bottom: 50px;
+    //background: @primary-color;
+  }
+
+  .big-title span {
+    display: inline-block;
+    position: relative;
+  }
+
+  .big-title span:before,
+  .big-title span:after {
+    content: "";
+    position: absolute;
+    position: absolute;
+    height: 25px;
+    border-bottom: 10px solid #FFE162;
+    border-top: 10px solid @primary-color;
+    top: 0;
+    width: calc((100vw - 367px)/2 - 45px);
+  }
+
+  .big-title span:before {
+    right: 100%;
+    margin-right: 15px;
+    margin-left: 10px;
+
+  }
+
+  .big-title span:after {
+    left: 100%;
+    margin-left: 15px;
+    margin-right: 10px;
+
+  }
+
+  .action-icon {
+    color: @primary-color
+  }
+
+  .action-icon-yellow {
+    color: #ddb718;
+  }
+
+  .action-icon-green {
+    color: #91C483;
+  }
 }
 
-.page-login {
-  background: url('../images/background.jpg') no-repeat center center fixed; 
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-  height: calc(100vh - ((100vw - 1200px)/2) - 22px);
-}
+
+
+
+
 
 #profile\$Menu {
   .ant-btn {

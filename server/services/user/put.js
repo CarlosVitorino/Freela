@@ -4,8 +4,8 @@ const username = _req.getString("username");
 const email = _req.getString("mail");
 const password = _req.getString("password");
 
-const dbClient = _db.queryFirst(`
-    SELECT * FROM client WHERE client_user_id = ?::int
+const db = _db.queryFirst(`
+    SELECT * FROM client_user WHERE client_user_id = ?::int
 `, _val.list().add(_user.id()));
 
 const oldUser = _user.get(_user.id());
@@ -29,7 +29,7 @@ if (password.length > 0) {
 }
 
 _db.update(
-    "client",
+    "client_user",
     dbClient.getInt("id"),
     _val.init()
         .set("name", name)

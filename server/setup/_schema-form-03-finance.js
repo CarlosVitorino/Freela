@@ -93,6 +93,36 @@ _form.createComponentIfNotExists(
 	"26699f0a-2e25-48ee-a092-8d208c4432fe",
 	_val.init()
 	.set("colspan", 0)
+	.set("displayname", "Client User")
+	.set("firebase", "")
+	.set("group_id", 0)
+	.set("height", 0)
+	.set("max", 0)
+	.set("min", 0)
+	.set("name", "client_user_id")
+	.set("notnull", false)
+	.set("primarykey", false)
+	.set("properties", "{\"ALLOW_USER_LOGGED\":{\"default\":\"false\",\"type\":\"BOOLEAN\",\"value\":\"false\"},\"GROUPS\":{\"default\":\"\",\"type\":\"STRING\",\"value\":\"\"},\"GROUPS_MODE\":{\"default\":\"all|exclude|only\",\"type\":\"CHOICE\",\"value\":\"all\"},\"USERS_MODE\":{\"default\":\"all|exclude|only\",\"type\":\"CHOICE\",\"value\":\"all\"},\"USERS\":{\"default\":\"\",\"type\":\"STRING\",\"value\":\"\"}}")
+	.set("rowspan", 0)
+	.set("tdheight", 0)
+	.set("tdwidth", 0)
+	.set("type", "user")
+	.set("uid", "10262a3a-72ec-492d-ab84-c6d60e3a7399")
+	.set("user_id", 0)
+	.set("whenedit", true)
+	.set("whenexport", true)
+	.set("whenfilter", true)
+	.set("whennew", true)
+	.set("whenresult", true)
+	.set("whenview", true)
+	.set("width", 0)
+	.set("x", 1)
+	.set("y", 6)
+)
+_form.createComponentIfNotExists(
+	"26699f0a-2e25-48ee-a092-8d208c4432fe",
+	_val.init()
+	.set("colspan", 0)
 	.set("description", "")
 	.set("displayname", "company")
 	.set("firebase", "")
@@ -118,7 +148,7 @@ _form.createComponentIfNotExists(
 	.set("whenview", true)
 	.set("width", 0)
 	.set("x", 1)
-	.set("y", 11)
+	.set("y", 12)
 )
 _form.createComponentIfNotExists(
 	"26699f0a-2e25-48ee-a092-8d208c4432fe",
@@ -149,7 +179,7 @@ _form.createComponentIfNotExists(
 	.set("whenview", true)
 	.set("width", 0)
 	.set("x", 1)
-	.set("y", 6)
+	.set("y", 7)
 )
 _form.createComponentIfNotExists(
 	"26699f0a-2e25-48ee-a092-8d208c4432fe",
@@ -180,7 +210,7 @@ _form.createComponentIfNotExists(
 	.set("whenview", true)
 	.set("width", 0)
 	.set("x", 1)
-	.set("y", 8)
+	.set("y", 9)
 )
 _form.createComponentIfNotExists(
 	"26699f0a-2e25-48ee-a092-8d208c4432fe",
@@ -211,7 +241,7 @@ _form.createComponentIfNotExists(
 	.set("whenview", true)
 	.set("width", 0)
 	.set("x", 1)
-	.set("y", 10)
+	.set("y", 11)
 )
 _form.createComponentIfNotExists(
 	"26699f0a-2e25-48ee-a092-8d208c4432fe",
@@ -273,7 +303,7 @@ _form.createComponentIfNotExists(
 	.set("whenview", true)
 	.set("width", 0)
 	.set("x", 1)
-	.set("y", 9)
+	.set("y", 10)
 )
 _form.createComponentIfNotExists(
 	"26699f0a-2e25-48ee-a092-8d208c4432fe",
@@ -335,7 +365,7 @@ _form.createComponentIfNotExists(
 	.set("whenview", true)
 	.set("width", 0)
 	.set("x", 1)
-	.set("y", 7)
+	.set("y", 8)
 )
 _form.createComponentIfNotExists(
 	"26699f0a-2e25-48ee-a092-8d208c4432fe",

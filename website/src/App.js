@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Switch, Route, useLocation, Link, Redirect } from "react-router-dom";
 
 import { ConfigProvider, Layout, Menu, Button } from 'antd';
-import { PieChartOutlined, UserOutlined, LogoutOutlined, MenuOutlined, EditOutlined, TeamOutlined, SkinOutlined, WalletOutlined } from '@ant-design/icons';
+import { PieChartOutlined, UserOutlined, LogoutOutlined, MenuOutlined, EditOutlined, TeamOutlined, SkinOutlined, WalletOutlined, SettingOutlined } from '@ant-design/icons';
 import { ReactSVG } from 'react-svg'
 
 import antLocale_ptPT from 'antd/lib/locale/pt_PT';
@@ -20,6 +20,7 @@ import Invoice from './pages/Finance/Invoice';
 import Expense from './pages/Finance/Expense';
 import Finance from './pages/Finance';
 import Detail from './pages/Clients/Detail';
+import Settings from './pages/Settings';
 import RecoveryPage from './pages/Recovery';
 import Profile from './pages/Profile';
 import NotFoundPage from './pages/NotFound';
@@ -43,7 +44,7 @@ export default function App(props) {
   useEffect(() => {
     setHeaderButtonMode(location.pathname);
     setMenu(location.pathname);
-    !logo &&  setLogo(<ReactSVG  className="logo" alt="logo"  src="images/mytime-logo-3.svg" />)
+    setLogo(<ReactSVG  className={classNames( !_auth.isLogged() ? "login-logo": "logo"  )}  alt="logo"  src="images/logo.svg" />)
   }, [location]);
 
   function onLogout() {
@@ -52,18 +53,19 @@ export default function App(props) {
 
   function onCollapse() {
     if(!collapsed) {
-      setLogo(<ReactSVG  className="logo logo-small" alt="logo"  src="images/mytime-logo-mini-3.svg" />)
+      setLogo(<ReactSVG  className="logo logo-small" alt="logo"  src="images/logo-small.svg" />)
     } else {
-      setLogo(<ReactSVG  className="logo" alt="logo"  src="images/mytime-logo-3.svg" />)
+      setLogo(<ReactSVG  className={classNames( !_auth.isLogged() ? "login-logo": "logo"  )} alt="logo"  src="images/logo.svg" />)
     }
     setCollapsed(!collapsed)
   }
 
   return (
     <ConfigProvider locale={antLocale_ptPT}>
-      <Layout className={'page ' + classNames({ 'auth ': _auth.isLogged()}) + classNames({ 'collapsed ': collapsed }, !_auth.isLogged() && ' page-login') }>
+      <Layout className={'page ' + classNames({ 'auth ': _auth.isLogged(),  'collapsed ': collapsed }, !_auth.isLogged() && ' page-login') }>
         {_auth.isLogged() &&
           <Sider
+            className="menu-side"
             onBreakpoint={mobile => {
               setSideMenuMobileMode(mobile)
             }}
@@ -93,6 +95,9 @@ export default function App(props) {
               </Menu.Item>              
               <Menu.Item key="/finance" icon={<WalletOutlined />}>
                 <Link to="/finance">Finance</Link>
+              </Menu.Item>
+              <Menu.Item key="/settings" icon={<SettingOutlined />}>
+                <Link to="/settings">Settings</Link>
               </Menu.Item>
             </Menu>
           </Sider>
@@ -146,6 +151,7 @@ export default function App(props) {
               <Route path="/finance/invoice" component={Invoice} />
               <Route path="/finance/expense" component={Expense} />
               <Route path="/finance" component={Finance} />
+              <Route path="/settings" component={Settings} />
               <Route path="/profile" component={Profile} />
               <Route path="/login" component={LoginPage} />
               <Route path="/register" component={RegisterPage} />

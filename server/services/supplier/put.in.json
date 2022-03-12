@@ -1,0 +1,7 @@
+{
+    "summary": "Save Data.",
+    "description": "",
+    "security": [
+        { "BearerAuth": [] }
+    ]
+}

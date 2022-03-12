@@ -22,8 +22,6 @@ module.exports = override(
                 '@border-radius-base': '2px',// major border radius
                 '@border-color-base': '#d9d9d9',// major border color
                 '@box-shadow-base': '0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 6px 16px 0 rgba(0, 0, 0, 0.08) 0 9px 28px 8px rgba(0, 0, 0, 0.05)', // major shadow for layers
-                '@table-body-sort-bg': '#91C483',
-                '@table-body-row-bg': '#91c48338',
                 '@layout-body-background': 'transparent',
                 '@layout-footer-background': '#EFF8FF',
                 '@layout-header-background': '#FFFFFF',

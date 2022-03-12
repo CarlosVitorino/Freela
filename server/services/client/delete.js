@@ -1,21 +1,16 @@
-const id = _req.getString("id") 
+const id = _req.getInt("id") 
 
+const resultFinance = _db.execute(`
+delete from finance where client_id = ? and client_user_id = ?::int
+`, _val.list().add(id).add(_user.id));
 
-const resultFinance = _db.delete(
-    "finance", 
-    _val.map().set(
-        "where", _val.map().set("client_id", id)
-    )
-);
+const resultSession = _db.execute(`
+delete from session where client_id = ? and client_user_id = ?::int
+`, _val.list().add(id).add(_user.id));
 
-const resultSession = _db.delete(
-    "session", 
-    _val.map().set(
-        "where", _val.map().set("client_id", id)
-    )
-);
-
-const resultClient = _db.delete("client", id);
+const resultClient = _db.execute(`
+delete from client where id = ? and client_user_id = ?::int
+`, _val.list().add(id).add(_user.id));
 
 const data = _val.map().set("resultFinance", resultSession).set("resultFinance", resultFinance).set("resultClient", resultClient)
 

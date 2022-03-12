@@ -1,7 +1,24 @@
 @import '../../styles/variables.less';
 
-.ant-layout, .ant-layout-sider, .login-page{
+.page-login{
     background-color: transparent !important;
+    background: url('../../images/background.jpg') no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+.ant-menu-item-only-child {
+    background-color: white;
+
+}
+.ant-menu, .ant-layout-header {
+    background-color: transparent;
+}
+
+.ant-menu, .ant-layout-header.auth {
+    background-color: white;
 }
 
   
@@ -30,7 +47,7 @@
             p {
                 font-size: 14px !important;
                 padding: 0 10px;
-                background-color: @layout-body-background;
+                background-color: #FFFFFF;
                 display: inline-block;
             }
         }

@@ -38,14 +38,14 @@ export default function Register(props) {
             success: (response) => {
                 if (response.json.result) {
                     notification["success"]({
-                        message: 'Conta Criada',
-                        description: 'A conta foi criada com sucesso, pode iniciar sessão.',
+                        message: 'Account Created',
+                        description: 'The account has been successfully created, you can log in now.',
                     });
                     setSubmitting(false);
                     setReady(true);
                 } else {
                     notification["warning"]({
-                        message: 'Utilizador existente',
+                        message: 'This user already exists',
                         description: response.json.error,
                     });
                     setSubmitting(false);
@@ -54,8 +54,8 @@ export default function Register(props) {
             fail: () => {
                 setSubmitting(false);
                 notification["error"]({
-                    message: 'Erro na Criação de Conta',
-                    description: 'Não foi possível criar a conta, contacte-nos através do chat de suporte.',
+                    message: 'Account Creation Error',
+                    description: 'Unable to create the account, please contact us to try again after doing the back flip.',
                 });
             }
         });
@@ -75,10 +75,10 @@ export default function Register(props) {
             <Layout>
                 <Content className="register-container">
                     <div className="content-title">
-                        <Title>Criar conta.</Title>
+                        <Title>Create Account.</Title>
                     </div>
                     <div className="content-body">
-                        <p>Crie uma conta para poder aceder à sua área reservada.</p>
+                        <p>Create an account to access your reserved area.</p>
                         <Form
                             ref={registerForm}
                             layout="vertical"
@@ -91,18 +91,18 @@ export default function Register(props) {
                                 label="Nome"
                                 name="name"
                                 rules={[
-                                    { required: true, message: 'Insira o seu nome.' },
-                                    { type: 'string', message: 'Nome inválido, apenas letras minúsculas e maiúsculas.', pattern: "^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$" }
+                                    { required: true, message: 'Enter your name.' },
+                                    { type: 'string', message: 'Invalid name, only lower case and upper case letters supported.', pattern: "^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$" }
                                 ]}
                             >
                                 <Input disabled={submitting} maxLength={25} />
                             </Form.Item>
                             <Form.Item
-                                label="Nome de Utilizador"
+                                label="Username"
                                 name="username"
                                 rules={[
-                                    { required: true, message: 'Insira o seu nome de utilizador.' },
-                                    { type: 'string', message: 'Utilizador inválido, apenas letras minúsculas e números.', pattern: '^[a-z0-9]{1,25}$' }
+                                    { required: true, message: 'Enter your username.' },
+                                    { type: 'string', message: 'Invalid name, only lower case and upper case letters supported.', pattern: '^[a-z0-9]{1,25}$' }
                                 ]}
                             >
                                 <Input disabled={submitting} maxLength={25} />
@@ -111,34 +111,34 @@ export default function Register(props) {
                                 label="E-mail"
                                 name="mail"
                                 rules={[
-                                    { type: 'email', message: 'O e-mail inserido não é válido.' },
-                                    { required: true, message: 'Insira o e-mail.' }
+                                    { type: 'email', message: 'The e-mail entered is not valid.' },
+                                    { required: true, message: 'Insert email.' }
                                 ]}
                             >
                                 <Input disabled={submitting} maxLength={250} />
                             </Form.Item>
                             <Form.Item
-                                label="Palavra-passe"
+                                label="Password"
                                 name="password"
                                 rules={[
-                                    { required: true, message: 'Insira a palavra-passe.' },
-                                    { type: 'string', message: 'Palavra-Passe deverá ter entre 8 a 25 caracteres.', min: 8, max: 25 },
+                                    { required: true, message: 'Enter the password.' },
+                                    { type: 'string', message: 'Password should be between 8 to 25 characters.', min: 8, max: 25 },
                                 ]}
                             >
                                 <PasswordInput disabled={submitting} maxLength={25} />
                             </Form.Item>
                             <Form.Item
-                                label="Confirmar a Palavra-passe"
+                                label="Confirm Password"
                                 name="password_confirm"
                                 rules={[
                                     { required: true, message: 'Insira a confirmação da palavra-passe.' },
-                                    { type: 'string', message: 'Palavra-Passe deverá ter entre 8 a 25 caracteres.', min: 8, max: 25 },
+                                    { type: 'string', message: 'Password should be between 8 to 25 characters.', min: 8, max: 25 },
                                     ({ getFieldValue }) => ({
                                         validator(_, value) {
                                             if (!value || getFieldValue('password') === value) {
                                                 return Promise.resolve();
                                             }
-                                            return Promise.reject('As palavras-passes não são iguais.');
+                                            return Promise.reject('The passwords are not the same.');
                                         },
                                     })
                                 ]}
@@ -147,14 +147,14 @@ export default function Register(props) {
                             </Form.Item>
                             <Form.Item>
                                 <Button type="primary" htmlType="submit" loading={submitting}>
-                                    Criar Conta
+                                    Create Account
                                     </Button>
                             </Form.Item>
                         </Form>
                     </div>
                 </Content>
                 <Sider width={'50%'}>
-                    <span className="helper" /><img alt="sider-register" src={"/images/sider-register.png"} />
+                    <span className="helper" /><img alt="sider-register" src={"/images/login.png"} />
                 </Sider>
             </Layout>
         );

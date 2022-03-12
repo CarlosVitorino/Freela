@@ -2,7 +2,7 @@ let response = _val.map();
 
 const dbClient = _db.queryFirst(`
   select * 
-  from client
+  from client_user
   where recovery_key = ?
     and recovery_limit >= current_timestamp
 `, _req.getString("key"));
