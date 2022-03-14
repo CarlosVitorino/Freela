@@ -4,6 +4,7 @@ const clients = _db.query(`
     LEFT JOIN session_type ON client.default_session_type_id = session_type.id
     LEFT JOIN session_sub_type ON client.default_session_sub_type_id = session_sub_type.id
     WHERE client.client_user_id = ?::int
+    ORDER BY client.name;
 `, _val.list().add(_user.id));
     
 _log.debug(`user id ${_user.id}`);

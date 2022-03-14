@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useLocation } from "react-router-dom";
 import { ArrowLeftOutlined } from '@ant-design/icons';
-import { Typography, Form, Table, DatePicker, Button, notification, Spin, Select, Row, Col, Card, Space } from 'antd';
-import moment from 'moment'
 import _service from '@netuno/service-client';
-
+import { Button, Card, Col, DatePicker, Form, notification, Row, Select, Space, Spin, Table, Typography } from 'antd';
+import moment from 'moment';
+import React, { useEffect, useRef, useState } from 'react';
+import { useLocation } from "react-router-dom";
 import './index.less';
+
 
 const { Title } = Typography;
 const { Text } = Typography;
@@ -127,12 +127,12 @@ export default function Invoice(props) {
 
     const onFinish = (values) => {
         setSubmitting(true);
-
+        const total_amount = JSON.parse(JSON.stringify(totalValue));
         values['pay_day'] = values['pay_day'].format('YYYY-MM-DD');
         values['created_at'] = moment().format('YYYY-MM-DD');
         values['billing_period'] = values['billing_period'][0].format('YYYY-MM-DD') + " - " + values['billing_period'][1].format('YYYY-MM-DD');
         values['sessions'] = JSON.stringify(location.ids);
-        values['total_amount'] = Number(totalValue.replace(/\€/g, ''));
+        values['total_amount'] = Number(total_amount.replace(/\€/g, ''));
 
         _service({
             method: 'PUT',

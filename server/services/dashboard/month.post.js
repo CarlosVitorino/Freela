@@ -16,7 +16,7 @@ const totalNewDuration = totalNewDb ? totalNewDb.getFloat("duration") : 0;
 const totalLast = totalLastDb ? totalLastDb.getFloat("money") : 0;
 
 // Estimate Month Money
-const estimatedMonthMoneyDb = _db.queryFirst(`SELECT SUM(sessions_per_month * default_price) as estimated FROM client WHERE active = true AND client_user_id = ${_user.id};;`)
+const estimatedMonthMoneyDb = _db.queryFirst(`SELECT SUM(sessions_per_month * default_price) as estimated FROM client WHERE active = true AND client_user_id = ${_user.id};`)
 const estimatedMonthMoney = estimatedMonthMoneyDb ? estimatedMonthMoneyDb.getFloat("estimated") : 0;
 const estimatedMoneyLeft = (estimatedMonthMoney / daysInMonth) * daysUntilEndOfMonth;
 const particalEstimatedMonthMoney = totalNewMoney + estimatedMoneyLeft;
@@ -34,12 +34,12 @@ const invoicesPaidDb = _db.queryFirst(`SELECT SUM(1) as money
 const invoicesDb = _db.queryFirst(`SELECT SUM(1) as money FROM finance WHERE client_user_id = ${_user.id};`)
 
 
-const received = receivedDb ? receivedDb.getFloat("money") : 0;
+const received = receivedDb && receivedDb > 0? receivedDb.getFloat("money") : 0;
 const paid = paidDb ? paidDb.getFloat("money") : 0;
-const receivedLast = receivedLastDb ? receivedLastDb.getFloat("money") : 0;
-const paidLast = paidLastDb ? paidLastDb.getFloat("money") : 0;
-const invoicesPaid = invoicesPaidDb ? invoicesPaidDb.getFloat("money") : 0;
-const invoices = invoicesDb ? invoicesDb.getFloat("money") : 0;
+const receivedLast = receivedLastDb  && receivedLastDb > 0 ? receivedLastDb.getFloat("money") : 0;
+const paidLast = paidLastDb  ? paidLastDb.getFloat("money") : 0;
+const invoicesPaid = invoicesPaidDb  ? invoicesPaidDb.getFloat("money") : 0;
+const invoices = invoicesDb  && invoicesDb > 0 ? invoicesDb.getFloat("money") : 0;
 
 
 const diffInvoice = (received + paid) - (receivedLast + paidLast);
@@ -49,6 +49,12 @@ data.set("totalMoney", totalNewMoney);
 data.set("totalTime", totalNewDuration);
 data.set("diffMoney", totalNewMoney - totalLast) ;
 data.set("estimatedMoney", particalEstimatedMonthMoney) ;
+
+//debug data
+data.set("estimatedMonthMoney", estimatedMonthMoney) ;
+data.set("daysInMonth", daysInMonth) ;
+data.set("daysUntilEndOfMonth", daysUntilEndOfMonth) ;
+// end of debug data
 
 data.set("received", received) ;
 data.set("paid", paid) ;

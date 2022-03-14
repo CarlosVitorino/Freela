@@ -482,7 +482,8 @@ class Session extends React.Component {
     handleClientChange = (row) => {
         const newDataFiltered = [...this.state.sessionsDataFiltered];
         const newData = [...this.state.sessionsData];
-        let { clientsData, sessionTypesData, sessionSubTypesData } = this.state;
+        let { clientsData, sessionTypesData, sessionSubTypesData, sessionSubTypesOptions } = this.state;
+        let sessionSubTypeOptionsNew = [];
 
         const index = newDataFiltered.findIndex((item) => row.key === item.key);
         let item = newDataFiltered[index];
@@ -503,9 +504,14 @@ class Session extends React.Component {
         newDataFiltered.splice(index, 1, { ...item, ...row });
         newData.find((item) => row.key === item.key) ? newData.splice(index, 1, { ...item, ...row }) : newData.splice(index, 0, { ...item, ...row });
 
+        sessionSubTypeOptionsNew = sessionSubTypesData.filter((item) => {
+            return item.type_id === (sessionType ? sessionType.id : client.default_session_type_id);
+        });
+
         this.setState({
             sessionsDataFiltered: newDataFiltered,
-            sessionsData: newData
+            sessionsData: newData,
+            sessionSubTypesOptions: (sessionSubTypeOptionsNew ? sessionSubTypeOptionsNew : sessionSubTypesOptions)
         });
     }
 

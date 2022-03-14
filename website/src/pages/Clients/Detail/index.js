@@ -52,6 +52,7 @@ export default function Detail(props) {
                     }
                     response.json.data[0].is_company && setIsCompany(true);
                     setActive(data['active']);
+                    handleTypeChange(response.json.data[0].default_session_type)
                     clientForm.current.setFieldsValue(data);
                 } else {
                     notification["warning"]({

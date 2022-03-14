@@ -55,7 +55,7 @@ _form.createComponentIfNotExists(
 	.set("whenview", true)
 	.set("width", 0)
 	.set("x", 1)
-	.set("y", 6)
+	.set("y", 9)
 )
 _form.createComponentIfNotExists(
 	"0028953a-b610-4e37-9f25-87bdad2e37dd",
@@ -86,7 +86,7 @@ _form.createComponentIfNotExists(
 	.set("whenview", true)
 	.set("width", 0)
 	.set("x", 1)
-	.set("y", 8)
+	.set("y", 11)
 )
 _form.createComponentIfNotExists(
 	"0028953a-b610-4e37-9f25-87bdad2e37dd",
@@ -117,7 +117,7 @@ _form.createComponentIfNotExists(
 	.set("whenview", true)
 	.set("width", 0)
 	.set("x", 1)
-	.set("y", 14)
+	.set("y", 17)
 )
 _form.createComponentIfNotExists(
 	"0028953a-b610-4e37-9f25-87bdad2e37dd",
@@ -148,7 +148,7 @@ _form.createComponentIfNotExists(
 	.set("whenview", true)
 	.set("width", 0)
 	.set("x", 1)
-	.set("y", 13)
+	.set("y", 16)
 )
 _form.createComponentIfNotExists(
 	"0028953a-b610-4e37-9f25-87bdad2e37dd",
@@ -210,7 +210,37 @@ _form.createComponentIfNotExists(
 	.set("whenview", true)
 	.set("width", 0)
 	.set("x", 1)
-	.set("y", 15)
+	.set("y", 18)
+)
+_form.createComponentIfNotExists(
+	"0028953a-b610-4e37-9f25-87bdad2e37dd",
+	_val.init()
+	.set("colspan", 0)
+	.set("displayname", "Legal Name")
+	.set("firebase", "")
+	.set("group_id", 0)
+	.set("height", 0)
+	.set("max", 0)
+	.set("min", 0)
+	.set("name", "legal_name")
+	.set("notnull", false)
+	.set("primarykey", false)
+	.set("properties", "{\"MASK_REVERSE\":{\"default\":\"false\",\"type\":\"BOOLEAN\",\"value\":\"false\"},\"MASK_SELECTONFOCUS\":{\"default\":\"false\",\"type\":\"BOOLEAN\",\"value\":\"false\"},\"MASK\":{\"default\":\"\",\"type\":\"STRING\",\"value\":\"\"}}")
+	.set("rowspan", 0)
+	.set("tdheight", 0)
+	.set("tdwidth", 0)
+	.set("type", "text")
+	.set("uid", "b5f2ac23-5f26-43fb-8a16-16c5f99a22e1")
+	.set("user_id", 0)
+	.set("whenedit", true)
+	.set("whenexport", true)
+	.set("whenfilter", true)
+	.set("whennew", true)
+	.set("whenresult", true)
+	.set("whenview", true)
+	.set("width", 0)
+	.set("x", 1)
+	.set("y", 4)
 )
 _form.createComponentIfNotExists(
 	"0028953a-b610-4e37-9f25-87bdad2e37dd",
@@ -272,7 +302,7 @@ _form.createComponentIfNotExists(
 	.set("whenview", true)
 	.set("width", 0)
 	.set("x", 1)
-	.set("y", 10)
+	.set("y", 13)
 )
 _form.createComponentIfNotExists(
 	"0028953a-b610-4e37-9f25-87bdad2e37dd",
@@ -303,7 +333,7 @@ _form.createComponentIfNotExists(
 	.set("whenview", true)
 	.set("width", 0)
 	.set("x", 1)
-	.set("y", 7)
+	.set("y", 10)
 )
 _form.createComponentIfNotExists(
 	"0028953a-b610-4e37-9f25-87bdad2e37dd",
@@ -334,7 +364,7 @@ _form.createComponentIfNotExists(
 	.set("whenview", true)
 	.set("width", 0)
 	.set("x", 1)
-	.set("y", 4)
+	.set("y", 5)
 )
 _form.createComponentIfNotExists(
 	"0028953a-b610-4e37-9f25-87bdad2e37dd",
@@ -365,7 +395,7 @@ _form.createComponentIfNotExists(
 	.set("whenview", true)
 	.set("width", 0)
 	.set("x", 1)
-	.set("y", 5)
+	.set("y", 7)
 )
 _form.createComponentIfNotExists(
 	"0028953a-b610-4e37-9f25-87bdad2e37dd",
@@ -396,7 +426,7 @@ _form.createComponentIfNotExists(
 	.set("whenview", true)
 	.set("width", 0)
 	.set("x", 1)
-	.set("y", 9)
+	.set("y", 12)
 )
 _form.createComponentIfNotExists(
 	"0028953a-b610-4e37-9f25-87bdad2e37dd",
@@ -427,7 +457,7 @@ _form.createComponentIfNotExists(
 	.set("whenview", true)
 	.set("width", 0)
 	.set("x", 1)
-	.set("y", 12)
+	.set("y", 15)
 )
 _form.createComponentIfNotExists(
 	"0028953a-b610-4e37-9f25-87bdad2e37dd",
@@ -458,7 +488,7 @@ _form.createComponentIfNotExists(
 	.set("whenview", true)
 	.set("width", 0)
 	.set("x", 1)
-	.set("y", 11)
+	.set("y", 14)
 )
 _form.createComponentIfNotExists(
 	"0028953a-b610-4e37-9f25-87bdad2e37dd",
@@ -490,4 +520,64 @@ _form.createComponentIfNotExists(
 	.set("width", 0)
 	.set("x", 1)
 	.set("y", 2)
+)
+_form.createComponentIfNotExists(
+	"0028953a-b610-4e37-9f25-87bdad2e37dd",
+	_val.init()
+	.set("colspan", 0)
+	.set("displayname", "VAT number")
+	.set("firebase", "")
+	.set("group_id", 0)
+	.set("height", 0)
+	.set("max", 0)
+	.set("min", 0)
+	.set("name", "vat")
+	.set("notnull", false)
+	.set("primarykey", false)
+	.set("properties", "{\"MASK_REVERSE\":{\"default\":\"false\",\"type\":\"BOOLEAN\",\"value\":\"false\"},\"MASK_SELECTONFOCUS\":{\"default\":\"false\",\"type\":\"BOOLEAN\",\"value\":\"false\"},\"MASK\":{\"default\":\"\",\"type\":\"STRING\",\"value\":\"\"}}")
+	.set("rowspan", 0)
+	.set("tdheight", 0)
+	.set("tdwidth", 0)
+	.set("type", "text")
+	.set("uid", "68b2947e-a4a2-40fa-9957-99673cd5051a")
+	.set("user_id", 0)
+	.set("whenedit", true)
+	.set("whenexport", true)
+	.set("whenfilter", true)
+	.set("whennew", true)
+	.set("whenresult", true)
+	.set("whenview", true)
+	.set("width", 0)
+	.set("x", 1)
+	.set("y", 6)
+)
+_form.createComponentIfNotExists(
+	"0028953a-b610-4e37-9f25-87bdad2e37dd",
+	_val.init()
+	.set("colspan", 0)
+	.set("displayname", "website")
+	.set("firebase", "")
+	.set("group_id", 0)
+	.set("height", 0)
+	.set("max", 0)
+	.set("min", 0)
+	.set("name", "website")
+	.set("notnull", false)
+	.set("primarykey", false)
+	.set("properties", "{\"MASK_REVERSE\":{\"default\":\"false\",\"type\":\"BOOLEAN\",\"value\":\"false\"},\"MASK_SELECTONFOCUS\":{\"default\":\"false\",\"type\":\"BOOLEAN\",\"value\":\"false\"},\"MASK\":{\"default\":\"\",\"type\":\"STRING\",\"value\":\"\"}}")
+	.set("rowspan", 0)
+	.set("tdheight", 0)
+	.set("tdwidth", 0)
+	.set("type", "text")
+	.set("uid", "bd8d9cb6-9a73-4daa-9170-6ef4b624bdde")
+	.set("user_id", 0)
+	.set("whenedit", true)
+	.set("whenexport", true)
+	.set("whenfilter", true)
+	.set("whennew", true)
+	.set("whenresult", true)
+	.set("whenview", true)
+	.set("width", 0)
+	.set("x", 1)
+	.set("y", 8)
 )

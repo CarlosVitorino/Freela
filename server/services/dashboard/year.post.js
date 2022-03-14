@@ -17,11 +17,12 @@ const data = _val.map();
  * */
 
 const dataByMonth = _db.query(`
-    SELECT TO_CHAR(date_trunc('month', date), 'Month') AS month , session_type.label AS type, sum(price) as revenue
+    SELECT TO_CHAR(date_trunc('month', date), 'Month') AS month, date_trunc('month', date) AS month_no, session_type.label AS type, sum(price) as revenue
     FROM session
     INNER JOIN session_type on session.type_id = session_type.id
     WHERE session.client_user_id = ${_user.id} 
-    GROUP BY month, type;`);
+    GROUP BY month, month_no, type
+	ORDER BY month_no;`);
 
 
 const top5Clients = _db.query(`
