@@ -1,10 +1,13 @@
 const moment = require('moment');
 const startOfMonth = moment().startOf('month').format('YYYY-MM-DD');
 const endOfMonth   = moment().endOf('month').format('YYYY-MM-DD');
+const startOfYear = moment().startOf('year').format('YYYY-MM-DD');
+const endOfYear   = moment().endOf('year').format('YYYY-MM-DD');
 const startOfLastMonth = moment().subtract(1,'months').startOf('month').format('YYYY-MM-DD');
 const endOfLastMonth   = moment().subtract(1,'months').endOf('month').format('YYYY-MM-DD');
 const daysUntilEndOfMonth = moment().endOf('month').diff(moment(), 'days');
 const daysInMonth = moment().daysInMonth();
+const daysPassFromStartOfYear = moment().diff(moment().startOf('year'), 'days');
 
 const data = _val.map();
 
@@ -17,8 +20,18 @@ const totalLast = totalLastDb ? totalLastDb.getFloat("money") : 0;
 
 // Estimate Month Money
 const estimatedMonthMoneyDb = _db.queryFirst(`SELECT SUM(sessions_per_month * default_price) as estimated FROM client WHERE active = true AND client_user_id = ${_user.id};`)
+
+//Atendance Calcule - To consider in Estimate Month Money value
+const sessionsDb = _db.queryFirst(`SELECT SUM(price) as money, SUM(duration) as duration, SUM(1) as sessions FROM session WHERE date BETWEEN '${startOfYear}' AND '${endOfYear}' AND client_user_id = ${_user.id}`)
+const sessions = sessionsDb ? sessionsDb.getFloat("sessions") : 0;
+const sessionsPerMonthDb = _db.queryFirst(`SELECT SUM(sessions_per_month) as sessions_per_month FROM client WHERE client_user_id = ${_user.id};`)
+const sessionsPerMonth = sessionsPerMonthDb.getInt('sessions_per_month')
+const sessionsPerDay = daysPassFromStartOfYear ? sessions / daysPassFromStartOfYear : 0;
+const expectedSessionsPerDay = sessionsPerMonth / (365/12)
+const atendance = expectedSessionsPerDay ? (sessionsPerDay / expectedSessionsPerDay) : 0;
+
 const estimatedMonthMoney = estimatedMonthMoneyDb ? estimatedMonthMoneyDb.getFloat("estimated") : 0;
-const estimatedMoneyLeft = (estimatedMonthMoney / daysInMonth) * daysUntilEndOfMonth;
+const estimatedMoneyLeft = ((estimatedMonthMoney * atendance) / daysInMonth) * daysUntilEndOfMonth;
 const particalEstimatedMonthMoney = totalNewMoney + estimatedMoneyLeft;
 
 // Received/Spended
@@ -51,6 +64,7 @@ data.set("diffMoney", totalNewMoney - totalLast) ;
 data.set("estimatedMoney", particalEstimatedMonthMoney) ;
 
 //debug data
+data.set("atendance", atendance) ;
 data.set("estimatedMonthMoney", estimatedMonthMoney) ;
 data.set("daysInMonth", daysInMonth) ;
 data.set("daysUntilEndOfMonth", daysUntilEndOfMonth) ;
