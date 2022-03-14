@@ -29,6 +29,10 @@ jobs:
       - name: Install 🔧
         run: npm install
         working-directory: ./website
+        
+      - name: Prepare
+        run: cp src/config/_production_config.json src/config/config.json
+        working-directory: ./website
 
       #- name: Lint 🧐
       #  run: npm run lint
