@@ -259,7 +259,7 @@ export default function Dashboard(props) {
                                         <Statistic title="Received" value={monthData.received} precision={2} suffix="€" loading={monthLoading} />
                                     </Col>
                                     <Col span={12} style={colStyle}>
-                                        <Statistic title="Spent" value={monthData.paid * -1} precision={2} suffix="€" loading={monthLoading} />
+                                        <Statistic title="Spend" value={monthData.paid * -1} precision={2} suffix="€" loading={monthLoading} />
                                     </Col>
                                     <Col span={12} style={colStyle}>
                                         <Statistic title="Total Invoice Progress" value={`${monthData.invoicesPaid}/${monthData.invoices}`} suffix="invoices" loading={monthLoading} />
@@ -282,7 +282,7 @@ export default function Dashboard(props) {
                     <Row {...layout}>
                         <Col xs={{ span: 24 }} lg={{ span: 24 }} style={colStyle}>
                             <Card>
-                                <Title level={4}>Revenie by Month</Title>
+                                <Title level={4}>Revenue by Month</Title>
                                 <Column {...configColumn} />
                             </Card>
                         </Col>
@@ -319,10 +319,10 @@ export default function Dashboard(props) {
                                         <Statistic title="Atendance" value={yearData.atendance} suffix="%" loading={anualLoading} />
                                     </Col>
                                     <Col span={12} style={colStyle}>
-                                        <Statistic title="Medium Price/Hour" value={yearData.mediumPriceHour} precision={2} suffix="€" loading={anualLoading} />
+                                        <Statistic title="Average Price/Hour" value={yearData.mediumPriceHour} precision={2} suffix="€" loading={anualLoading} />
                                     </Col>
                                     <Col span={12} style={colStyle}>
-                                        <Statistic title="Medium Session Duration" value={moment.duration(yearData.mediumSessionDuration, "minutes").minutes()} suffix="min" loading={anualLoading} />
+                                        <Statistic title="Average Session Duration" value={moment.duration(yearData.mediumSessionDuration, "minutes").minutes()} suffix="min" loading={anualLoading} />
                                     </Col>
 
                                 </Row>
@@ -338,7 +338,7 @@ export default function Dashboard(props) {
                         </Col>
                         <Col xs={{ span: 24 }} lg={{ span: 12 }} style={colStyle}>
                             <Card className="card-right">
-                                <Title level={4}>Top 5 Clients</Title>
+                                <Title level={4}>Clients/ Revenue</Title>
                                 <Pie {...configPie} />
                             </Card>
                         </Col>
