@@ -26,6 +26,9 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Navigate
+        run: cd ./website
+        
       - name: Install 🔧
         run: npm install
 
