@@ -26,17 +26,18 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Navigate
-        run: cd ./website
-        
       - name: Install 🔧
         run: npm install
+        working-directory: ./website
 
       #- name: Lint 🧐
       #  run: npm run lint
+      #  working-directory: ./website
 
       - name: Build 🏗️
         run: npm run build
-
+        working-directory: ./website
+        
       #- name: Test 🚨
       #  run: npm test
+      #  working-directory: ./website
