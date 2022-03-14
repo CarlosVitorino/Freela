@@ -30,7 +30,8 @@ const top5Clients = _db.query(`
     FROM session
     INNER JOIN client on session.client_id = client.id
     WHERE session.client_user_id = ${_user.id} 
-    GROUP BY client;`);
+    GROUP BY client
+    ORDER BY amount;`);
 
 const sessionsDb = _db.queryFirst(`SELECT SUM(price) as money, SUM(duration) as duration, SUM(1) as sessions FROM session WHERE date BETWEEN '${startOfYear}' AND '${endOfYear}' AND client_user_id = ${_user.id}`)
 const paidDb = _db.queryFirst(`SELECT SUM(total_amount) as money FROM finance WHERE total_amount < 0 AND paid_at BETWEEN '${startOfYear}' AND '${endOfYear}'  AND client_user_id = ${_user.id};`)
