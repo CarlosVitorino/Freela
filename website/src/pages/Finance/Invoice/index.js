@@ -132,7 +132,8 @@ export default function Invoice(props) {
         values['created_at'] = moment().format('YYYY-MM-DD');
         values['billing_period'] = values['billing_period'][0].format('YYYY-MM-DD') + " - " + values['billing_period'][1].format('YYYY-MM-DD');
         values['sessions'] = JSON.stringify(location.ids);
-        values['total_amount'] = Number(total_amount.replace('€', ''));
+        const valueStr = total_amount.replace('€', '');
+        values['total_amount'] = Number(valueStr);
 
         _service({
             method: 'PUT',
