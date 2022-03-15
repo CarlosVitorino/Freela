@@ -8,6 +8,7 @@ const start_date = _req.hasKey("start_date") ? _req.getString("start_date") : nu
 const sessions_per_month = _req.hasKey("sessions_per_month") ? _req.getInt("sessions_per_month") : null;
 const default_session_type = _req.hasKey("default_session_type") ? _req.getString("default_session_type") : null;
 const default_session_sub_type = _req.hasKey("default_session_sub_type") ? _req.getString("default_session_sub_type") : null;
+const client_association_id = _req.hasKey("client_association_id") ? _req.getInt("client_association_id") : null;
 
 //Company Data
 const legal_name = _req.hasKey("legal_name") ? _req.getString("legal_name") : null;
@@ -61,6 +62,7 @@ if (dbClient) {
             .set("website", website)
             .set("default_session_type_id", default_session_type ? dbSessionType.getInt("id") : null)
             .set("default_session_sub_type_id", default_session_sub_type ? dbSessionSubType.getInt("id") : null)
+            .set("client_association_id", client_association_id)
     );
 
     const dbFitnessData = _db.queryFirst(`
@@ -101,6 +103,8 @@ if (dbClient) {
             .set("default_session_type_id", default_session_type ? dbSessionType.getInt("id") : null)
             .set("default_session_sub_type_id", default_session_sub_type ? dbSessionSubType.getInt("id") : null)
             .set("client_user_id", _user.id)
+            .set("client_association_id", client_association)
+
 
     );
 

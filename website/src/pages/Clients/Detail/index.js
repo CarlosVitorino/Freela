@@ -16,6 +16,7 @@ export default function Detail(props) {
     const [sessionType, setSessionType] = useState(false);
     const [sessionSubType, setSessionSubType] = useState(false);
     const [sessionSubTypeOptions, setSessionSubTypeOptions] = useState(false);
+    const [clients, setClients] = useState([]);
     const [active, setActive] = useState(true);
     const [isCompany, setIsCompany] = useState(false);
     const [sessionTypeValue, setSessionTypeValue] = useState(false);
@@ -34,6 +35,7 @@ export default function Detail(props) {
     useEffect(() => {
         onFetchSessionType();
         onFetchSessionSubType();
+        onFetchClients();
         if ( clientForm.current && id ) onFetchDetail();
     }, [location]);
 
@@ -134,6 +136,33 @@ export default function Detail(props) {
         });
     }
 
+    const onFetchClients = () => {
+        setLoading(true);
+        _service({
+            method: 'GET',
+            url: 'client/list',
+            success: (response) => {
+                setLoading(false);
+                if (response.json.result) {
+                    setClients(response.json.data)
+                } else {
+                    notification["warning"]({
+                        message: 'Ocorreu um erro a carregar os dados',
+                        description: response.json.error,
+                    });
+                    setLoading(false);
+                }
+            },
+            fail: () => {
+                setLoading(false);
+                notification["error"]({
+                    message: 'Ocorreu um erro a carregar os dados',
+                    description: 'Ocorreu um erro a carregar os dados, por favor tente novamente.',
+                });
+            }
+        });
+    }
+
     const onFinish = (values) => {
         setSubmitting(true);
         if (values['start_date']) {
@@ -161,7 +190,6 @@ export default function Detail(props) {
                         description: response.json.error,
                     });
                     setSubmitting(false);
-
                 }
             },
             fail: () => {
@@ -260,19 +288,9 @@ export default function Detail(props) {
                     clientForm.current.setFieldsValue({default_session_sub_type: undefined});
                 }
             }
-
-
             setSessionSubTypeOptions(newSessionSubTypeOptions);
         }
     }
-
-    const deleteDisclamer = (
-        <div>
-            <p>Content</p>
-            <p>Content</p>
-        </div>
-    );
-
 
     if (loading) {
         return (
@@ -337,6 +355,22 @@ export default function Detail(props) {
                                     >
                                         <Input disabled={submitting || !active} maxLength={250} />
                                     </Form.Item>
+                                    <Space wrap>
+                                        <Text className="info">This client is associated with:</Text>
+                                        <Form.Item label="" name="client_association_id">
+                                            <Select
+                                                disabled={submitting || !active}
+                                                placeholder="Client"
+                                                allowClear
+                                                style={{ minWidth: 150 }}
+
+                                            >
+                                            {clients && clients.map(client => (
+                                                <Option value={client.id}>{client.name}</Option>
+                                            ))}
+                                            </Select>
+                                        </Form.Item>
+                                    </Space>
                                 </Card>
                             </Col>
                             <Col xs={{ span: 24 }} lg={{ span: 12 }} className="gutter-row" >
@@ -423,9 +457,6 @@ export default function Detail(props) {
                                         <Form.Item label="Start Date" name="start_date" rules={[{ type: 'date' }]}>
                                             <DatePicker disabled={submitting || !active} />
                                         </Form.Item>
-
-
-
                                     </Space>
                                     <Text> <blockquote>Default information - The data entered in these fields will be used for automatic filling. The same customer may have sessions with varying information which can be changed manually.</blockquote></Text>
                                 </Card>

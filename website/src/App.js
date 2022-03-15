@@ -85,14 +85,15 @@ export default function App(props) {
               {logo}
             </div>
             <Menu selectedKeys={[menu]} mode="inline">
-              <Text className="menu-group">TRACK</Text>
-              <Menu.Item key="/sessions" icon={<SkinOutlined />}>
-                <Link to="/sessions">Sessions</Link>
-              </Menu.Item>  
               <Text className="menu-group">ANALIZE</Text>
               <Menu.Item key="/dashboard" icon={<PieChartOutlined />}>
                 <Link to="/dashboard">Dashboard</Link>
               </Menu.Item>
+              
+              <Text className="menu-group">TRACK</Text>
+              <Menu.Item key="/sessions" icon={<SkinOutlined />}>
+                <Link to="/sessions">Sessions</Link>
+              </Menu.Item>  
 
               <Text className="menu-group">MANAGE</Text>
               <Menu.Item key="/clients" icon={<TeamOutlined />}>
