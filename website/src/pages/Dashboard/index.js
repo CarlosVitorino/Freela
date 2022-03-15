@@ -209,7 +209,7 @@ export default function Dashboard(props) {
                                 </article>
                             </Col>
                             <Col className="empty-data" xs={{ span: 24 }} lg={{ span: 10 }}>
-                                <img alt="empty-data" src={"/images/empty-image-2.svg"} />
+                                <img alt="empty-data" src={"/images/empty-dashboard-3.svg"} />
                             </Col>
                         </Row>
                     </div>

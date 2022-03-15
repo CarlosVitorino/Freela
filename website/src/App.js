@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Switch, Route, useLocation, Link, Redirect } from "react-router-dom";
 
-import { ConfigProvider, Layout, Menu, Button } from 'antd';
+import { ConfigProvider, Layout, Menu, Button, Typography } from 'antd';
 import { PieChartOutlined, UserOutlined, LogoutOutlined, MenuOutlined, EditOutlined, TeamOutlined, SkinOutlined, WalletOutlined, SettingOutlined } from '@ant-design/icons';
 import { ReactSVG } from 'react-svg'
 
@@ -30,6 +30,7 @@ import './styles/App.less';
 
 const { Header, Content, Sider, Footer } = Layout;
 const { SubMenu } = Menu;
+const { Text } = Typography;
 
 export default function App(props) {
 
@@ -84,15 +85,20 @@ export default function App(props) {
               {logo}
             </div>
             <Menu selectedKeys={[menu]} mode="inline">
+              <Text className="menu-group">TRACK</Text>
+              <Menu.Item key="/sessions" icon={<SkinOutlined />}>
+                <Link to="/sessions">Sessions</Link>
+              </Menu.Item>  
+              <Text className="menu-group">ANALIZE</Text>
               <Menu.Item key="/dashboard" icon={<PieChartOutlined />}>
                 <Link to="/dashboard">Dashboard</Link>
               </Menu.Item>
+
+              <Text className="menu-group">MANAGE</Text>
               <Menu.Item key="/clients" icon={<TeamOutlined />}>
                 <Link to="/clients">Clients</Link>
               </Menu.Item>
-              <Menu.Item key="/sessions" icon={<SkinOutlined />}>
-                <Link to="/sessions">Sessions</Link>
-              </Menu.Item>              
+          
               <Menu.Item key="/finance" icon={<WalletOutlined />}>
                 <Link to="/finance">Finance</Link>
               </Menu.Item>
@@ -120,7 +126,10 @@ export default function App(props) {
                   <SubMenu key={"profile"} className="profile-menu" icon={<UserOutlined />}>
                     <Menu.Item key="1">
                       <Link to="/profile">
-                        <EditOutlined />&nbsp;&nbsp;&nbsp;Editar Perfil
+                        <Button type="link" style={{color:  'rgba(0, 0, 0, 0.65)'}}>
+                          <EditOutlined />&nbsp;&nbsp;&nbsp;Editar Perfil
+                        </Button>
+
                       </Link>
                     </Menu.Item>
                     <Menu.Item key="2">
