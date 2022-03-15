@@ -15,7 +15,7 @@ const vat = _req.hasKey("vat") ? _req.getString("vat") : null;
 const website = _req.hasKey("website") ? _req.getString("website") : null;
 
 //Fitness Data
-const age = _req.hasKey("age") ? _req.getInt("age") : null;
+const date_of_birth = _req.hasKey("date_of_birth") ? _req.getString("date_of_birth") : null;
 const dislikes = _req.hasKey("dislikes") ?  _req.getString("dislikes") : null;
 const gender = _req.hasKey("gender") ? _req.getString("gender") : null;
 const goals = _req.hasKey("goals") ? _req.getString("goals") : null;
@@ -72,7 +72,7 @@ if (dbClient) {
         dbFitnessData.getInt("id"),
         _val.init()
             .set("client_id", dbClient.getInt("id"))
-            .set("age", age)
+            .set("date_of_birth", date_of_birth)
             .set("dislikes", dislikes)
             .set("gender", gender)
             .set("goals", goals)
@@ -108,7 +108,7 @@ if (dbClient) {
         "fitness_data",
         _val.init()
             .set("client_id", client_id)
-            .set("age", age)
+            .set("date_of_birth", date_of_birth)
             .set("dislikes", dislikes)
             .set("gender", gender)
             .set("goals", goals)

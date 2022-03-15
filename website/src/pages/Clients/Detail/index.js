@@ -54,10 +54,11 @@ export default function Detail(props) {
                     let data = response.json.data[0];
                     if (data['start_date']) {
                         data['start_date'] = moment(data['start_date']);
+                        data['date_of_birth'] = moment(data['date_of_birth']);
                     }
-                    response.json.data[0].is_company && setIsCompany(true);
+                    data.is_company && setIsCompany(true);
                     setActive(data['active']);
-                    setSessionTypeValue(response.json.data[0].default_session_type);
+                    setSessionTypeValue(data.default_session_type);
                     clientForm.current.setFieldsValue(data);
                 } else {
                     notification["warning"]({
@@ -135,6 +136,9 @@ export default function Detail(props) {
         setSubmitting(true);
         if (values['start_date']) {
             values['start_date'] = values['start_date'].format('YYYY-MM-DD');
+        }
+        if (values['date_of_birth']) {
+            values['date_of_birth'] = values['date_of_birth'].format('YYYY-MM-DD');
         }
         values['is_company'] = isCompany;
         _service({
@@ -347,9 +351,10 @@ export default function Detail(props) {
                                                 <Option value="other">other</Option>
                                             </Select>
                                         </Form.Item>
+
                                         <Space wrap>
-                                            <Form.Item label="Age" name="age" rules={[{ type: 'number' }]} >
-                                                <InputNumber disabled={submitting || !active} maxLength={250} />
+                                            <Form.Item label="Date of Birth" name="date_of_birth" rules={[{ type: 'date' }]} >
+                                                <DatePicker disabled={submitting || !active} />
                                             </Form.Item>
                                             <Form.Item label="Weight" name="weight" rules={[{ type: 'number' }]}>
                                                 <InputNumber disabled={submitting || !active} maxLength={250} />
