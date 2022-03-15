@@ -18,6 +18,7 @@ export default function Detail(props) {
     const [sessionSubTypeOptions, setSessionSubTypeOptions] = useState(false);
     const [active, setActive] = useState(true);
     const [isCompany, setIsCompany] = useState(false);
+    const [sessionTypeValue, setSessionTypeValue] = useState(false);
     const { id } = useParams();
     const location = useLocation();
     const clientForm = useRef(null);
@@ -31,10 +32,14 @@ export default function Detail(props) {
     const colStyle = { padding: '8px 0px' };
 
     useEffect(() => {
-        if (clientForm.current && id) onFetchDetail();
         onFetchSessionType();
         onFetchSessionSubType();
+        if ( clientForm.current && id ) onFetchDetail();
     }, [location]);
+
+    useEffect(() => {
+        if ( sessionTypeValue && sessionType && sessionSubType && !sessionSubTypeOptions ) handleTypeChange(sessionTypeValue);
+    }, [sessionTypeValue, sessionType, sessionSubType]);
 
     const onFetchDetail = () => {
 
@@ -52,7 +57,7 @@ export default function Detail(props) {
                     }
                     response.json.data[0].is_company && setIsCompany(true);
                     setActive(data['active']);
-                    handleTypeChange(response.json.data[0].default_session_type)
+                    setSessionTypeValue(response.json.data[0].default_session_type);
                     clientForm.current.setFieldsValue(data);
                 } else {
                     notification["warning"]({
@@ -240,9 +245,18 @@ export default function Detail(props) {
     const handleTypeChange = (value) => {
         const sessionTypeObj = sessionType.find((item) => item.value === value);
         if (sessionTypeObj) {
-            setSessionSubTypeOptions(sessionSubType.filter((item) => {
+            const newSessionSubTypeOptions = sessionSubType.filter((item) => {
                 return sessionTypeObj.id == item.type_id;
-            }));
+            });
+            const fields = clientForm.current.getFieldsValue();
+            if(fields && fields.default_session_sub_type){
+                if( !newSessionSubTypeOptions.find((item) => item.value === fields.default_session_sub_type) ){
+                    clientForm.current.setFieldsValue({default_session_sub_type: undefined});
+                }
+            }
+
+
+            setSessionSubTypeOptions(newSessionSubTypeOptions);
         }
     }
 
