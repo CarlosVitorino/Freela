@@ -54,6 +54,8 @@ export default function Detail(props) {
                     let data = response.json.data[0];
                     if (data['start_date']) {
                         data['start_date'] = moment(data['start_date']);
+                    }
+                    if (data['date_of_birth']) {
                         data['date_of_birth'] = moment(data['date_of_birth']);
                     }
                     data.is_company && setIsCompany(true);
