@@ -10,10 +10,13 @@ if [ $LOCAL = $REMOTE ]; then
 elif [ $LOCAL = $BASE ]; then
     echo "Will pull"
     git pull
-    echo "Will build"
+    echo "building..."
     ./fastBuild.sh
 elif [ $REMOTE = $BASE ]; then
-    echo "Need to push"
+    echo "Forcing pull"
+    git reset --hard HEAD && git clean -f && git pull
+    echo "building..."
+    ./fastBuild.sh
 else
     echo "Diverged"
 fi
