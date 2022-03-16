@@ -22,9 +22,7 @@ import Finance from './pages/Finance';
 import Detail from './pages/Clients/Detail';
 import Settings from './pages/Settings';
 import RecoveryPage from './pages/Recovery';
-import Profile from './pages/Profile';
 import NotFoundPage from './pages/NotFound';
-import ReservedArea from './pages/ReservedArea';
 
 import './styles/App.less';
 
@@ -85,17 +83,24 @@ export default function App(props) {
               {logo}
             </div>
             <Menu selectedKeys={[menu]} mode="inline">
-              <Text className="menu-group">ANALIZE</Text>
+              
+              <div className={collapsed ? "menu-group-wrapper-collapsed": "menu-group-wrapper"}>
+                <Text className="menu-group">ANALIZE</Text>
+              </div>
               <Menu.Item key="/dashboard" icon={<PieChartOutlined />}>
                 <Link to="/dashboard">Dashboard</Link>
               </Menu.Item>
-              
-              <Text className="menu-group">TRACK</Text>
+
+              <div className={collapsed ? "menu-group-wrapper-collapsed": "menu-group-wrapper"}>
+                <Text className="menu-group">TRACK</Text>
+              </div>
               <Menu.Item key="/sessions" icon={<SkinOutlined />}>
                 <Link to="/sessions">Sessions</Link>
               </Menu.Item>  
 
-              <Text className="menu-group">MANAGE</Text>
+              <div className={collapsed ? "menu-group-wrapper-collapsed": "menu-group-wrapper"}>
+                <Text className="menu-group">MANAGE</Text>
+              </div>
               <Menu.Item key="/clients" icon={<TeamOutlined />}>
                 <Link to="/clients">Clients</Link>
               </Menu.Item>
@@ -106,44 +111,16 @@ export default function App(props) {
               <Menu.Item key="/settings" icon={<SettingOutlined />}>
                 <Link to="/settings">Settings</Link>
               </Menu.Item>
+              <Menu.Item className="logout" key="lougout" onClick={onLogout}>
+                {collapsed ?
+                  <Link to="/login" className="lougout-link"><LogoutOutlined /></Link>
+                : <Link to="/login" className="lougout-link"><LogoutOutlined /> Logout</Link>
+                }
+              </Menu.Item>
             </Menu>
           </Sider>
         }
         <Layout>
-          <Header className={classNames({ 'auth ': _auth.isLogged() }, { 'collapsed ': collapsed }, !_auth.isLogged() ? 'login-page': '')}>
-            { !_auth.isLogged() &&
-              <div className="logo-container">
-                {logo}
-              </div>
-            }
-            <Menu mode="horizontal">
-              {headerButtonMode === '/login' ?
-                ""
-                : headerButtonMode === '/register' ?
-                  <Link to="/login">
-                    <Button type="primary">Iniciar sessão</Button>
-                  </Link>
-                  : _auth.isLogged() &&
-                  <SubMenu key={"profile"} className="profile-menu" icon={<UserOutlined />}>
-                    <Menu.Item key="1">
-                      <Link to="/profile">
-                        <Button type="link" style={{color:  'rgba(0, 0, 0, 0.65)'}}>
-                          <EditOutlined />&nbsp;&nbsp;&nbsp;Editar Perfil
-                        </Button>
-
-                      </Link>
-                    </Menu.Item>
-                    <Menu.Item key="2">
-                      <Link to="/login">
-                        <Button type="link" onClick={onLogout} danger>
-                          <LogoutOutlined /> Terminar Sessão
-                        </Button>
-                      </Link>
-                    </Menu.Item>
-                  </SubMenu>
-              }
-            </Menu>
-          </Header>
           <Content className={classNames({ 'auth ': _auth.isLogged() })}>
             <Switch>
               <Route exact path="/">
@@ -162,7 +139,6 @@ export default function App(props) {
               <Route path="/finance/expense" component={Expense} />
               <Route path="/finance" component={Finance} />
               <Route path="/settings" component={Settings} />
-              <Route path="/profile" component={Profile} />
               <Route path="/login" component={LoginPage} />
               <Route path="/register" component={RegisterPage} />
               <Route path="/recovery" component={RecoveryPage} />

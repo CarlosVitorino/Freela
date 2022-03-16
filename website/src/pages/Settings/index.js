@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, useParams } from "react-router-dom";
 import { Redirect } from "react-router-dom";
-import { Typography, Card, Tabs, Row, Col, List, notification, Popconfirm, Tooltip, Form, Button, Input, InputNumber, Space, Select } from 'antd';
+import { Typography, Card, Tabs, Row, Col, List, notification, Popconfirm, Tooltip, Form, Button, Input, InputNumber, Space, Select, Table } from 'antd';
 import { DeleteFilled } from '@ant-design/icons';
-
 import _auth from '@netuno/auth-client';
 import _service from '@netuno/service-client';
+import Profile from '../../components/Profile';
 
 import './index.less';
 import classNames from 'classnames';
@@ -168,7 +168,10 @@ export default function Settings(props) {
                 <div className={classNames("content-body", "content-table")}>
                     <Card >
                         <Tabs defaultActiveKey="1" onChange={callback}>
-                            <TabPane tab="Suppliers" key="1">
+                            <TabPane tab="Profile" key = "1">
+                                <Profile/>
+                            </TabPane>
+                            <TabPane tab="Suppliers" key="2">
                                 <Row {...layout}>
                                     <Col xs={{ span: 24 }} lg={{ span: 12 }}>
                                         <Title level={4} style={{ marginBottom: 20 }}>Add new Supplier</Title>
@@ -274,7 +277,7 @@ export default function Settings(props) {
                                     </Col>
                                 </Row>
                             </TabPane>
-                            <TabPane tab="Session Types" key="2">
+                            <TabPane tab="Session Types" key="3">
                                 <Row {...layout}>
                                     <Col xs={{ span: 24 }} lg={{ span: 12 }}>
                                         <Title level={4} style={{ marginBottom: 20 }}>Add new Type</Title>
@@ -328,7 +331,7 @@ export default function Settings(props) {
                                     </Col>
                                 </Row>
                             </TabPane>
-                            <TabPane tab="Session Sub Types" key="3">
+                            <TabPane tab="Session Sub Types" key="4">
                                 <Row {...layout}>
                                     <Col xs={{ span: 24 }} lg={{ span: 12 }}>
                                         <Title level={4} style={{ marginBottom: 20 }}>Add new Sub Type</Title>
