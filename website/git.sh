@@ -6,7 +6,7 @@ REMOTE=$(git rev-parse "$UPSTREAM")
 BASE=$(git merge-base @ "$UPSTREAM")
 echo $LOCAL
 echo $REMOTE  
-echo $BASE
+echo $UPSTREAM
 if [ $LOCAL = $REMOTE ]; then
     echo "Up-to-date"
 elif [ $LOCAL = $BASE ]; then
