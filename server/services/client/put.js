@@ -103,7 +103,7 @@ if (dbClient) {
             .set("default_session_type_id", default_session_type ? dbSessionType.getInt("id") : null)
             .set("default_session_sub_type_id", default_session_sub_type ? dbSessionSubType.getInt("id") : null)
             .set("client_user_id", _user.id)
-            .set("client_association_id", client_association)
+            .set("client_association_id", client_association_id)
 
 
     );
