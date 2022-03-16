@@ -60,6 +60,7 @@ export default function Detail(props) {
                     if (data['date_of_birth']) {
                         data['date_of_birth'] = moment(data['date_of_birth']);
                     }
+                    data['client_association_id'] = data.client_association_id === 0 ? null : data.client_association_id;
                     data.is_company && setIsCompany(true);
                     setActive(data['active']);
                     setSessionTypeValue(data.default_session_type);
