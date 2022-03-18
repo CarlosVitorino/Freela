@@ -101,7 +101,7 @@ export default function Login(props) {
                             </Form.Item>
 
                             <Form.Item style={{ textAlign: 'center' }}>
-                                <Button type="link" onClick={() => setVisible(!visible)} >Did you forgot your password?</Button>
+                                <Button type="link" onClick={() => setVisible(!visible)} >Did you forget your password?</Button>
                                 {visible && <RecoverModal onClose={() => { setVisible(false) }} />}
                             </Form.Item>
 

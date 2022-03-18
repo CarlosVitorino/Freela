@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, useParams } from "react-router-dom";
 import { Redirect } from "react-router-dom";
 import { Typography, Card, Tabs, Row, Col, List, notification, Popconfirm, Tooltip, Form, Button, Input, InputNumber, Space, Select, Table } from 'antd';
-import { DeleteFilled } from '@ant-design/icons';
+import { DeleteFilled, EditOutlined } from '@ant-design/icons';
 import _auth from '@netuno/auth-client';
 import _service from '@netuno/service-client';
 import Profile from '../../components/Profile';
@@ -157,8 +157,6 @@ export default function Settings(props) {
         console.log(key);
     }
 
-
-
     if (_auth.isLogged()) {
         return (
             <div className="settings">
@@ -174,7 +172,7 @@ export default function Settings(props) {
                             <TabPane tab="Suppliers" key="2">
                                 <Row {...layout}>
                                     <Col xs={{ span: 24 }} lg={{ span: 12 }}>
-                                        <Title level={4} style={{ marginBottom: 20 }}>Add new Supplier</Title>
+                                        <Title level={4} style={{ marginBottom: 20 }}>Supplier</Title>
                                         <Form
                                             ref={supplierForm}
                                             name="basic"
@@ -183,6 +181,9 @@ export default function Settings(props) {
                                             onFinish={(values) => { addRecord(values, 'supplier') }}
                                             autoComplete="off"
                                         >
+                                            <Form.Item label="id" name="id" style={{ display: 'none' }}>
+                                                <InputNumber/>
+                                            </Form.Item>
                                             <Form.Item
                                                 label="Name"
                                                 name="name"
@@ -216,9 +217,10 @@ export default function Settings(props) {
                                                 <Input />
                                             </Form.Item>
                                             <Form.Item wrapperCol={{ offset: 4, span: 16 }}>
-                                                <Button type="primary" htmlType="submit">
-                                                    Add
-                                                </Button>
+                                                <Space>
+                                                    <Button type="primary" htmlType="submit">Save</Button>
+                                                    <Button type="secondary" onClick={() => supplierForm.current.resetFields()} >Reset</Button>
+                                                </Space>
                                             </Form.Item>
                                         </Form>
                                     </Col>
@@ -266,11 +268,16 @@ export default function Settings(props) {
                                                             </Space>
                                                         }
                                                     />
-                                                    <Popconfirm title="Are you sure, you want to DELETE this record?" onConfirm={() => handleDeleteRecord(item, 'supplier')}>
-                                                        <Tooltip title="Delete">
-                                                            <DeleteFilled className={classNames("action-icon", "float-button")} />
-                                                        </Tooltip>
-                                                    </Popconfirm>
+                                                    <Space className="float-button">
+                                                        <Popconfirm title="Are you sure, you want to DELETE this record?" onConfirm={() => handleDeleteRecord(item, 'supplier')}>
+                                                            <Tooltip title="Delete">
+                                                                <DeleteFilled className="action-icon" />
+                                                            </Tooltip>
+                                                        </Popconfirm>
+                                                    <Tooltip title="Edit">
+                                                            <Button type="link" className="action-icon" onClick={() => supplierForm.current.setFieldsValue(item)} icon={<EditOutlined />} />
+                                                    </Tooltip>
+                                                    </Space>
                                                 </List.Item>
                                             )}
                                         />
@@ -280,7 +287,7 @@ export default function Settings(props) {
                             <TabPane tab="Session Types" key="3">
                                 <Row {...layout}>
                                     <Col xs={{ span: 24 }} lg={{ span: 12 }}>
-                                        <Title level={4} style={{ marginBottom: 20 }}>Add new Type</Title>
+                                        <Title level={4} style={{ marginBottom: 20 }}>Type</Title>
                                         <Form
                                             ref={typeForm}
                                             name="basic"
@@ -289,9 +296,12 @@ export default function Settings(props) {
                                             onFinish={(values) => { addRecord(values, 'type') }}
                                             autoComplete="off"
                                         >
+                                            <Form.Item label="id" name="id" style={{ display: 'none' }}>
+                                                <InputNumber/>
+                                            </Form.Item>
                                             <Form.Item
                                                 label="Name"
-                                                name="name"
+                                                name="label"
                                                 rules={[{ required: true, message: 'Please input supplier name!' }]}
                                             >
                                                 <Input />
@@ -303,9 +313,10 @@ export default function Settings(props) {
                                                 <Input.TextArea rows={4} />
                                             </Form.Item>
                                             <Form.Item wrapperCol={{ offset: 4, span: 16 }}>
-                                                <Button type="primary" htmlType="submit">
-                                                    Add
-                                                </Button>
+                                                <Space>
+                                                    <Button type="primary" htmlType="submit">Save</Button>
+                                                    <Button type="secondary" onClick={() => typeForm.current.resetFields()} >Reset</Button>
+                                                </Space>
                                             </Form.Item>
                                         </Form>
                                     </Col>
@@ -320,11 +331,16 @@ export default function Settings(props) {
                                                         title={<Text strong>{item.label}</Text>}
                                                         description={item.description}
                                                     />
-                                                    <Popconfirm title="Are you sure, you want to DELETE this record?" onConfirm={() => handleDeleteRecord(item, 'type')}>
-                                                        <Tooltip title="Delete">
-                                                            <DeleteFilled className={classNames("action-icon", "float-button")} />
+                                                    <Space className="float-button">
+                                                        <Popconfirm title="Are you sure, you want to DELETE this record?" onConfirm={() => handleDeleteRecord(item, 'type')}>
+                                                            <Tooltip title="Delete">
+                                                                <DeleteFilled className="action-icon" />
+                                                            </Tooltip>
+                                                        </Popconfirm>
+                                                        <Tooltip title="Edit">
+                                                                <Button type="link" className="action-icon" onClick={() => typeForm.current.setFieldsValue(item)} icon={<EditOutlined />} />
                                                         </Tooltip>
-                                                    </Popconfirm>
+                                                    </Space>
                                                 </List.Item>
                                             )}
                                         />
@@ -334,7 +350,7 @@ export default function Settings(props) {
                             <TabPane tab="Session Sub Types" key="4">
                                 <Row {...layout}>
                                     <Col xs={{ span: 24 }} lg={{ span: 12 }}>
-                                        <Title level={4} style={{ marginBottom: 20 }}>Add new Sub Type</Title>
+                                        <Title level={4} style={{ marginBottom: 20 }}>Sub Type</Title>
                                         <Form
                                             ref={subTypeForm}
                                             name="basic"
@@ -343,18 +359,23 @@ export default function Settings(props) {
                                             onFinish={(values) => { addRecord(values, 'subType') }}
                                             autoComplete="off"
                                         >
+                                            <Form.Item label="id" name="id" style={{ display: 'none' }}>
+                                                <InputNumber/>
+                                            </Form.Item>
                                             <Form.Item
                                                 label="Name"
-                                                name="name"
-                                                rules={[{ required: true, message: 'Please input supplier name!' }]}
+                                                name="label"
+                                                rules={[{ required: true, message: 'Please input subtype name!' }]}
                                             >
                                                 <Input />
                                             </Form.Item>
-                                            <Form.Item label="Session Type" name="type_value">
+                                            <Form.Item label="Session Type" name="type_value" rules={[{ required: true, message: 'Please select the type associated!' }]}
+>
                                                 <Select
                                                     placeholder="Select a option"
                                                     allowClear
                                                     options={typesData}
+                                                    
                                                 />
                                             </Form.Item>
                                             <Form.Item
@@ -364,9 +385,10 @@ export default function Settings(props) {
                                                 <Input.TextArea rows={4} />
                                             </Form.Item>
                                             <Form.Item wrapperCol={{ offset: 4, span: 16 }}>
-                                                <Button type="primary" htmlType="submit">
-                                                    Add
-                                                </Button>
+                                                <Space>
+                                                    <Button type="primary" htmlType="submit">Save</Button>
+                                                    <Button type="secondary" onClick={() => subTypeForm.current.resetFields()} >Reset</Button>
+                                                </Space>
                                             </Form.Item>
                                         </Form>
                                     </Col>
@@ -383,11 +405,17 @@ export default function Settings(props) {
                                                             title={<><Text strong>{item.label}</Text><Text> {typeName && ` (${typeName.label})`}</Text></>}
                                                             description={item.description}
                                                         />
-                                                        <Popconfirm title="Are you sure, you want to DELETE this record?" onConfirm={() => handleDeleteRecord(item, 'subType')}>
-                                                            <Tooltip title="Delete">
-                                                                <DeleteFilled className={classNames("action-icon", "float-button")} />
+                                                        <Space className="float-button">
+                                                            <Popconfirm title="Are you sure, you want to DELETE this record?" onConfirm={() => handleDeleteRecord(item, 'subType')}>
+                                                                <Tooltip title="Delete">
+                                                                    <DeleteFilled className="action-icon" />
+                                                                </Tooltip>
+                                                            </Popconfirm>
+                                                            <Tooltip title="Edit">
+                                                                    <Button type="link" className="action-icon" onClick={() => subTypeForm.current.setFieldsValue(item)} icon={<EditOutlined />} />
                                                             </Tooltip>
-                                                        </Popconfirm>
+                                                        </Space>
+                                                        
                                                     </List.Item>
                                                 )
                                             }}

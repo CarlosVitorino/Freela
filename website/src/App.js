@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Switch, Route, useLocation, Link, Redirect } from "react-router-dom";
 
 import { ConfigProvider, Layout, Menu, Button, Typography } from 'antd';
-import { PieChartOutlined, UserOutlined, LogoutOutlined, MenuOutlined, EditOutlined, TeamOutlined, SkinOutlined, WalletOutlined, SettingOutlined } from '@ant-design/icons';
+import { PieChartOutlined, CarryOutOutlined, LogoutOutlined, MenuOutlined, UserOutlined, WalletOutlined, SettingOutlined } from '@ant-design/icons';
 import { ReactSVG } from 'react-svg'
 
 import antLocale_ptPT from 'antd/lib/locale/pt_PT';
@@ -94,14 +94,14 @@ export default function App(props) {
               <div className={collapsed ? "menu-group-wrapper-collapsed": "menu-group-wrapper"}>
                 <Text className="menu-group">TRACK</Text>
               </div>
-              <Menu.Item key="/sessions" icon={<SkinOutlined />}>
+              <Menu.Item key="/sessions" icon={<CarryOutOutlined />}>
                 <Link to="/sessions">Sessions</Link>
               </Menu.Item>  
 
               <div className={collapsed ? "menu-group-wrapper-collapsed": "menu-group-wrapper"}>
                 <Text className="menu-group">MANAGE</Text>
               </div>
-              <Menu.Item key="/clients" icon={<TeamOutlined />}>
+              <Menu.Item key="/clients" icon={<UserOutlined />}>
                 <Link to="/clients">Clients</Link>
               </Menu.Item>
           

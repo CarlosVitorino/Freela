@@ -46,11 +46,24 @@ export default function Clients(props) {
             title: 'Price',
             dataIndex: 'default_price',
             key: 'default_price',
+            render: (_, record) => (record.default_price + "€")
         },
         {
             title: 'Duration',
             dataIndex: 'session_duration',
             key: 'session_duration',
+        },
+        {
+            title: 'Price/Hour',
+            dataIndex: 'price_hour',
+            key: 'price_hour',
+            render: (_, record) => { 
+                let priceHour = 0;
+                if('default_price' in record && 'session_duration' in record && record.session_duration > 0){
+                    priceHour = (60 * record.default_price) / record.session_duration;
+                }    
+                return priceHour + "€/h";
+            }
         },
         {
             title: 'Times/Month',

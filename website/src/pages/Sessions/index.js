@@ -103,6 +103,13 @@ const EditableCell = ({
                         style={{ width: 220 }}
                         ref={inputRef}
                         onChange={customSave}
+                        showSearch
+                        filterOption={(input, option) =>
+                            option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                        }
+                        filterSort={(optionA, optionB) =>
+                        optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())
+                        }
                     >
                         {dataSource}
                     </Select>
@@ -515,7 +522,6 @@ class Session extends React.Component {
             const sessionSubType = sessionSubTypesData.find(sessionSubType => sessionSubType.value === row.session_sub_type);
             row['session_sub_type'] = sessionSubType.label;
         }
-        debugger
         newDataFiltered.splice(index, 1, { ...item, ...row });
         newData.find((item) => row.key === item.key) ? newData.splice(index, 1, { ...item, ...row }) : newData.splice(index, 0, { ...item, ...row });
         this.setState({
@@ -586,7 +592,7 @@ class Session extends React.Component {
         if (clientFilter) {
             newFilteredData = newFilteredData.filter((sessionData) => {
                 const client = clientsData.find(clientData => clientData.name === sessionData.client_name);
-                return clientFilter === client.id.toString();
+                return clientFilter === client.id.toString() || clientFilter === client.client_association_id.toString();
             });
         }
         if (datesFilter && datesFilter[0] && datesFilter[1]) {
@@ -682,12 +688,36 @@ class Session extends React.Component {
                                     <Space style={{ marginBottom: 16 }} wrap>
                                         <Button type="primary" icon={<PlusOutlined />} onClick={this.handleAdd}>Add Session</Button>
                                         <RangePicker onChange={(dates, dateStrings) => { this.filter(dateStrings, typeFilter, clientFilter, queryFilter); }} />
-                                        <Select placeholder="Type filter" allowClear style={{ width: 120 }} onChange={(type) => { this.filter(datesFilter, type, clientFilter, queryFilter); }}>
+                                        <Select 
+                                            placeholder="Type filter" 
+                                            allowClear 
+                                            style={{ width: 120 }} 
+                                            onChange={(type) => { this.filter(datesFilter, type, clientFilter, queryFilter); }}
+                                            showSearch
+                                            filterOption={(input, option) =>
+                                                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                            }
+                                            filterSort={(optionA, optionB) =>
+                                            optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())
+                                            }
+                                        >
                                             {sessionTypesData.map(sessionType => (
                                                 <Option key={sessionType.value}>{sessionType.label}</Option>
                                             ))}
                                         </Select>
-                                        <Select placeholder="Client filter" allowClear style={{ width: 120 }} onChange={(client) => { this.filter(datesFilter, typeFilter, client, queryFilter); }}>
+                                        <Select 
+                                            placeholder="Client filter" 
+                                            allowClear 
+                                            style={{ width: 120 }} 
+                                            onChange={(client) => { this.filter(datesFilter, typeFilter, client, queryFilter); }}
+                                            showSearch
+                                            filterOption={(input, option) =>
+                                                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                            }
+                                            filterSort={(optionA, optionB) =>
+                                            optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())
+                                            }
+                                        >
                                             {clientsData.map(clientData => (
                                                 <Option key={clientData.id}>{clientData.name}</Option>
                                             ))}
