@@ -1,3 +1,4 @@
+const id = _req.hasKey("id") ? _req.getInt("id") : null;
 const is_company =  _req.getString("is_company");
 const name = _req.getString("name");
 const email = _req.getString("email");
@@ -25,9 +26,6 @@ const injuries_conditions = _req.hasKey("injuries_conditions") ? _req.getString(
 const likes = _req.hasKey("likes") ? _req.getString("likes") : null;
 const weight = _req.hasKey("weight") ? _req.getInt("weight") : null;
 
-const dbClient = _db.queryFirst(`
-    SELECT * FROM client WHERE email = ? and client_user_id = ?::int
-`, _val.list().add(email).add(_user.id));
 
 let dbSessionType = null;
 if(default_session_type) {
@@ -44,10 +42,10 @@ if(default_session_sub_type) {
 }
 
 
-if (dbClient) {
+if (id) {
     _db.update(
         "client",
-        dbClient.getInt("id"),
+        id,
         _val.init()
             .set("name", name)
             .set("is_company", is_company)
@@ -67,13 +65,13 @@ if (dbClient) {
 
     const dbFitnessData = _db.queryFirst(`
     SELECT id FROM fitness_data WHERE client_id = ?::Int
-    `, _val.list().add(dbClient.getInt("id"),));
+    `, _val.list().add(id));
 
     _db.update(
         "fitness_data",
         dbFitnessData.getInt("id"),
         _val.init()
-            .set("client_id", dbClient.getInt("id"))
+            .set("client_id", id)
             .set("date_of_birth", date_of_birth)
             .set("dislikes", dislikes)
             .set("gender", gender)

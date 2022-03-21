@@ -172,6 +172,10 @@ export default function Detail(props) {
         if (values['date_of_birth']) {
             values['date_of_birth'] = values['date_of_birth'].format('YYYY-MM-DD');
         }
+        if(id) {
+            values['id'] = parseInt(id); 
+        }
+
         values['is_company'] = isCompany;
         _service({
             method: 'PUT',
@@ -180,14 +184,14 @@ export default function Detail(props) {
             success: (response) => {
                 if (response.json.result) {
                     notification["success"]({
-                        message: 'Client Created',
-                        description: 'New client created successfully.',
+                        message: 'Client Saved',
+                        description: 'Client saved successfully.',
                     });
                     props.history.goBack();
                     setSubmitting(false);
                 } else {
                     notification["warning"]({
-                        message: 'Client not created',
+                        message: 'Client not saved',
                         description: response.json.error,
                     });
                     setSubmitting(false);
