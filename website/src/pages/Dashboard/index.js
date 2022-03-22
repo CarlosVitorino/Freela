@@ -216,6 +216,16 @@ export default function Dashboard(props) {
                 </div>
             )
         }
+        const mDays = moment.duration(monthData.totalTime, "minutes").days();
+        const mHours = moment.duration(monthData.totalTime, "minutes").hours();
+        const mMinutes = moment.duration(monthData.totalTime, "minutes").minutes();
+        const monthTime =  ` ${mDays > 0 ? mDays + " days, ": ''} ${mHours} h ${mMinutes} min`;
+
+        const yDays = moment.duration(yearData.totalMinutes, "minutes").days();
+        const yHours = moment.duration(yearData.totalMinutes, "minutes").hours();
+        const yMinutes = moment.duration(yearData.totalMinutes, "minutes").minutes();
+        const yearTime =  ` ${yDays > 0 ? yDays + " days, ": ''} ${yHours} h ${yMinutes} min`;
+
         return (
             <div className="dashboard">
                 <div className="content-title">
@@ -231,7 +241,7 @@ export default function Dashboard(props) {
                                         <Statistic title="Revenue" value={monthData.totalMoney} precision={2} suffix="€" loading={monthLoading} />
                                     </Col>
                                     <Col span={12} style={colStyle}>
-                                        <Statistic title="Time Worked " value={`${moment.duration(monthData.totalTime, "minutes").hours()} h  ${moment.duration(monthData.totalTime, "minutes").minutes()} min`} loading={monthLoading} />
+                                        <Statistic title="Time Worked " value={monthTime} loading={monthLoading} />
                                     </Col>
                                     <Col span={12} style={colStyle}>
                                         <Statistic
@@ -313,7 +323,7 @@ export default function Dashboard(props) {
                                 <Title level={4}>Sessions {moment().format('YYYY')}</Title>
                                 <Row {...layout}>
                                     <Col span={12} style={colStyle}>
-                                        <Statistic title="Total hours" value={`${moment.duration(yearData.totalMinutes, "minutes").hours()} h  ${moment.duration(yearData.totalMinutes, "minutes").minutes()} min`} loading={anualLoading} />
+                                        <Statistic title="Total hours" value={yearTime} loading={anualLoading} />
                                     </Col>
                                     <Col span={12} style={colStyle}>
                                         <Statistic title="Atendance" value={yearData.atendance} suffix="%" loading={anualLoading} />
