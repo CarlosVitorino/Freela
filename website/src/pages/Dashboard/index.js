@@ -224,7 +224,7 @@ export default function Dashboard(props) {
         const yDays = moment.duration(yearData.totalMinutes, "minutes").days();
         const yHours = moment.duration(yearData.totalMinutes, "minutes").hours();
         const yMinutes = moment.duration(yearData.totalMinutes, "minutes").minutes();
-        const yearTime =  ` ${yDays > 0 ? yDays + " days, ": ''} ${yHours} h ${yMinutes} min`;
+        const yearTime =  ` ${yDays > 0 ? (yDays == 1 ? "day, " : " days, ") : ''} ${yHours} h ${yMinutes} min`;
 
         return (
             <div className="dashboard">
