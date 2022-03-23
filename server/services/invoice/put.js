@@ -1,3 +1,4 @@
+const moment = require('moment');
 
 const created_at = _req.getString("created_at");
 const total_amount = _req.getFloat("total_amount");
@@ -8,7 +9,7 @@ const pay_day = _req.hasKey("pay_day") ? _req.getString("pay_day") : null;
 const sessions = _req.hasKey("sessions") ? _req.getString("sessions") : null;
 const description = _req.hasKey("description") ? _req.getString("description") : null;
 const provider = _req.hasKey("provider") ? _req.getString("provider") : null;
-const date = _req.hasKey("date") ? _req.getString("date") : null;
+const date = _req.hasKey("date") ? _req.getString("date") : moment().format('YYYY-MM-DD');
 
 const dbPaymentStatus = _db.queryFirst(`
     SELECT id FROM payment_status WHERE code = ?

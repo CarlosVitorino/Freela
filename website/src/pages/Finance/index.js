@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Redirect, useLocation, useHistory, Link } from "react-router-dom";
 
-import { Typography, Space, Button, Input, Table, notification, Spin, Popconfirm, Card, Tooltip } from 'antd';
+import { Typography, Space, Button, Input, Table, notification, Spin, Popconfirm, Card, Tooltip, DatePicker, Modal } from 'antd';
 import { DeleteFilled, CheckSquareFilled, MinusSquareFilled } from '@ant-design/icons';
 
 import _auth from '@netuno/auth-client';
 import _service from '@netuno/service-client';
 import classNames from 'classnames';
+import moment from 'moment';
 
 import './index.less';
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 const { Search } = Input;
 
 export default function Finance(props) {
@@ -18,6 +19,9 @@ export default function Finance(props) {
     const [loading, setLoading] = useState(false);
     const [financeData, setFinanceData] = useState(false);
     const [financeDataFiltered, setFinanceDataFiltered] = useState(false);
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [record, setRecord] = useState(false);
+    const [paidAt, setPaidAt] = useState(moment());
 
     const history = useHistory();
     const location = useLocation();
@@ -34,12 +38,12 @@ export default function Finance(props) {
             key: 'description',
         },
         {
-            title: 'Created At',
-            dataIndex: 'created_at',
-            key: 'created_at',
+            title: 'Pay Day',
+            dataIndex: 'pay_day',
+            key: 'pay_day',
         },
         {
-            title: 'Pay Day',
+            title: 'Paid at',
             dataIndex: 'date',
             key: 'date',
         },
@@ -59,20 +63,21 @@ export default function Finance(props) {
             render: (_, record) =>
                 financeData.length >= 1 ? (
                     <Space>
-                        <Popconfirm title="Are you sure, you want to change the status?" onConfirm={() => handleStatusChange(record)}>
-                                { record.status_code === 'waiting_payment' ? 
-                                    <Tooltip title="Waiting Payment - click to change">
-                                        <MinusSquareFilled className="action-icon-yellow"/>
-                                    </Tooltip>
-                                    : 
-                                    <Tooltip title="Paid - click to change">
-                                        <CheckSquareFilled className="action-icon-green"/>
-                                    </Tooltip>
-                                }
-                        </Popconfirm>
+                        {/* <Popconfirm title="Are you sure, you want to change the status?" onConfirm={() => handleStatusChange(record)}> */}
+                        { record.status_code === 'waiting_payment' ?
+                            <Tooltip title="Waiting Payment - click to change">
+                                <Button type="link" className="action-icon" onClick={() => showModal(record)} icon={<MinusSquareFilled className="action-icon-yellow" />} />
+                            </Tooltip>
+                            :
+                            <Tooltip title="Paid - click to change">
+                                <Button type="link" className="action-icon" onClick={() => handleStatusChange(record)} icon={<CheckSquareFilled className="action-icon-green" />} />
+
+                            </Tooltip>
+                        }
+                        {/* </Popconfirm> */}
                         <Popconfirm title="Are you sure, you want to DELETE this record?" onConfirm={() => handleDeleteRecord(record)}>
                             <Tooltip title="Delete">
-                                <DeleteFilled className="action-icon"/>
+                                <DeleteFilled className="action-icon" />
                             </Tooltip>
                         </Popconfirm>
                     </Space>
@@ -112,14 +117,16 @@ export default function Finance(props) {
         });
     }
 
-    const handleStatusChange = (record) => {
+    const handleStatusChange = (data) => {
+        const paidAt =  data.paidAt ? data.paidAt.format('YYYY-MM-DD') : null;
         setLoading(true);
         _service({
             method: 'PUT',
             url: 'finance/toggle',
             data: {
-                "status": record.status_code === 'waiting_payment' ? 'paid' : 'waiting_payment',
-                "invoiceId": record.id
+                "status": data.status_code === 'waiting_payment' ? 'paid' : 'waiting_payment',
+                "invoiceId": data.id,
+                "paidAt": paidAt
             },
             success: (response) => {
                 if (response.json.result) {
@@ -183,6 +190,23 @@ export default function Finance(props) {
         });
     }
 
+    const showModal = (record) => {
+        setRecord(record);
+        setIsModalVisible(true);
+    };
+
+    const handleOk = () => {
+        const newRecord = record;
+        newRecord.paidAt = paidAt;
+        setPaidAt(moment());
+        setIsModalVisible(false);
+        handleStatusChange(record);
+    };
+
+    const handleCancel = () => {
+        setIsModalVisible(false);
+    };
+
 
     const filter = (e) => {
         const value = e.target.value;
@@ -216,7 +240,7 @@ export default function Finance(props) {
                 <div className="finance">
                     <div className="content-title">
                         <Title className="big-title"><span>Finance</span></Title>
- 
+
                     </div>
                     <div className={classNames("content-body", "content-table")}>
                         <Card >
@@ -232,10 +256,17 @@ export default function Finance(props) {
                                 <Table
                                     dataSource={financeDataFiltered}
                                     columns={columns}
-                                    scroll = {{x:''}}
+                                    scroll={{ x: '' }}
                                 />
                             </div>
                         </Card>
+                        <Modal title="Please enter the payment date" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+                            <Space>
+                                <Text>Payment Date:</Text>
+                                <DatePicker value={paidAt} onChange={(date) => setPaidAt(date)}/>
+                            </Space>
+
+                        </Modal>
                     </div>
                 </div>
             );

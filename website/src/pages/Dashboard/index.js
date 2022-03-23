@@ -130,7 +130,7 @@ export default function Dashboard(props) {
             end: 1,
         },
         tooltip: {
-            customItems: (originalItems: TooltipItem[]) => {
+            customItems: (originalItems) => {
                 // process originalItems,
                 console.log(originalItems);
                 originalItems.forEach(item => {
@@ -216,15 +216,13 @@ export default function Dashboard(props) {
                 </div>
             )
         }
-        const mDays = moment.duration(monthData.totalTime, "minutes").days();
-        const mHours = moment.duration(monthData.totalTime, "minutes").hours();
         const mMinutes = moment.duration(monthData.totalTime, "minutes").minutes();
-        const monthTime =  ` ${mDays > 0 ? mDays + " days, ": ''} ${mHours} h ${mMinutes} min`;
+        const mHours = moment.duration(monthData.totalTime, "minutes").subtract(moment.duration(mMinutes, "minutes")).asHours();
+        const monthTime =  `${mHours}h ${mMinutes}m`;
 
-        const yDays = moment.duration(yearData.totalMinutes, "minutes").days();
-        const yHours = moment.duration(yearData.totalMinutes, "minutes").hours();
         const yMinutes = moment.duration(yearData.totalMinutes, "minutes").minutes();
-        const yearTime =  ` ${yDays > 0 ? (yDays === 1 ? "day, " : "days, ") : ''} ${yHours}h ${yMinutes}m`;
+        const yHours = moment.duration(yearData.totalMinutes, "minutes").subtract(moment.duration(yMinutes, "minutes")).asHours();
+        const yearTime =  `${yHours}h ${yMinutes}m`;
 
         return (
             <div className="dashboard">
@@ -269,7 +267,7 @@ export default function Dashboard(props) {
                                         <Statistic title="Received" value={monthData.received} precision={2} suffix="€" loading={monthLoading} />
                                     </Col>
                                     <Col span={12} style={colStyle}>
-                                        <Statistic title="Spend" value={monthData.paid * -1} precision={2} suffix="€" loading={monthLoading} />
+                                        <Statistic title="Spent" value={monthData.paid * -1} precision={2} suffix="€" loading={monthLoading} />
                                     </Col>
                                     <Col span={12} style={colStyle}>
                                         <Statistic title="Total Invoice Progress" value={`${monthData.invoicesPaid}/${monthData.invoices}`} suffix="invoices" loading={monthLoading} />
@@ -306,7 +304,7 @@ export default function Dashboard(props) {
                                         <Statistic title="Billed " value={yearData.billed} precision={2} suffix="€" loading={anualLoading} />
                                     </Col>
                                     <Col span={12} style={colStyle}>
-                                        <Statistic title="Spend" value={yearData.spent * -1} precision={2} suffix="€" loading={anualLoading} />
+                                        <Statistic title="Spent" value={yearData.spent * -1} precision={2} suffix="€" loading={anualLoading} />
                                     </Col>
                                     <Col span={12} style={colStyle}>
                                         <Statistic title="Profit" value={yearData.profit} precision={2} suffix="€" loading={anualLoading} />

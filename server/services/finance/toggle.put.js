@@ -2,7 +2,8 @@ const moment = require('moment');
 
 const invoiceId = _req.getInt("invoiceId");
 const status = _req.getString("status");
-const paid_at = _req.getString("status") === "paid" ? moment().format('YYYY-MM-DD') : null;
+const paid_at = _req.getString("paidAt");
+//const paid_at = _req.getString("status") === "paid" ? moment().format('YYYY-MM-DD') : null;
 
 const dbPaymentStratus = _db.queryFirst(`
     SELECT id FROM payment_status WHERE code = ?

@@ -44,15 +44,18 @@ const invoicesPaidDb = _db.queryFirst(`SELECT SUM(1) as money
                                         INNER JOIN payment_status ON finance.status_id = payment_status.id
                                         WHERE paid_at IS NOT NULL AND payment_status.code = 'paid' 
                                         AND finance.client_user_id = ${_user.id};`)
-const invoicesDb = _db.queryFirst(`SELECT SUM(1) as money FROM finance WHERE paid_at IS NOT NULL AND client_user_id = ${_user.id};`)
+const invoicesDb = _db.queryFirst(`SELECT SUM(1) as money FROM finance 
+                                    INNER JOIN payment_status ON finance.status_id = payment_status.id
+                                    WHERE paid_at IS NOT NULL AND payment_status.code = 'paid' 
+                                    AND client_user_id = ${_user.id};`)
 
 
-const received = receivedDb && receivedDb > 0? receivedDb.getFloat("money") : 0;
-const paid = paidDb ? paidDb.getFloat("money") : 0;
-const receivedLast = receivedLastDb  && receivedLastDb > 0 ? receivedLastDb.getFloat("money") : 0;
-const paidLast = paidLastDb  ? paidLastDb.getFloat("money") : 0;
-const invoicesPaid = invoicesPaidDb  ? invoicesPaidDb.getFloat("money") : 0;
-const invoices = invoicesDb  ? invoicesDb.getFloat("money") : 0;
+const received = receivedDb && receivedDb.hasKey("money") ? receivedDb.getFloat("money") : 0;
+const paid = paidDb && paidDb.hasKey("money") ? paidDb.getFloat("money") : 0;
+const receivedLast = receivedLastDb && receivedLastDb.hasKey("money") ? receivedLastDb.getFloat("money") : 0;
+const paidLast = paidLastDb && paidLastDb.hasKey("money")  ? paidLastDb.getFloat("money") : 0;
+const invoicesPaid = invoicesPaidDb && invoicesPaidDb.hasKey("money") ? invoicesPaidDb.getFloat("money") : 0;
+const invoices = invoicesDb && invoicesDb.hasKey("money") ? invoicesDb.getFloat("money") : 0;
 
 
 const diffInvoice = (received + paid) - (receivedLast + paidLast);
