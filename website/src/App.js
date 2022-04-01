@@ -73,9 +73,6 @@ export default function App(props) {
             collapsible
             collapsed={collapsed}
             onCollapse={onCollapse}
-            onBreakpoint={broken => {
-              console.log(broken);
-            }}
             trigger={<MenuOutlined />}
             theme="light"
           >
