@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Redirect } from "react-router-dom";
-import { Typography, Statistic, Row, Col, Space, Card, notification, Divider } from 'antd';
+import { Typography, Statistic, Row, Col, Card, notification, Divider } from 'antd';
 import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
 import { Column, Pie, Sunburst } from '@ant-design/plots';
 
@@ -12,7 +12,7 @@ import _service from '@netuno/service-client';
 
 import './index.less';
 
-const { Title, Paragraph, Text, Link } = Typography;
+const { Title, Paragraph, Link } = Typography;
 const layout = {
     wrapperCol: { xs: { span: 12 }, sm: { span: 12 }, md: { span: 24 }, lg: { span: 24 } },
     style: { marginBotton: 10, marginTop: 10 }

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Switch, Route, useLocation, Link, Redirect } from "react-router-dom";
 
-import { ConfigProvider, Layout, Menu, Button, Typography } from 'antd';
+import { ConfigProvider, Layout, Menu, Typography } from 'antd';
 import { PieChartOutlined, CarryOutOutlined, LogoutOutlined, MenuOutlined, UserOutlined, WalletOutlined, SettingOutlined } from '@ant-design/icons';
 import { ReactSVG } from 'react-svg'
 
@@ -23,13 +23,11 @@ import Detail from './pages/Clients/Detail';
 import Settings from './pages/Settings';
 import RecoveryPage from './pages/Recovery';
 import NotFoundPage from './pages/NotFound';
-import { BrowserView, MobileView, isBrowser, isMobile } from 'react-device-detect';
-import { slide as Burger } from 'react-burger-menu'
+import { isMobile } from 'react-device-detect';
 
 import './styles/App.less';
 
-const { Header, Content, Sider, Footer } = Layout;
-const { SubMenu } = Menu;
+const { Content, Sider, Footer } = Layout;
 const { Text } = Typography;
 
 export default function App(props) {

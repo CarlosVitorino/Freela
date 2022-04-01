@@ -34,7 +34,7 @@ export default function Invoice(props) {
             title: 'Price',
             dataIndex: 'price',
             key: 'price',
-            render: text => <a>{text} €</a>,
+            render: text => (<>{text} €</>),
 
         },
         {
@@ -145,6 +145,23 @@ export default function Invoice(props) {
                         message: 'Invoice Created',
                         description: 'New invoice created successfully.',
                     });
+                    _service({
+                        method: 'POST',
+                        url: 'invoice/pdf',
+                        data: values,
+                        success: (response) => {
+                            if (response.json.result) {
+                                const file = new Blob([response.json.data], { type: 'application/pdf' });
+                                const fileURL = URL.createObjectURL(file);
+                                window.open(fileURL);
+                            } else {
+                                notification["warning"]({
+                                    message: 'There was an error loading data',
+                                    description: response.json.error,
+                                });
+                            }
+                        }
+                    })
                     setSubmitting(false);
                     props.history.goBack();
 
