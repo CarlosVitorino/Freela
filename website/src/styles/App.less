@@ -6,13 +6,23 @@
   //padding-top: @layout-header-height;
   min-height: 100vh;
 
+  @media screen and (max-width: @mobile-width) {
+
+    .content-body {
+      padding: 2px !important;
+    }
+    .ant-layout-sider-light .ant-layout-sider-zero-width-trigger {
+      background-color: transparent;
+    }
+  }
   @media screen and (min-width: @mobile-width) {
+
     &.auth {
       padding-left: 200px;
       transition: all 0.2s;
 
       &.collapsed {
-        padding-left: 80px;
+        padding-left: 0px;
       }
     }
   }
@@ -100,7 +110,7 @@
 
           @media screen and (max-width: @mobile-width) {
             padding: 20px 0;
-            margin-left: 80px;
+            //margin-left: 80px;
           }
         }
       }

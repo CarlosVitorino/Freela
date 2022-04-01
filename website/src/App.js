@@ -23,6 +23,8 @@ import Detail from './pages/Clients/Detail';
 import Settings from './pages/Settings';
 import RecoveryPage from './pages/Recovery';
 import NotFoundPage from './pages/NotFound';
+import { BrowserView, MobileView, isBrowser, isMobile } from 'react-device-detect';
+import { slide as Burger } from 'react-burger-menu'
 
 import './styles/App.less';
 
@@ -43,7 +45,7 @@ export default function App(props) {
   useEffect(() => {
     setHeaderButtonMode(location.pathname);
     setMenu(location.pathname);
-    setLogo(<ReactSVG  className={classNames( !_auth.isLogged() ? "login-logo": "logo"  )}  alt="logo"  src="images/logo.svg" />)
+    setLogo(<ReactSVG className={classNames(!_auth.isLogged() ? "login-logo" : "logo")} alt="logo" src="images/logo.svg" />)
   }, [location]);
 
   function onLogout() {
@@ -51,71 +53,68 @@ export default function App(props) {
   }
 
   function onCollapse() {
-    if(!collapsed) {
-      setLogo(<ReactSVG  className="logo logo-small" alt="logo"  src="images/logo-small.svg" />)
+    if (!collapsed) {
+      setLogo(<ReactSVG className="logo logo-small" alt="logo" src="images/logo-small.svg" />)
     } else {
-      setLogo(<ReactSVG  className={classNames( !_auth.isLogged() ? "login-logo": "logo"  )} alt="logo"  src="images/logo.svg" />)
+      setLogo(<ReactSVG className={classNames(!_auth.isLogged() ? "login-logo" : "logo")} alt="logo" src="images/logo.svg" />)
     }
     setCollapsed(!collapsed)
   }
 
   return (
     <ConfigProvider locale={antLocale_ptPT}>
-      <Layout className={'page ' + classNames({ 'auth ': _auth.isLogged(),  'collapsed ': collapsed }, !_auth.isLogged() && ' page-login') }>
+      <Layout className={'page ' + classNames({ 'auth ': _auth.isLogged(), 'collapsed ': collapsed }, !_auth.isLogged() && ' page-login')}>
         {_auth.isLogged() &&
-          <Sider
-            className="menu-side"
-            onBreakpoint={mobile => {
-              setSideMenuMobileMode(mobile)
-            }}
-            collapsedWidth={sideMenuMobileMode ? '0' : '80'}
-            breakpoint={"md"}
-            collapsible
-            collapsed={collapsed}
-            onCollapse={onCollapse}
-            trigger={<MenuOutlined />}
-            theme="light"
-          >
-            <div className="logo-container">
-              {logo}
-            </div>
-            <Menu selectedKeys={[menu]} mode="inline">
-              
-              <div className={collapsed ? "menu-group-wrapper-collapsed": "menu-group-wrapper"}>
-                <Text className="menu-group">ANALIZE</Text>
-              </div>
-              <Menu.Item key="/dashboard" icon={<PieChartOutlined />}>
-                <Link to="/dashboard">Dashboard</Link>
-              </Menu.Item>
+              <Sider
+                className="menu-side"
+                onBreakpoint={mobile => {
+                  setSideMenuMobileMode(mobile)
+                }}
+                collapsedWidth={sideMenuMobileMode ? '0' : '80'}
+                breakpoint={"md"}
+                collapsible
+                collapsed={collapsed}
+                onCollapse={onCollapse}
+                trigger={<MenuOutlined />}
+                theme="light"
+              >
+                <div className="logo-container">
+                  {logo}
+                </div>
+                <Menu selectedKeys={[menu]} mode="inline">
 
-              <div className={collapsed ? "menu-group-wrapper-collapsed": "menu-group-wrapper"}>
-                <Text className="menu-group">TRACK</Text>
-              </div>
-              <Menu.Item key="/sessions" icon={<CarryOutOutlined />}>
-                <Link to="/sessions">Sessions</Link>
-              </Menu.Item>  
+                  <div className={collapsed ? "menu-group-wrapper-collapsed" : "menu-group-wrapper"}>
+                    <Text className="menu-group">ANALIZE</Text>
+                  </div>
+                  <Menu.Item key="/dashboard" icon={<PieChartOutlined />}>
+                    <Link to="/dashboard" onClick={() => isMobile ? setCollapsed(true) : ""} >Dashboard</Link>
+                  </Menu.Item>
 
-              <div className={collapsed ? "menu-group-wrapper-collapsed": "menu-group-wrapper"}>
-                <Text className="menu-group">MANAGE</Text>
-              </div>
-              <Menu.Item key="/clients" icon={<UserOutlined />}>
-                <Link to="/clients">Clients</Link>
-              </Menu.Item>
-          
-              <Menu.Item key="/finance" icon={<WalletOutlined />}>
-                <Link to="/finance">Finance</Link>
-              </Menu.Item>
-              <Menu.Item key="/settings" icon={<SettingOutlined />}>
-                <Link to="/settings">Settings</Link>
-              </Menu.Item>
-              <Menu.Item className="logout" key="lougout" onClick={onLogout}>
-                {collapsed ?
-                  <Link to="/login" className="lougout-link"><LogoutOutlined /></Link>
-                : <Link to="/login" className="lougout-link"><LogoutOutlined /> Logout</Link>
-                }
-              </Menu.Item>
-            </Menu>
-          </Sider>
+                  <div className={collapsed ? "menu-group-wrapper-collapsed" : "menu-group-wrapper"}>
+                    <Text className="menu-group">TRACK</Text>
+                  </div>
+                  <Menu.Item key="/sessions" icon={<CarryOutOutlined />}>
+                    <Link to="/sessions" onClick={() => isMobile ? setCollapsed(true) : ""}>Sessions</Link>
+                  </Menu.Item>
+
+                  <div className={collapsed ? "menu-group-wrapper-collapsed" : "menu-group-wrapper"}>
+                    <Text className="menu-group">MANAGE</Text>
+                  </div>
+                  <Menu.Item key="/clients" icon={<UserOutlined />}>
+                    <Link to="/clients" onClick={() => isMobile ? setCollapsed(true) : ""}>Clients</Link>
+                  </Menu.Item>
+
+                  <Menu.Item key="/finance" icon={<WalletOutlined />}>
+                    <Link to="/finance">Finance</Link>
+                  </Menu.Item>
+                  <Menu.Item key="/settings" icon={<SettingOutlined />}>
+                    <Link to="/settings" onClick={() => isMobile ? setCollapsed(true) : ""}>Settings</Link>
+                  </Menu.Item>
+                  <Menu.Item className="logout" key="lougout" onClick={onLogout}>
+                    {!collapsed && <Link to="/login" className="lougout-link"><LogoutOutlined /> Logout</Link>}
+                  </Menu.Item>
+                </Menu>
+              </Sider>
         }
         <Layout>
           <Content className={classNames({ 'auth ': _auth.isLogged() })}>

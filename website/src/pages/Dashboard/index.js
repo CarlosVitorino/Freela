@@ -174,8 +174,7 @@ export default function Dashboard(props) {
     };
 
     if (_auth.isLogged()) {
-        if (monthData && monthData.totalMoney == -1) {
-            const settings = "Don't forget to have a look at the settings menu for additional parameterization."
+        if (monthData && monthData.totalMoney === -1) {
             return (
                 <div className="dashboard">
                     <div className="content-title">
