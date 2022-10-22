@@ -23,7 +23,6 @@ import Detail from './pages/Clients/Detail';
 import Settings from './pages/Settings';
 import RecoveryPage from './pages/Recovery';
 import NotFoundPage from './pages/NotFound';
-import { isMobile } from 'react-device-detect';
 
 import './styles/App.less';
 
@@ -85,28 +84,28 @@ export default function App(props) {
                     <Text className="menu-group">ANALIZE</Text>
                   </div>
                   <Menu.Item key="/dashboard" icon={<PieChartOutlined />}>
-                    <Link to="/dashboard" onClick={() => isMobile ? setCollapsed(true) : ""} >Dashboard</Link>
+                    <Link to="/dashboard" onClick={() => sideMenuMobileMode ? setCollapsed(true) : ""} >Dashboard</Link>
                   </Menu.Item>
 
                   <div className={collapsed ? "menu-group-wrapper-collapsed" : "menu-group-wrapper"}>
                     <Text className="menu-group">TRACK</Text>
                   </div>
                   <Menu.Item key="/sessions" icon={<CarryOutOutlined />}>
-                    <Link to="/sessions" onClick={() => isMobile ? setCollapsed(true) : ""}>Sessions</Link>
+                    <Link to="/sessions" onClick={() => sideMenuMobileMode ? setCollapsed(true) : ""}>Sessions</Link>
                   </Menu.Item>
 
                   <div className={collapsed ? "menu-group-wrapper-collapsed" : "menu-group-wrapper"}>
                     <Text className="menu-group">MANAGE</Text>
                   </div>
                   <Menu.Item key="/clients" icon={<UserOutlined />}>
-                    <Link to="/clients" onClick={() => isMobile ? setCollapsed(true) : ""}>Clients</Link>
+                    <Link to="/clients" onClick={() => sideMenuMobileMode ? setCollapsed(true) : ""}>Clients</Link>
                   </Menu.Item>
 
                   <Menu.Item key="/finance" icon={<WalletOutlined />}>
                     <Link to="/finance">Finance</Link>
                   </Menu.Item>
                   <Menu.Item key="/settings" icon={<SettingOutlined />}>
-                    <Link to="/settings" onClick={() => isMobile ? setCollapsed(true) : ""}>Settings</Link>
+                    <Link to="/settings" onClick={() => sideMenuMobileMode ? setCollapsed(true) : ""}>Settings</Link>
                   </Menu.Item>
                   <Menu.Item className="logout" key="lougout" onClick={onLogout}>
                     {!collapsed && <Link to="/login" className="lougout-link"><LogoutOutlined /> Logout</Link>}

@@ -10,7 +10,7 @@
  */
 _header.contentType("pdf");
 
-/* val created_at = _req.getString("created_at");
+val created_at = _req.getString("created_at");
 val total_amount = _req.getFloat("total_amount");
 val billing_period = _req.hasKey("billing_period") ? _req.getString("billing_period") : null;
 val client = _req.hasKey("client") ? _req.getString("client") : null;
@@ -19,7 +19,7 @@ val pay_day = _req.hasKey("pay_day") ? _req.getString("pay_day") : null;
 val sessions = _req.hasKey("sessions") ? _req.getString("sessions") : null;
 val description = _req.hasKey("description") ? _req.getString("description") : null;
 val provider = _req.hasKey("provider") ? _req.getString("provider") : null;
-val date = _req.hasKey("date") ? _req.getString("date") : moment().format("YYYY-MM-DD"); */
+val date = _req.hasKey("date") ? _req.getString("date") : moment().format("YYYY-MM-DD");
 
 val pdfDocument = _pdf.newDocument(_pdf.pageSize("A4"));
 pdfDocument.add(_pdf.paragraph(""));

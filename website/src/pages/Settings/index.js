@@ -6,13 +6,13 @@ import { DeleteFilled, EditOutlined } from '@ant-design/icons';
 import _auth from '@netuno/auth-client';
 import _service from '@netuno/service-client';
 import Profile from '../../components/Profile';
+import Company from '../../components/Company';
 
 import './index.less';
 import classNames from 'classnames';
 
 const { Title, Text } = Typography;
 const { TabPane } = Tabs;
-const { TextArea } = Input;
 
 const layout = {
     wrapperCol: { xs: { span: 12 }, sm: { span: 12 }, md: { span: 24 }, lg: { span: 24 } },
@@ -40,7 +40,6 @@ const data = [
 export default function Settings(props) {
 
     const [loading, setLoading] = useState(false);
-    const [submitting, setSubmitting] = useState(false);
     const [suppliersData, setSuppliersData] = useState([]);
     const [typesData, setTypesData] = useState([]);
     const [subTypesData, setSubTypesData] = useState([]);
@@ -169,7 +168,10 @@ export default function Settings(props) {
                             <TabPane tab="Profile" key = "1">
                                 <Profile/>
                             </TabPane>
-                            <TabPane tab="Suppliers" key="2">
+                            <TabPane tab="Company" key = "2">
+                                <Company/>
+                            </TabPane>
+                            <TabPane tab="Suppliers" key="3">
                                 <Row {...layout}>
                                     <Col xs={{ span: 24 }} lg={{ span: 12 }}>
                                         <Title level={4} style={{ marginBottom: 20 }}>Supplier</Title>
@@ -284,7 +286,7 @@ export default function Settings(props) {
                                     </Col>
                                 </Row>
                             </TabPane>
-                            <TabPane tab="Session Types" key="3">
+                            <TabPane tab="Session Types" key="4">
                                 <Row {...layout}>
                                     <Col xs={{ span: 24 }} lg={{ span: 12 }}>
                                         <Title level={4} style={{ marginBottom: 20 }}>Type</Title>
@@ -347,7 +349,7 @@ export default function Settings(props) {
                                     </Col>
                                 </Row>
                             </TabPane>
-                            <TabPane tab="Session Sub Types" key="4">
+                            <TabPane tab="Session Sub Types" key="5">
                                 <Row {...layout}>
                                     <Col xs={{ span: 24 }} lg={{ span: 12 }}>
                                         <Title level={4} style={{ marginBottom: 20 }}>Sub Type</Title>

@@ -230,7 +230,7 @@ export default function Profile(props) {
 
                         <Form.Item>
                             <Button type="primary" htmlType="submit" loading={submitting}>
-                                Atualizar Perfil
+                                Update Profile
                             </Button>
                         </Form.Item>
                     </Form>

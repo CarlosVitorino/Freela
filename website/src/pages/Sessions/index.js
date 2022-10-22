@@ -613,7 +613,7 @@ class Session extends React.Component {
     }
 
     rowSelection = {
-        onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
+        onChange: (selectedRowKeys, selectedRows) => {
             console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
             this.setState({ selectedSessions: selectedRowKeys })
         }

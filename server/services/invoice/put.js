@@ -1,3 +1,5 @@
+// _core : pdf
+
 const moment = require('moment');
 
 const created_at = _req.getString("created_at");
@@ -40,5 +42,21 @@ const invoice_id = _db.insert(
         .set("client_user_id", _user.id)
 );
 
+//Generate PDF
+const sessionsDataDB = _db.query(`
+    SELECT * FROM sessions WHERE id IN (?)
+`, _val.list().add(sessions));
 
-_out.json(_val.map().set("result", true));
+const company = _db.findFirst(
+    "company",
+    _val.init()
+        .set("client_user_id", _user.id)
+);
+
+const clientDB = _db.get("client", client);
+const invoce = _db.get("invoice", invoice_id);
+
+generatePDF(invoce, company, clientDB, sessionsDataDB);
+
+
+_out.json(_val.map().set("result", true).set("invoice_id", invoice_id));

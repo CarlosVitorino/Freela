@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Redirect, useLocation, useHistory, Link } from "react-router-dom";
+import { Redirect, useLocation, Link } from "react-router-dom";
 
 import { Typography, Space, Button, Input, Table, notification, Spin, Popconfirm, Card, Tooltip, DatePicker, Modal } from 'antd';
-import { DeleteFilled, CheckSquareFilled, MinusSquareFilled } from '@ant-design/icons';
+import { DeleteOutlined, CheckSquareFilled, MinusSquareFilled, FilePdfOutlined } from '@ant-design/icons';
 
+import config from '../../config/config.json';
 import _auth from '@netuno/auth-client';
 import _service from '@netuno/service-client';
 import classNames from 'classnames';
@@ -12,7 +13,6 @@ import moment from 'moment';
 import './index.less';
 
 const { Title, Text } = Typography;
-const { Search } = Input;
 
 export default function Finance(props) {
 
@@ -22,8 +22,6 @@ export default function Finance(props) {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [record, setRecord] = useState(false);
     const [paidAt, setPaidAt] = useState(moment());
-
-    const history = useHistory();
     const location = useLocation();
 
     const columns = [
@@ -56,30 +54,39 @@ export default function Finance(props) {
             title: 'Status',
             dataIndex: 'status',
             key: 'status',
+            render: (_, record) => 
+                financeData.length >= 1 ? 
+                (
+                    <> 
+                        { record.status_code === 'waiting_payment' ?
+                                <Tooltip title="Waiting Payment - click to change">
+                                    <Button type="link" className="action-icon" onClick={() => showModal(record)} icon={<MinusSquareFilled className="action-icon-yellow" />} />
+                                </Tooltip>
+                                :
+                                <Tooltip title="Paid - click to change">
+                                    <Button type="link" className="action-icon" onClick={() => handleStatusChange(record)} icon={<CheckSquareFilled className="action-icon-green" />} />
+                                </Tooltip>
+                        }
+                    {record.status} </> 
+                ) : record.status   
+                
+
+            
         },
         {
-            title: 'operation',
+            title: 'Operation',
             dataIndex: 'operation',
             render: (_, record) =>
                 financeData.length >= 1 ? (
                     <Space>
-                        {/* <Popconfirm title="Are you sure, you want to change the status?" onConfirm={() => handleStatusChange(record)}> */}
-                        { record.status_code === 'waiting_payment' ?
-                            <Tooltip title="Waiting Payment - click to change">
-                                <Button type="link" className="action-icon" onClick={() => showModal(record)} icon={<MinusSquareFilled className="action-icon-yellow" />} />
-                            </Tooltip>
-                            :
-                            <Tooltip title="Paid - click to change">
-                                <Button type="link" className="action-icon" onClick={() => handleStatusChange(record)} icon={<CheckSquareFilled className="action-icon-green" />} />
-
-                            </Tooltip>
-                        }
-                        {/* </Popconfirm> */}
                         <Popconfirm title="Are you sure, you want to DELETE this record?" onConfirm={() => handleDeleteRecord(record)}>
                             <Tooltip title="Delete">
-                                <DeleteFilled className="action-icon" />
+                                <DeleteOutlined className="action-icon" />
                             </Tooltip>
                         </Popconfirm>
+                        <Tooltip title="View Invoice PDF">
+                            <FilePdfOutlined className="action-icon" onClick={() => window.open(config.api.services + "/finance/pdf")} />
+                        </Tooltip>
                     </Space>
                 ) : null,
         },

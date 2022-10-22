@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Redirect, useLocation, useHistory, Link } from "react-router-dom";
+import { JellyTriangle } from '@uiball/loaders'
 
 import { Typography, Space, Button, Input, Table, notification, Spin, Card } from 'antd';
 
@@ -137,7 +138,9 @@ export default function Clients(props) {
             return (
                 <div className="loading-wrapper">
                     <div className="content-title">
-                        <Title level={2}><Spin /> Loading...</Title>
+                        <div aria-live="polite" aria-busy={loading}>
+                            {loading && <JellyTriangle color="papayawhip" />}
+                        </div>
                     </div>
                 </div>
             );

@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, useParams } from "react-router-dom";
 import { ArrowLeftOutlined } from '@ant-design/icons';
-import { Typography, Form, Input, InputNumber, DatePicker, Button, notification, Spin, Select, Row, Col, Card, Space, Switch, Popconfirm, Checkbox } from 'antd';
+import { Typography, Form, Input, InputNumber, DatePicker, Button, notification, Select, Row, Col, Card, Space, Switch, Popconfirm, Checkbox } from 'antd';
 import moment from 'moment'
+import { JellyTriangle } from '@uiball/loaders'
 import _service from '@netuno/service-client';
 
 import './index.less';
@@ -40,7 +41,7 @@ export default function Detail(props) {
     }, [location]);
 
     useEffect(() => {
-        if ( sessionTypeValue && sessionType && sessionSubType && !sessionSubTypeOptions ) handleTypeChange(sessionTypeValue);
+        if ( sessionTypeValue && sessionType && sessionSubType && clientForm.current && !sessionSubTypeOptions ) handleTypeChange(sessionTypeValue);
     }, [sessionTypeValue, sessionType, sessionSubType]);
 
     const onFetchDetail = () => {
@@ -52,7 +53,7 @@ export default function Detail(props) {
             data: { clientId: parseInt(id) },
             success: (response) => {
                 setLoading(false);
-                if (response.json.result && response.json.data.length == 1) {
+                if (response.json.result && response.json.data.length === 1) {
                     let data = response.json.data[0];
                     if (data['start_date']) {
                         data['start_date'] = moment(data['start_date']);
@@ -77,7 +78,7 @@ export default function Detail(props) {
                 setLoading(false);
                 notification["error"]({
                     message: 'Ocorreu um erro a carregar os dados',
-                    description: 'Ocorreu um erro a carregar os dados, por favor tente novamente.',
+                    description: 'Detail - Ocorreu um erro a carregar os dados, por favor tente novamente.',
                 });
             }
         });
@@ -97,7 +98,6 @@ export default function Detail(props) {
                         message: 'There was an error loading data',
                         description: response.json.error,
                     });
-                    setLoading(false);
                 }
             },
             fail: (error) => {
@@ -124,7 +124,6 @@ export default function Detail(props) {
                         message: 'There was an error loading data',
                         description: response.json.error,
                     });
-                    setLoading(false);
                 }
             },
             fail: (error) => {
@@ -151,7 +150,6 @@ export default function Detail(props) {
                         message: 'Ocorreu um erro a carregar os dados',
                         description: response.json.error,
                     });
-                    setLoading(false);
                 }
             },
             fail: () => {
@@ -301,7 +299,9 @@ export default function Detail(props) {
         return (
             <div className="loading-wrapper">
                 <div className="content-title">
-                    <Title level={2}><Spin /> Loading...</Title>
+                    <div className="loader" aria-live="polite" aria-busy={loading}>
+                        {loading && <JellyTriangle color="#4b4848"/>}
+                    </div>
                 </div>
             </div>
         );
