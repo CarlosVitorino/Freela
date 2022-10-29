@@ -24,7 +24,7 @@ switch(type) {
                     .set("vat", vat)
                     .set("website", website)
                     .set("phone", phone)
-                    .set("client_user_id", _user.id)
+                    .set("client_user_id", _user.id())
             );
         } else {
             result = _db.insert(
@@ -35,7 +35,7 @@ switch(type) {
                     .set("vat", vat)
                     .set("website", website)
                     .set("phone", phone)
-                    .set("client_user_id", _user.id)
+                    .set("client_user_id", _user.id())
             );
         }
         break;
@@ -50,7 +50,7 @@ switch(type) {
                     .set("label", label)
                     .set("value", value)
                     .set("description", description)
-                    .set("client_user_id", _user.id)
+                    .set("client_user_id", _user.id())
             );
         } else {
             result = _db.insert(
@@ -59,7 +59,7 @@ switch(type) {
                     .set("label", label)
                     .set("value", value)
                     .set("description", description)
-                    .set("client_user_id", _user.id)
+                    .set("client_user_id", _user.id())
             );
         }
         break;
@@ -67,7 +67,7 @@ switch(type) {
     case 'subType':
         dbSessionType = _db.queryFirst(`
         SELECT * FROM session_type WHERE value = ? and client_user_id = ?::int
-    `, _val.list().add(type_value).add(_user.id));  
+    `, _val.list().add(type_value).add(_user.id()));  
 
         value = label.replace(/\s+/g, '-').toLowerCase();
         if(id) {
@@ -79,7 +79,7 @@ switch(type) {
                     .set("value", value)
                     .set("type_id", dbSessionType ? dbSessionType.getInt("id"): null)
                     .set("description", description)
-                    .set("client_user_id", _user.id)
+                    .set("client_user_id", _user.id())
             );
         } else {
             result = _db.insert(
@@ -89,7 +89,7 @@ switch(type) {
                     .set("value", value)
                     .set("type_id", dbSessionType ? dbSessionType.getInt("id"): null)
                     .set("description", description)
-                    .set("client_user_id", _user.id)
+                    .set("client_user_id", _user.id())
             );
         }
         break;

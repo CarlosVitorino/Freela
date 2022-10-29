@@ -13,7 +13,7 @@ const invoice_id = _db.insert(
         .set("vat", vat)
         .set("website", website)
         .set("phone", phone)
-        .set("client_user_id", _user.id)
+        .set("client_user_id", _user.id())
 );
 
 

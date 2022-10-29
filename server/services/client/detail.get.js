@@ -6,6 +6,6 @@ const clients = _db.queryFirst(`
     LEFT JOIN session_type ON client.default_session_type_id = session_type.id
     LEFT JOIN session_sub_type ON client.default_session_sub_type_id = session_sub_type.id
     WHERE client.id = ?::int and client.client_user_id = ?::int
-`, _val.list().add(clientId).add(_user.id));
+`, _val.list().add(clientId).add(_user.id()));
 
 _out.json(_val.map().set("result", true).set("data", _val.list().add(clients)));

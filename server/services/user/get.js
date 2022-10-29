@@ -1,7 +1,7 @@
 const user = _db.queryFirst(`
     SELECT * FROM client_user
     WHERE client_user_id = ?::int
-`, _val.list().add(_user.id));
+`, _val.list().add(_user.id()));
 
 const userData = _val.map()
     .set("name", user.getString("name"))

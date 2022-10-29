@@ -4,7 +4,7 @@ const query = `
     INNER JOIN client ON session.client_id = client.id
     LEFT JOIN session_type ON session.type_id = session_type.id
     LEFT JOIN session_sub_type ON session.sub_type_id = session_sub_type.id
-    WHERE client.client_user_id = ${_user.id}
+    WHERE client.client_user_id = ${_user.id()}
     order by session.date desc, session.id desc
 `;
 

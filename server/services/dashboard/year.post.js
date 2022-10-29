@@ -20,7 +20,7 @@ const dataByMonth = _db.query(`
     SELECT TO_CHAR(date_trunc('month', date), 'Month') AS month, date_trunc('month', date) AS month_no, session_type.label AS type, sum(price) as revenue
     FROM session
     INNER JOIN session_type on session.type_id = session_type.id
-    WHERE session.client_user_id = ${_user.id} 
+    WHERE session.client_user_id = ${_user.id()} 
     GROUP BY month, month_no, type
 	ORDER BY month_no;`);
 
@@ -29,12 +29,12 @@ const top5Clients = _db.query(`
     SELECT client.name AS client, SUM(price) AS amount 
     FROM session
     INNER JOIN client on session.client_id = client.id
-    WHERE session.client_user_id = ${_user.id} 
+    WHERE session.client_user_id = ${_user.id()} 
     GROUP BY client
     ORDER BY amount desc;`);
 
-const sessionsDb = _db.queryFirst(`SELECT SUM(price) as money, SUM(duration) as duration, SUM(1) as sessions FROM session WHERE date BETWEEN '${startOfYear}' AND '${endOfYear}' AND client_user_id = ${_user.id}`)
-const paidDb = _db.queryFirst(`SELECT SUM(total_amount) as money FROM finance WHERE total_amount < 0 AND paid_at BETWEEN '${startOfYear}' AND '${endOfYear}'  AND client_user_id = ${_user.id};`)
+const sessionsDb = _db.queryFirst(`SELECT SUM(price) as money, SUM(duration) as duration, SUM(1) as sessions FROM session WHERE date BETWEEN '${startOfYear}' AND '${endOfYear}' AND client_user_id = ${_user.id()}`)
+const paidDb = _db.queryFirst(`SELECT SUM(total_amount) as money FROM finance WHERE total_amount < 0 AND paid_at BETWEEN '${startOfYear}' AND '${endOfYear}'  AND client_user_id = ${_user.id()};`)
 const billed = sessionsDb ? sessionsDb.getFloat("money") : 0;
 const totalMinutes = sessionsDb ? sessionsDb.getFloat("duration") : 0;
 const sessions = sessionsDb ? sessionsDb.getFloat("sessions") : 0;
@@ -44,7 +44,7 @@ const profit = billed + spent;
 /**
  * Estimated revenue 
  */
-const estimatedMonthMoneyDb = _db.queryFirst(`SELECT SUM(sessions_per_month * default_price) as estimated FROM client where active = true AND client_user_id = ${_user.id};`)
+const estimatedMonthMoneyDb = _db.queryFirst(`SELECT SUM(sessions_per_month * default_price) as estimated FROM client where active = true AND client_user_id = ${_user.id()};`)
 const estimatedMonthMoney = estimatedMonthMoneyDb ? estimatedMonthMoneyDb.getFloat("estimated") : 0;
 const estimatedMoneyLeft = daysInMonth ? (estimatedMonthMoney / daysInMonth) * daysUntilEndOfMonth : 0;
 const partialEstimatedMonthMoney = spent + estimatedMoneyLeft;
@@ -56,7 +56,7 @@ const estimationReceivedYear = partialEstimatedMonthMoney + (estimatedMonthMoney
 const spentByMonth = _db.query(`
     SELECT date_trunc('month', paid_at) AS month , sum(total_amount) as spent
     FROM finance
-    WHERE paid_at IS NOT NULL AND total_amount < 0 AND client_user_id = ${_user.id}
+    WHERE paid_at IS NOT NULL AND total_amount < 0 AND client_user_id = ${_user.id()}
     GROUP BY month
     ORDER BY month desc;`);
 
@@ -89,7 +89,7 @@ const estimatedProfitYear = estimationReceivedYear + estimatedSpendYear;
  /**
   * Atendance
   */
-const sessionsPerMonthDb = _db.queryFirst(`SELECT SUM(sessions_per_month) as sessions_per_month FROM client WHERE client_user_id = ${_user.id};`)
+const sessionsPerMonthDb = _db.queryFirst(`SELECT SUM(sessions_per_month) as sessions_per_month FROM client WHERE client_user_id = ${_user.id()};`)
 const sessionsPerMonth = sessionsPerMonthDb.getInt('sessions_per_month')
 const sessionsPerDay = daysPassFromStartOfYear ? sessions / daysPassFromStartOfYear : 0;
 const expectedSessionsPerDay = sessionsPerMonth / (365/12)
@@ -103,7 +103,7 @@ const atendance = expectedSessionsPerDay ? Math.round((sessionsPerDay / expected
     SELECT session_type.label AS name, session_type.id AS id, sum(price) as value
     FROM session
     INNER JOIN session_type on session.type_id = session_type.id
-    WHERE session.client_user_id = ${_user.id}
+    WHERE session.client_user_id = ${_user.id()}
     GROUP BY name, session_type.id;`);
 
  const dataBySubType = _db.query(`
@@ -111,7 +111,7 @@ const atendance = expectedSessionsPerDay ? Math.round((sessionsPerDay / expected
     FROM session
     INNER JOIN session_type on session.type_id = session_type.id
     INNER JOIN session_sub_type on session.sub_type_id = session_sub_type.id
-    WHERE session.client_user_id = ${_user.id}
+    WHERE session.client_user_id = ${_user.id()}
     GROUP BY name, session_sub_type.type_id;`);
 
  const sunburst = _val.map();

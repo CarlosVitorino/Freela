@@ -37,7 +37,7 @@ const invoice_id = _db.insert(
         .set("provider_id", provider_id)
         .set("paid_at", date)
         .set("status_id", dbPaymentStatus.getInt('id'))
-        .set("client_user_id", _user.id)
+        .set("client_user_id", _user.id())
 );
 
 
