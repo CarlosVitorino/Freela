@@ -1,4 +1,3 @@
-
 /**
  *
  *  EN: Export PDF
@@ -9,7 +8,7 @@
  *
  */
 
-fun generatePDF(invoiceData: Values, companyData: Values, customerData: Values, productsData: List<Values>) {
+fun generatePDF(invoiceData: val, companyData: val, customerData: val, productsData: List<val>) {
 
     //_header.contentType("pdf");
     //val pdfDocument = _pdf.newDocument(_pdf.pageSize("A4"));

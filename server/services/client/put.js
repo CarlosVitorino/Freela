@@ -31,14 +31,14 @@ let dbSessionType = null;
 if(default_session_type) {
     dbSessionType = _db.queryFirst(`
     SELECT * FROM session_type WHERE value = ? and client_user_id = ?::int
-`, _val.list().add(default_session_type).add(_user.id));  
+`, _val.list().add(default_session_type).add(_user.id()));  
 }
 
 let dbSessionSubType = null;
 if(default_session_sub_type) {
     dbSessionSubType = _db.queryFirst(`
     SELECT * FROM session_sub_type WHERE value = ? and client_user_id = ?::int
-`, _val.list().add(default_session_sub_type).add(_user.id));  
+`, _val.list().add(default_session_sub_type).add(_user.id()));  
 }
 
 
@@ -100,7 +100,7 @@ if (id) {
             .set("website", website)
             .set("default_session_type_id", default_session_type ? dbSessionType.getInt("id") : null)
             .set("default_session_sub_type_id", default_session_sub_type ? dbSessionSubType.getInt("id") : null)
-            .set("client_user_id", _user.id)
+            .set("client_user_id", _user.id())
             .set("client_association_id", client_association_id)
 
 
@@ -118,7 +118,7 @@ if (id) {
             .set("injuries_conditions", injuries_conditions)
             .set("likes", likes)
             .set("weight", weight)
-            .set("client_user_id", _user.id)
+            .set("client_user_id", _user.id())
     );
 
 }

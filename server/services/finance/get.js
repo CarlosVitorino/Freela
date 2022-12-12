@@ -3,7 +3,7 @@ const query = `
     FROM finance
     LEFT JOIN client ON finance.client_id = client.id
     INNER JOIN payment_status ON finance.status_id = payment_status.id
-    WHERE finance.client_user_id = ${_user.id}
+    WHERE finance.client_user_id = ${_user.id()}
     order by date desc
 `;
 

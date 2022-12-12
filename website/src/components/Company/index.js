@@ -281,7 +281,17 @@ export default function Company(props) {
                                         { type: 'string', message: 'Insert a valid address' }
                                     ]}
                                 >
-                                    <Input.TextArea rows={5} style={{ maxWidth: 257 }} disabled={submitting} />
+                                    <Input.TextArea rows={1} style={{ maxWidth: 257 }} disabled={submitting} />
+                                </Form.Item>
+                                <Form.Item
+                                    label="City"
+                                    name="city"
+                                    rules={[
+                                        { required: true, message: 'Insert the city' },
+                                        { type: 'string', message: 'Insert a valid city' }
+                                    ]}
+                                >
+                                    <Input style={{ maxWidth: 257 }} disabled={submitting} />
                                 </Form.Item>
                                 <Form.Item
                                     label="Postal Code"

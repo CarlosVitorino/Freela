@@ -63,7 +63,7 @@ export default function Clients(props) {
                 if('default_price' in record && 'session_duration' in record && record.session_duration > 0){
                     priceHour = (60 * record.default_price) / record.session_duration;
                 }    
-                return priceHour + "€/h";
+                return Math.round(priceHour * 100) / 100 + "€/h";
             }
         },
         {

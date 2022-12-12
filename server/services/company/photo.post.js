@@ -2,13 +2,13 @@ const file = _req.getFile("file")
 let companyId = _req.hasKey("companyId") ? _req.getInt("companyId") : null;
 
 const os = _os.init()
-const user = _user.id;
+const user = _user.id();
 
 
 _log.info(`User: ${user} is uploading a photo`);
 
 if (file !== null) {
-	if(companyId === null) {
+	if(companyId === -1) {
 		companyId = _db.insert(
 			"company",
 			_val.init()

@@ -4,7 +4,7 @@ const sessionsToUpdate = _req.hasKey("toUpdate") ? _req.getList("toUpdate") : nu
 
 for(const session of sessionsToCreate) {
     _log.info(session.toJSON());
-    session.set("client_user_id", _user.id)
+    session.set("client_user_id", _user.id())
 }
 
 if (sessionsToCreate) {

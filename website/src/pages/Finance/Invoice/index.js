@@ -131,7 +131,7 @@ export default function Invoice(props) {
         values['pay_day'] = values['pay_day'].format('YYYY-MM-DD');
         values['created_at'] = moment().format('YYYY-MM-DD');
         values['billing_period'] = values['billing_period'][0].format('YYYY-MM-DD') + " - " + values['billing_period'][1].format('YYYY-MM-DD');
-        values['sessions'] = JSON.stringify(location.ids);
+        values['sessions'] = location.ids.toString();
         const valueStr = total_amount.replace('€', '');
         values['total_amount'] = parseFloat(valueStr);
 

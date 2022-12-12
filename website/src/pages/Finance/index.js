@@ -49,6 +49,9 @@ export default function Finance(props) {
             title: 'Amount',
             dataIndex: 'total_amount',
             key: 'total_amount',
+            render: (_, record) => { 
+                return (record.total_amount + "€")
+            }
         },
         {
             title: 'Status',
@@ -158,6 +161,7 @@ export default function Finance(props) {
                     message: 'Error!',
                     description: 'There was an error, please contact your boyfriend.'
                 });
+             
             }
         });
     }
@@ -224,7 +228,7 @@ export default function Finance(props) {
                 let exist = false;
                 for (var prop in finance) {
                     if (Object.prototype.hasOwnProperty.call(finance, prop)) {
-                        if (finance[prop].toString().indexOf(value) !== -1) exist = true;
+                        if (finance[prop].toString().toLowerCase().indexOf(value.toLowerCase()) !== -1) exist = true;
                     }
                 }
                 return exist;

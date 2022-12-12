@@ -1,4 +1,5 @@
 // _core : pdf
+// _core : kotlin
 
 const moment = require('moment');
 
@@ -39,24 +40,30 @@ const invoice_id = _db.insert(
         .set("provider_id", provider_id)
         .set("paid_at", date)
         .set("status_id", dbPaymentStatus.getInt('id'))
-        .set("client_user_id", _user.id)
+        .set("client_user_id", _user.id())
 );
 
+_log.info("sessions:" + sessions);
+const sanitezedIds = _db.sanitize(sessions)
 //Generate PDF
 const sessionsDataDB = _db.query(`
-    SELECT * FROM sessions WHERE id IN (?)
-`, _val.list().add(sessions));
+    SELECT * FROM session WHERE id IN (${sanitezedIds}) 
+    AND client_user_id = ${_user.id()}
+`);
 
 const company = _db.findFirst(
     "company",
     _val.init()
-        .set("client_user_id", _user.id)
+        .set("client_user_id", _user.id())
 );
 
 const clientDB = _db.get("client", client);
-const invoce = _db.get("invoice", invoice_id);
+const invoce = _db.get("finance", invoice_id);
 
-generatePDF(invoce, company, clientDB, sessionsDataDB);
+const kotlinTest = new kotlinTest();
+const value = kotlinTest.test();
+_log.debug("test:" + value);
+//generatePDF(invoce, company, clientDB, sessionsDataDB);
 
 
 _out.json(_val.map().set("result", true).set("invoice_id", invoice_id));

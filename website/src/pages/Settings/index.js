@@ -19,24 +19,6 @@ const layout = {
     style: { marginBotton: 10, marginTop: 10 }
 };
 
-const data = [
-    {
-        title: 'Ant Design Title 1',
-    },
-    {
-        title: 'Ant Design Title 2',
-    },
-    {
-        title: 'Ant Design Title 3',
-    },
-    {
-        title: 'Ant Design Title 4',
-    },
-    {
-        title: 'Ant Design Title 5',
-    },
-];
-
 export default function Settings(props) {
 
     const [loading, setLoading] = useState(false);
