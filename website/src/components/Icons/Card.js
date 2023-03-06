@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function Card() {
+export default function CardIcon() {
   return (
     <span
       role="img"

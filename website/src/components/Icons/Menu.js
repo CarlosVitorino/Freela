@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function ClientIcon() {
+export default function MenuIcon() {
   return (
     <span
       role="img"
@@ -29,12 +29,14 @@ export default function ClientIcon() {
           y="10"
           width="68"
           height="68"
-          fill="#DD7DFF"
+          fill="#9C9DAF"
           stroke="black"
           stroke-width="4"
           stroke-linejoin="round"
         />
-        <circle cx="44" cy="44" r="8" fill="black" />
+        <path d="M24 58H64" stroke="black" stroke-width="8" />
+        <path d="M24 44H64" stroke="black" stroke-width="8" />
+        <path d="M24 30H64" stroke="black" stroke-width="8" />
       </svg>
     </span>
   );

@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function PieChart() {
+export default function PieChartIcon() {
   return (
     <span
       role="img"

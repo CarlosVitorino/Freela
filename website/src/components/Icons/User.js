@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function User() {
+export default function UserIcon() {
   return (
     <span
       role="img"

@@ -1,16 +1,10 @@
 import React, { useEffect, useState } from "react";
+import { useMediaQuery } from "react-responsive";
+
 import { Switch, Route, useLocation, Link, Redirect } from "react-router-dom";
 
 import { ConfigProvider, Layout, Menu, Typography } from "antd";
-import {
-  PieChartOutlined,
-  CarryOutOutlined,
-  LogoutOutlined,
-  MenuOutlined,
-  UserOutlined,
-  WalletOutlined,
-  SettingOutlined,
-} from "@ant-design/icons";
+import { MenuOutlined } from "@ant-design/icons";
 import { ReactSVG } from "react-svg";
 
 import antLocale_ptPT from "antd/lib/locale/pt_PT";
@@ -32,18 +26,18 @@ import Settings from "./pages/Settings";
 import RecoveryPage from "./pages/Recovery";
 import NotFoundPage from "./pages/NotFound";
 import {
-  Client,
-  Card,
-  PieChart,
-  Options,
-  Time,
-  User,
-  Exit,
+  CardIcon,
+  PieChartIcon,
+  OptionsIcon,
+  TimeIcon,
+  UserIcon,
+  ExitIcon,
+  MenuIcon,
 } from "./components/Icons";
 
 import "./styles/App.less";
 
-const { Content, Sider, Footer } = Layout;
+const { Content, Sider } = Layout;
 const { Text } = Typography;
 
 export default function App(props) {
@@ -54,16 +48,25 @@ export default function App(props) {
   const [menu, setMenu] = useState("dashboard");
   const [logo, setLogo] = useState(false);
   const [sideMenuMobileMode, setSideMenuMobileMode] = useState(false);
+  const isMobile = useMediaQuery({ query: `(max-width: 760px)` });
 
   useEffect(() => {
     setHeaderButtonMode(location.pathname);
     setMenu(location.pathname);
     setLogo(
-      <ReactSVG
-        className={classNames(!_auth.isLogged() ? "login-logo" : "logo")}
-        alt="logo"
-        src="images/logo.svg"
-      />
+      !collapsed ? (
+        <ReactSVG
+          className={classNames(!_auth.isLogged() ? "login-logo" : "logo")}
+          alt="logo"
+          src="images/logo.svg"
+        />
+      ) : (
+        <ReactSVG
+          className="logo logo-small"
+          alt="logo"
+          src="images/logo-small.svg"
+        />
+      )
     );
   }, [location]);
 
@@ -106,19 +109,27 @@ export default function App(props) {
         {_auth.isLogged() && (
           <Sider
             className="menu-side"
-            onBreakpoint={(mobile) => {
-              setSideMenuMobileMode(mobile);
+            onBreakpoint={(breakpoint) => {
+              console.log(breakpoint);
+              setSideMenuMobileMode(breakpoint);
             }}
-            collapsedWidth={sideMenuMobileMode ? "0" : "80"}
-            breakpoint={"lg"}
+            collapsedWidth={isMobile ? "100" : "100"}
+            breakpoint={("sm", "lg")}
             collapsible
             collapsed={collapsed}
             onCollapse={onCollapse}
-            trigger={<MenuOutlined />}
+            trigger={isMobile ? <MenuOutlined /> : null}
             theme="light"
           >
             <div className="logo-container">{logo}</div>
-            <Menu selectedKeys={[menu]} mode="inline">
+            <Menu selectedKeys={[menu]} mode="inline" className="inner-menu">
+              <Menu.Item
+                key="collapse"
+                onClick={() => onCollapse()}
+                icon={<MenuIcon />}
+              >
+                <span className="menu-trigger">MENU</span>
+              </Menu.Item>
               <div
                 className={
                   collapsed
@@ -128,15 +139,9 @@ export default function App(props) {
               >
                 <Text className="menu-group">ANALIZE</Text>
               </div>
-              <Menu.Item key="/dashboard" icon={<PieChart />}>
-                <Link
-                  to="/dashboard"
-                  onClick={() => (sideMenuMobileMode ? setCollapsed(true) : "")}
-                >
-                  Dashboard
-                </Link>
+              <Menu.Item key="/dashboard" icon={<PieChartIcon />}>
+                <Link to="/dashboard">Dashboard</Link>
               </Menu.Item>
-
               <div
                 className={
                   collapsed
@@ -146,15 +151,9 @@ export default function App(props) {
               >
                 <Text className="menu-group">TRACK</Text>
               </div>
-              <Menu.Item key="/sessions" icon={<Time />}>
-                <Link
-                  to="/sessions"
-                  onClick={() => (sideMenuMobileMode ? setCollapsed(true) : "")}
-                >
-                  Sessions
-                </Link>
+              <Menu.Item key="/sessions" icon={<TimeIcon />}>
+                <Link to="/sessions">Sessions</Link>
               </Menu.Item>
-
               <div
                 className={
                   collapsed
@@ -164,34 +163,23 @@ export default function App(props) {
               >
                 <Text className="menu-group">MANAGE</Text>
               </div>
-              <Menu.Item key="/clients" icon={<User />}>
-                <Link
-                  to="/clients"
-                  onClick={() => (sideMenuMobileMode ? setCollapsed(true) : "")}
-                >
-                  Clients
-                </Link>
+              <Menu.Item key="/clients" icon={<UserIcon />}>
+                <Link to="/clients">Clients</Link>
               </Menu.Item>
-
-              <Menu.Item key="/finance" icon={<Card />}>
+              <Menu.Item key="/finance" icon={<CardIcon />}>
                 <Link to="/finance">Finance</Link>
               </Menu.Item>
-              <Menu.Item key="/settings" icon={<Options />}>
-                <Link
-                  to="/settings"
-                  onClick={() => (sideMenuMobileMode ? setCollapsed(true) : "")}
-                >
-                  Settings
-                </Link>
+              <Menu.Item key="/settings" icon={<OptionsIcon />}>
+                <Link to="/settings">Settings</Link>
               </Menu.Item>
               <Menu.Item
                 className="logout"
-                key="lougout"
+                key="/login"
                 onClick={onLogout}
-                icon={<Exit />}
+                icon={<ExitIcon />}
               >
                 {!collapsed && (
-                  <Link to="/login" className="lougout-link">
+                  <Link to="/login" onClick={onLogout} className="lougout-link">
                     Logout
                   </Link>
                 )}
@@ -224,7 +212,7 @@ export default function App(props) {
               <Route component={NotFoundPage} />
             </Switch>
           </Content>
-          {!_auth.isLogged() && <Footer>© sitana.pt 2021</Footer>}
+          {/*!_auth.isLogged() && <Footer>© sitana.pt 2021</Footer>*/}
         </Layout>
       </Layout>
     </ConfigProvider>

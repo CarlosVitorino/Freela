@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function Time() {
+export default function TimeIcon() {
   return (
     <span
       role="img"

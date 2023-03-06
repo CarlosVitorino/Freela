@@ -1,9 +1,19 @@
-import Card from "./Card";
-import Client from "./Client";
-import Options from "./Options";
-import PieChart from "./PieChart";
-import Time from "./Time";
-import User from "./User";
-import Exit from "./Exit";
+import CardIcon from "./Card";
+import ClientIcon from "./Client";
+import OptionsIcon from "./Options";
+import PieChartIcon from "./PieChart";
+import TimeIcon from "./Time";
+import UserIcon from "./User";
+import ExitIcon from "./Exit";
+import MenuIcon from "./Menu";
 
-export { Card, Client, Options, PieChart, Time, User, Exit };
+export {
+  CardIcon,
+  ClientIcon,
+  OptionsIcon,
+  PieChartIcon,
+  TimeIcon,
+  UserIcon,
+  ExitIcon,
+  MenuIcon,
+};

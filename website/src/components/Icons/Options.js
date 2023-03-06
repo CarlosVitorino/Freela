@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function Options() {
+export default function OptionsIcon() {
   return (
     <span
       role="img"

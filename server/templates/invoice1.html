@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    /* Add some style to the invoice */
+    body {
+      font-family: Arial, sans-serif;
+      font-size: 12px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    td, th {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+    }
+    tr:nth-child(even) {
+      background-color: #dddddd;
+    }
+    .invoice-header {
+      background-color: #f2f2f2;
+      text-align: center;
+      padding: 10px;
+    }
+    .invoice-footer {
+      background-color: #f2f2f2;
+      text-align: center;
+      padding: 10px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="invoice-header">
+    <h1>Invoice</h1>
+  </div>
+  <table>
+    <tr>
+      <th>Item</th>
+      <th>Quantity</th>
+      <th>Price</th>
+      <th>Total</th>
+    </tr>
+    <tr>
+      <td>Item 1</td>
+      <td>2</td>
+      <td>$5.00</td>
+      <td>$10.00</td>
+    </tr>
+    <tr>
+      <td>Item 2</td>
+      <td>1</td>
+      <td>$10.00</td>
+      <td>$10.00</td>
+    </tr>
+    <tr>
+      <td>Item 3</td>
+      <td>4</td>
+      <td>$2.50</td>
+      <td>$10.00</td>
+    </tr>
+    <tr>
+      <td></td>
+      <td></td>
+      <td>Total:</td>
+      <td>$30.00</td>
+    </tr>
+  </table>
+  <div class="invoice-footer">
+    <p>Thank you for your business!</p>
+  </div>
+</body>
+</html>

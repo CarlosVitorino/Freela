@@ -1,38 +1,49 @@
-@import './variables.less';
-@import './fonts.less';
+@import "./variables.less";
+@import "./fonts.less";
 
 .page {
-  font-family: 'Fira Sans', sans-serif;
+  font-family: "Fira Sans", sans-serif;
   //padding-top: @layout-header-height;
   min-height: 100vh;
 
-  @media screen and (max-width: @mobile-width) {
+  &.auth {
+    padding-left: 200px;
+    transition: all 0.2s;
 
+    &.collapsed {
+      padding-left: 100px;
+    }
+  }
+
+  @media screen and (max-width: @tablet-width) {
+    .content-body {
+      padding: 10px !important;
+    }
+  }
+
+  @media screen and (max-width: @mobile-width) {
     .content-body {
       padding: 2px !important;
     }
-
   }
-  @media screen and (min-width: @mobile-width) {
-
+  @media screen and (max-width: @mobile-width) {
     &.auth {
       padding-left: 200px;
       transition: all 0.2s;
 
       &.collapsed {
-        padding-left: 0px;
+        padding-left: 100px;
       }
     }
   }
 
   .ant {
-
     &-layout {
       &-header {
         position: fixed;
         width: 100vw;
         top: 0;
-        padding: 0 calc((100vw - @desktop-width)/2);
+        padding: 0 calc((100vw - @desktop-width) / 2);
         z-index: 100;
 
         @media screen and (max-width: @desktop-width) {
@@ -49,7 +60,7 @@
             width: 100%;
 
             @media screen and (min-width: @mobile-width) {
-              width: calc(100% - 80px);
+              width: calc(100% - 100px);
             }
           }
         }
@@ -91,7 +102,7 @@
 
           .logo-small {
             width: 40px;
-            margin-left: 20px;
+            margin-left: 30px;
           }
 
           @media screen and (max-width: @mobile-width) {
@@ -100,17 +111,11 @@
         }
       }
 
-      &-sider {
-        &-light, &-trigger {
-          background-color: #EEEEEE;
-        }
-      }
-
       &-content {
         position: relative;
 
         &.auth {
-          background-color: #EEEEEE;
+          background-color: #eeeeee;
           padding: 20px 0;
 
           @media screen and (max-width: @mobile-width) {
@@ -124,7 +129,7 @@
         .ant-layout {
           &-content {
             @media screen and (min-width: @desktop-width) {
-              padding: 40px 0 40px calc(50vw - @desktop-width/2 - 40px);
+              padding: 40px 0 40px calc(50vw - @desktop-width / 2 - 40px);
             }
           }
 
@@ -150,9 +155,8 @@
       }
 
       &-footer {
-
         text-align: center;
-        padding: 20px calc((100vw - @desktop-width)/2);
+        padding: 20px calc((100vw - @desktop-width) / 2);
 
         @media screen and (max-width: @desktop-width) {
           padding: 20px 40px;
@@ -166,7 +170,7 @@
       /* font-weight: bold; */
       color: #5b5a5a;
       box-shadow: 5px 5px 0px 0px #5b5a5a;
-  }
+    }
 
     &-menu-item a {
       color: rgba(0, 0, 0, 0.65);
@@ -174,79 +178,112 @@
     }
 
     &-table {
-      .ant-table-thead>tr>th {
+      .ant-table-thead > tr > th {
         background: #81ad74;
         color: white;
         font-weight: bold;
       }
 
-      .ant-table-tbody>tr>td {
+      .ant-table-tbody > tr > td {
         background: #91c48338;
       }
     }
 
+    //Boxes
     &-btn-primary {
       background-color: #ffbc00;
-      border: 2px solid #5b5a5a;
+      border: 1px solid #5b5a5a;
       font-weight: bold;
       color: #5b5a5a;
-      box-shadow: 5px 5px 0px 0px #5b5a5a;
-      height: 36px;
+      height: 32px;
     }
 
-    &-btn-default, &-picker, &-select {
+    &-select {
       background-color: #fff;
-      border: 2px solid #5b5a5a;
+      border: 1px solid #5b5a5a;
       color: #5b5a5a;
-      box-shadow: 5px 5px 0px 0px #5b5a5a;
     }
 
-    &-btn-primary:focus {
-      transform: translateY(4px);
-      box-shadow: 1px 2px 0px 0px #5b5a5a;
+    &-pagination-item {
+      background-color: #fff;
+      color: #5b5a5a;
+      border: 1px solid #5b5a5a;
+
+      height: 33px;
+    }
+
+    &-pagination-next,
+    &-pagination-prev {
+      background-color: #fff;
+      color: #5b5a5a;
+      height: 33px;
+      .ant-pagination-item-link {
+        border: 1px solid #5b5a5a;
+      }
+    }
+
+    &-btn-default,
+    &-picker {
+      background-color: #fff;
+      border: 1px solid #5b5a5a;
+      color: #5b5a5a;
+      height: 32px;
     }
 
     &-input {
       padding: 5px 11px;
     }
 
-    &-input-affix-wrapper, &-input[type="text"]  {
+    &-input-affix-wrapper,
+    &-input:not([type="password"]),
+    &-input-number {
       background-color: #fff;
-      border: 2px solid #5b5a5a;
+      border: 1px solid #5b5a5a;
       color: #5b5a5a;
-      box-shadow: 5px 5px 0px 0px #5b5a5a;
     }
 
-    &-upload  {
-
-      box-shadow: 5px 5px 0px 0px #5b5a5a;
+    &-tooltip-inner {
+      .menu-trigger {
+        color: white;
+      }
     }
+  }
 
+  .ant-layout-sider-light .ant-layout-sider-zero-width-trigger,
+  .ant-layout-sider-light .ant-layout-sider-trigger {
+    display: none;
   }
 
   textarea.ant-input {
     background-color: #fff;
-    border: 2px solid #5b5a5a;
+    border: 1px solid #5b5a5a;
     color: #5b5a5a;
-    box-shadow: 5px 5px 0px 0px #5b5a5a;
-  
+    //box-shadow: 1px 1px 0px 0px #5b5a5a;
   }
 
   .menu-side {
-    background-color: #EEEEEE;
+    background-color: #eeeeee;
     //background: url('../images/13973.png') no-repeat center bottom fixed;
     //-webkit-background-size: cover;
     //-moz-background-size: cover;
     //-o-background-size: cover;
     //background-size: cover;
 
+    .inner-menu {
+      padding-top: 20px;
+    }
+
+    .menu-trigger {
+      font-weight: 600;
+    }
+
     .logout {
       bottom: 40px;
       position: absolute;
-      background-color: #EEEEEE;
+      background-color: transparent;
       max-width: 199px;
       :hover {
-        color: @primary-color  !important;
+        color: @primary-color !important;
       }
     }
     .menu-group-wrapper {
@@ -257,7 +294,6 @@
       .menu-group {
         display: flex;
         width: 100%;
-
       }
 
       &-collapsed {
@@ -265,14 +301,22 @@
         padding: 30px 0px 10px 0px;
         font-weight: 600;
         color: rgba(0, 0, 0, 52%);
-      } 
+      }
+    }
 
+    .ant-menu.ant-menu-inline-collapsed > .ant-menu-item,
+    .ant-menu.ant-menu-inline-collapsed > .ant-menu-item-group > .ant-menu-item-group-list > .ant-menu-item,
+    .ant-menu.ant-menu-inline-collapsed
+      > .ant-menu-item-group
+      > .ant-menu-item-group-list
+      > .ant-menu-submenu
+      > .ant-menu-submenu-title,
+    .ant-menu.ant-menu-inline-collapsed > .ant-menu-submenu > .ant-menu-submenu-title {
+      padding: 5px calc(50% - 32px / 2);
     }
   }
 
-
-
-  >.ant-layout-sider {
+  > .ant-layout-sider {
     //box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.15);
     z-index: 100;
     left: 0;
@@ -284,8 +328,8 @@
     }
 
     .ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
-      background: rgb(237,252,251);
-      background: linear-gradient(90deg, rgba(237,252,251,1) 94%, rgba(255,255,255,0) 100%);
+      background: rgb(237, 252, 251);
+      background: linear-gradient(90deg, rgba(237, 252, 251, 1) 94%, rgba(255, 255, 255, 0) 100%);
     }
 
     .ant-layout-sider-zero-width-trigger {
@@ -315,7 +359,7 @@
 
       .logo {
         width: 140px;
-        margin: 15px 30px;
+        margin: 25px 30px;
       }
 
       .login-logo {
@@ -325,7 +369,7 @@
 
       .logo-small {
         width: 40px;
-        margin-left: 20px;
+        margin-left: 30px;
       }
 
       @media screen and (max-width: @mobile-width) {
@@ -337,7 +381,6 @@
   .go-back-btn {
     padding: 4px 0;
   }
-
 
   .content {
     &-title {
@@ -357,7 +400,7 @@
   .big-title {
     line-height: 0.5;
     text-align: center;
-    font-family: 'Ultra', serif;
+    font-family: "Ultra", serif;
     color: #4b4848;
     padding: 20px 10px 10px 10px;
     margin-bottom: 50px;
@@ -375,24 +418,22 @@
     position: absolute;
     position: absolute;
     height: 25px;
-    border-bottom: 10px solid #FFE162;
+    border-bottom: 10px solid #ffe162;
     border-top: 10px solid @primary-color;
     top: 0;
-    width: calc((100vw - 367px)/2 - 45px);
+    width: calc((100vw - 367px) / 2 - 45px);
   }
 
   .big-title span:before {
     right: 100%;
     margin-right: 15px;
     margin-left: 10px;
-
   }
 
   .big-title span:after {
     left: 100%;
     margin-left: 15px;
     margin-right: 10px;
-
   }
 
   .action-icon {
@@ -411,15 +452,10 @@
   }
 
   .action-icon-green {
-    color: #91C483;
+    color: #91c483;
     font-size: 16px;
   }
 }
-
-
-
-
-
 
 #profile\$Menu {
   .ant-btn {
@@ -429,6 +465,4 @@
   .anticon {
     margin: 0 0 1em;
   }
-
-
 }

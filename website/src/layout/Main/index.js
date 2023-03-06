@@ -95,7 +95,7 @@ export default function Main(props) {
             onBreakpoint={(mobile) => {
               setSideMenuMobileMode(mobile);
             }}
-            collapsedWidth={sideMenuMobileMode ? "0" : "80"}
+            collapsedWidth={sideMenuMobileMode ? "0" : "100"}
             breakpoint={"lg"}
             collapsible
             collapsed={collapsed}
@@ -184,7 +184,7 @@ export default function Main(props) {
               <Route component={NotFoundPage} />
             </Switch>
           </Content>
-          {!_auth.isLogged() && <Footer>© sitana.pt 2023</Footer>}
+          {/*!_auth.isLogged() && <Footer>© sitana.pt 2023</Footer>*/}
         </Layout>
       </Layout>
     </ConfigProvider>

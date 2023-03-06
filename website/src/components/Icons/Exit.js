@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function Exit() {
+export default function ExitIcon() {
   return (
     <span
       role="img"

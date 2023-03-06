@@ -10,16 +10,60 @@
  */
 _header.contentType("pdf");
 
-val created_at = _req.getString("created_at");
-val total_amount = _req.getFloat("total_amount");
-val billing_period = _req.hasKey("billing_period") ? _req.getString("billing_period") : null;
-val client = _req.hasKey("client") ? _req.getString("client") : null;
-val supplier = _req.hasKey("supplier") ? _req.getString("supplier") : null;
-val pay_day = _req.hasKey("pay_day") ? _req.getString("pay_day") : null;
-val sessions = _req.hasKey("sessions") ? _req.getString("sessions") : null;
-val description = _req.hasKey("description") ? _req.getString("description") : null;
-val provider = _req.hasKey("provider") ? _req.getString("provider") : null;
-val date = _req.hasKey("date") ? _req.getString("date") : moment().format("YYYY-MM-DD");
+val user = _user.id();
+/*Fetch Data */
+val invoice_id = _req.getString("id");
+val invoice_new = _db.get("finance", invoice_id);
+_log.info(invoice_new.toJSON());
+val sessionsIds = invoice_new.getString("sessions");
+val sanitezedSessionsIds = _db.sanitize(sessionsIds);
+val sessions = _db.query("SELECT count(s.*) as qty, s.price, sst.label as description FROM session s inner join session_sub_type sst on s.sub_type_id = sst.id WHERE s.id IN (${sanitezedSessionsIds}) AND s.client_user_id = ${user} group by sst.label, s.price ");
+val client = _db.get("client", invoice_new.getInt("client_id"));
+val company = _db.findFirst(
+    "company",
+    _val.map()
+        .set(
+            "where",
+            _val.map()
+                .set("client_user_id", invoice_new.getInt("client_user_id"))
+        )
+)
+_log.info("client: " + client.toJSON());
+
+/* Company Data */
+val company_name = if (company.getString("company") !== null) company.getString("company") else "";
+val address = if (company.getString("address") !== null) company.getString("address") else "";
+val city = if (company.getString("city") !== null) company.getString("city") else "";
+val postal_code = if (company.getString("postal_code") !== null) company.getString("postal_code") else "";
+val country = if (company.getString("country") !== null) company.getString("country") else "";
+val vat = if (company.getString("vat") !== null) company.getString("vat") else "";
+val terms = if (company.getString("terms") !== null) company.getString("terms") else "";
+val phone_number = if (company.getString("phone_number") !== null) company.getString("phone_number") else "";
+val email = if (company.getString("email") !== null) company.getString("email") else "";
+
+/* Client Data */
+val client_name = if (client.getString("legal_name") !== null) client.getString("legal_name") else client.getString("name");
+val client_address = if (client.getString("address") !== null) client.getString("address") else "";
+val client_city = if (client.getString("city") !== null) client.getString("city") else "";
+val client_postal_code = if (client.getString("postal_code") !== null) client.getString("postal_code") else "";
+val client_country = if (client.getString("country") !== null) client.getString("country") else "";
+val client_vat = if (client.getString("vat") !== null) client.getString("vat") else ""; 
+
+/* Invoice Data */
+val billing_period = if (invoice_new.getString("billing_period") !== null) invoice_new.getString("billing_period") else "";
+val processed_at = if (invoice_new.getString("created_at") !== null) invoice_new.getString("created_at") else "";
+val total_amount = if (invoice_new.getString("total_amount") !== null) invoice_new.getString("total_amount") else "";
+val service_description = if (invoice_new.getString("service_description") !== null) invoice_new.getString("service_description") else "";
+val invoice_number = if (invoice_new.getString("id") !== null) invoice_new.getString("id") else "";
+/* Sessions List logging */
+for (session in sessions) {
+    _log.info(session.toJSON());
+}
+
+
+
+/* Generate PDF */
+
 
 val pdfDocument = _pdf.newDocument(_pdf.pageSize("A4"));
 pdfDocument.add(_pdf.paragraph(""));
@@ -54,7 +98,7 @@ canvas.stroke();
 //val rectangle = new Rectangle(36, 650, 100, 100);
 
 pdfDocument.add(
-    _pdf.image(_storage.filesystem("server", "samples/export-pdf", "tiina.png"))
+    _pdf.image(_storage.database("company", "logo", company.getString("logo")))
         .scaleAbsolute(120.toFloat(), 36.toFloat())
 );
 
@@ -69,22 +113,22 @@ val from = _pdf.cell().setBorder(_pdf.border("no-border"));
 from
 .add(_pdf.paragraph("\n")
 ).add(
-    _pdf.paragraph("Bodylanguage")
+    _pdf.paragraph(company_name)
         .setFont(title)
         .setFontSize(textSize)
         .setFontColor(textColor)
 ).add(
-    _pdf.paragraph("Rua Infante D. Pedro 1 3º ESQ")
+    _pdf.paragraph(address)
         .setFont(text)
         .setFontSize(textSize)
         .setFontColor(textColor)
 ).add(
-    _pdf.paragraph("2835-218 Almada")
+    _pdf.paragraph(postal_code + " " +  city)
         .setFont(text)
         .setFontSize(textSize)
         .setFontColor(textColor)
 ).add(
-    _pdf.paragraph("Portugal")
+    _pdf.paragraph(country)
         .setFont(text)
         .setFontSize(textSize)
         .setFontColor(textColor)
@@ -94,7 +138,7 @@ from
         .setFontSize(textSize)
         .setFontColor(textColor)
         .add( 
-            _pdf.paragraph("123456789")
+            _pdf.paragraph(vat)
             .setFont(text)
             .setFontSize(textSize)
             .setFontColor(textColor)
@@ -109,7 +153,7 @@ val to = _pdf.cell().setBorder(_pdf.border("no-border"));
 to
 .add(_pdf.paragraph("\n")
 ).add(
-    _pdf.paragraph("Kelly Family")
+    _pdf.paragraph(client_name)
         .setFont(title)
         .setFontSize(textSize)
         .setFontColor(textColor)
@@ -119,23 +163,23 @@ to
         .setFontSize(textSize)
         .setFontColor(textColor)
         .add( 
-            _pdf.paragraph("123456789")
+            _pdf.paragraph(client_vat)
             .setFont(text)
             .setFontSize(textSize)
             .setFontColor(textColor)
         )
 ).add(
-    _pdf.paragraph("Av. Infante D. Pedro 66 5º ESQ")
+    _pdf.paragraph(client_address)
         .setFont(text)
         .setFontSize(textSize)
         .setFontColor(textColor)
 ).add(
-    _pdf.paragraph("1050-081 Lisboa")
+    _pdf.paragraph(client_postal_code + " " +  client_city)
         .setFont(text)
         .setFontSize(textSize)
         .setFontColor(textColor)
 ).add(
-    _pdf.paragraph("Portugal")
+    _pdf.paragraph(client_country)
         .setFont(text)
         .setFontSize(textSize)
         .setFontColor(textColor)
@@ -152,7 +196,7 @@ reference.add( _pdf.paragraph("\n")
         .setFontSize(smallSize)
         .setFontColor(lightTextColor)
         .add( 
-            _pdf.paragraph("Fitness services")
+            _pdf.paragraph(service_description)
             .setFont(text)
             .setFontSize(smallSize)
             .setFontColor(textColor)
@@ -163,7 +207,7 @@ reference.add( _pdf.paragraph("\n")
         .setFontSize(smallSize)
         .setFontColor(lightTextColor)
         .add( 
-            _pdf.paragraph("2022-03-01 - 2022-03-31")
+            _pdf.paragraph(billing_period)
             .setFont(text)
             .setFontSize(smallSize)
             .setFontColor(textColor)
@@ -187,7 +231,7 @@ processed.add( _pdf.paragraph("\n").setFontSize(smallSize)
         .setFontSize(smallSize)
         .setFontColor(lightTextColor)
         .add( 
-            _pdf.paragraph("$formatted")
+            _pdf.paragraph(processed_at)
             .setFont(text)
             .setFontSize(smallSize)
             .setFontColor(textColor)
@@ -214,13 +258,70 @@ invoice.add(
         .setFontSize(titleSize)
         .setFontColor(textColor)
 ).add(
-    _pdf.paragraph("Invoice nº 1234")
+    _pdf.paragraph("Invoice nº " + invoice_number)
         .setFont(title)
         .setFontSize(textSize)
         .setFontColor(textColor)
 );
 
 body.addCell(invoice);
+
+val pdfTable = _pdf.table(treeOfSixColumnWidths)
+    .addCell(
+        _pdf.cell()
+            .add(
+                _pdf.paragraph("Qty")
+                .setFont(title)
+                .setFontSize(smallSize)
+                .setFontColor(textColor)
+            ).setBorder(_pdf.border("no-border")).setBorderBottom(_pdf.border("solid", _pdf.color("#827878"), 0.5F))
+
+    )
+    .addCell(
+        _pdf.cell()
+            .add(
+                _pdf.paragraph("Description")
+                    .setFont(title)
+                    .setFontSize(smallSize)
+                    .setFontColor(textColor)
+            ).setBorder(_pdf.border("no-border")).setBorderBottom(_pdf.border("solid", _pdf.color("#827878"), 0.5F))
+    )
+    .addCell(
+        _pdf.cell()
+            .add(
+                _pdf.paragraph("Price")
+                    .setFont(title)
+                    .setFontSize(smallSize)
+                    .setFontColor(textColor)
+            ).setBorder(_pdf.border("no-border")).setBorderBottom(_pdf.border("solid", _pdf.color("#827878"), 0.5F))
+    )
+for (session in sessions) {
+    pdfTable.addCell(
+        _pdf.cell()
+            .add(
+                _pdf.paragraph(session.getString("qty"))
+                    .setFont(text)
+                    .setFontSize(smallSize)
+                    .setFontColor(textColor)
+            ).setBorder(_pdf.border("no-border")).setBorderBottom(_pdf.border("solid", _pdf.color("#827878"), 0.5F))
+    ).addCell(
+        _pdf.cell()
+            .add(
+                _pdf.paragraph(session.getString("description"))
+                    .setFont(text)
+                    .setFontSize(smallSize)
+                    .setFontColor(textColor)
+            ).setBorder(_pdf.border("no-border")).setBorderBottom(_pdf.border("solid", _pdf.color("#827878"), 0.5F))
+    ).addCell(
+        _pdf.cell()
+            .add(
+                _pdf.paragraph(session.getString("price") + "€")
+                    .setFont(text)
+                    .setFontSize(smallSize)
+                    .setFontColor(textColor)
+            ).setBorder(_pdf.border("no-border")).setBorderBottom(_pdf.border("solid", _pdf.color("#827878"), 0.5F))
+    )
+}
 
 val services = _pdf.cell().setBorder(_pdf.border("no-border"));
 services.add( _pdf.paragraph("\n")
@@ -231,118 +332,7 @@ services.add( _pdf.paragraph("\n")
         .setFontColor(textColor)
 ).add( _pdf.paragraph("\n")
 ).add(
-    _pdf.table(treeOfSixColumnWidths)
-        .addCell(
-            _pdf.cell()
-                .add(
-                    _pdf.paragraph("Qty")
-                    .setFont(title)
-                    .setFontSize(smallSize)
-                    .setFontColor(textColor)
-                ).setBorder(_pdf.border("no-border")).setBorderBottom(_pdf.border("solid", _pdf.color("#827878"), 0.5F))
-
-        )
-        .addCell(
-            _pdf.cell()
-                .add(
-                    _pdf.paragraph("Description")
-                        .setFont(title)
-                        .setFontSize(smallSize)
-                        .setFontColor(textColor)
-                ).setBorder(_pdf.border("no-border")).setBorderBottom(_pdf.border("solid", _pdf.color("#827878"), 0.5F))
-        )
-        .addCell(
-            _pdf.cell()
-                .add(
-                    _pdf.paragraph("Price")
-                        .setFont(title)
-                        .setFontSize(smallSize)
-                        .setFontColor(textColor)
-                ).setBorder(_pdf.border("no-border")).setBorderBottom(_pdf.border("solid", _pdf.color("#827878"), 0.5F))
-        )
-        .addCell(
-            _pdf.cell()
-                .add(
-                    _pdf.paragraph("4")
-                        .setFont(text)
-                        .setFontSize(smallSize)
-                        .setFontColor(textColor)
-                ).setBorder(_pdf.border("no-border")).setBorderBottom(_pdf.border("solid", _pdf.color("#dddada"), 0.5F))
-        )
-        .addCell(
-            _pdf.cell()
-                .add(
-                    _pdf.paragraph("Conversation")
-                        .setFont(text)
-                        .setFontSize(smallSize)
-                        .setFontColor(textColor)
-                ).setBorder(_pdf.border("no-border")).setBorderBottom(_pdf.border("solid", _pdf.color("#dddada"), 0.5F))
-        )
-        .addCell(
-            _pdf.cell()
-                .add(
-                    _pdf.paragraph("20€")
-                        .setFont(text)
-                        .setFontSize(smallSize)
-                        .setFontColor(textColor)
-                ).setBorder(_pdf.border("no-border")).setBorderBottom(_pdf.border("solid", _pdf.color("#dddada"), 0.5F))
-        )
-        .addCell(
-            _pdf.cell()
-                .add(
-                    _pdf.paragraph("8")
-                        .setFont(text)
-                        .setFontSize(smallSize)
-                        .setFontColor(textColor)
-                ).setBorder(_pdf.border("no-border")).setBorderBottom(_pdf.border("solid", _pdf.color("#dddada"), 0.5F))
-        )
-        .addCell(
-            _pdf.cell()
-                .add(
-                    _pdf.paragraph("Class")
-                        .setFont(text)
-                        .setFontSize(smallSize)
-                        .setFontColor(textColor)
-                ).setBorder(_pdf.border("no-border")).setBorderBottom(_pdf.border("solid", _pdf.color("#dddada"), 0.5F))
-        )
-        .addCell(
-            _pdf.cell()
-                .add(
-                    _pdf.paragraph("25€")
-                        .setFont(text)
-                        .setFontSize(smallSize)
-                        .setFontColor(textColor)
-                ).setBorder(_pdf.border("no-border")).setBorderBottom(_pdf.border("solid", _pdf.color("#dddada"), 0.5F))
-        )
-
-        .addCell(
-            _pdf.cell()
-                .add(
-                    _pdf.paragraph("1")
-                        .setFont(text)
-                        .setFontSize(smallSize)
-                        .setFontColor(textColor)
-                ).setBorder(_pdf.border("no-border")).setBorderBottom(_pdf.border("solid", _pdf.color("#dddada"), 0.5F))
-        )
-        .addCell(
-            _pdf.cell()
-                .add(
-                    _pdf.paragraph("Text Correction")
-                        .setFont(text)
-                        .setFontSize(smallSize)
-                        .setFontColor(textColor)
-                ).setBorder(_pdf.border("no-border")).setBorderBottom(_pdf.border("solid", _pdf.color("#dddada"), 0.5F))
-        )
-        .addCell(
-            _pdf.cell()
-                .add(
-                    _pdf.paragraph("10€")
-                        .setFont(text)
-                        .setFontSize(smallSize)
-                        .setFontColor(textColor)
-                ).setBorder(_pdf.border("no-border")).setBorderBottom(_pdf.border("solid", _pdf.color("#dddada"), 0.5F))
-        )
-).add( _pdf.paragraph("\n")
+    pdfTable
 ).add(
     _pdf.table(treeOfSixColumnWidths)
         .addCell(
@@ -370,7 +360,7 @@ services.add( _pdf.paragraph("\n")
         .addCell(
             _pdf.cell()
                 .add(
-                    _pdf.paragraph("55€")
+                    _pdf.paragraph(total_amount + "€")
                     .setFont(title)
                     .setFontSize(smallSize)
                     .setFontColor(textColor)
@@ -386,16 +376,16 @@ services.add( _pdf.paragraph("\n")
         .setFontSize(smallSize)
         .setFontColor(textColor)
 ).add( 
-    _pdf.paragraph(" - Invoice need to be paid in 30 days ")
+    _pdf.paragraph(terms)
         .setFont(text)
         .setFontSize(smallSize)
         .setFontColor(textColor)
-).add( 
+)/* .add( 
     _pdf.paragraph(" - Transaction expenses will be paid by the issuer ")
         .setFont(text)
         .setFontSize(smallSize)
         .setFontColor(textColor)
-)
+) */
 body.addCell(services);
 pdfDocument.add(body);
 
@@ -411,7 +401,7 @@ pdfDocument.add(
                     .setFontColor(lightTextColor)
                     .setTextAlignment(com.itextpdf.layout.property.TextAlignment.CENTER)
                     .add( 
-                        _pdf.paragraph("Bodylanguage")
+                        _pdf.paragraph(company_name)
                         .setFont(text)
                         .setFontSize(smallSize)
                         .setFontColor(textColor)
@@ -429,7 +419,7 @@ pdfDocument.add(
                     .setFontColor(lightTextColor)
                     .setTextAlignment(com.itextpdf.layout.property.TextAlignment.CENTER)
                     .add( 
-                        _pdf.paragraph("+351 969 696 966")
+                        _pdf.paragraph(phone_number)
                         .setFont(text)
                         .setFontSize(smallSize)
                         .setFontColor(textColor)
@@ -446,7 +436,7 @@ pdfDocument.add(
                     .setFontColor(lightTextColor)
                     .setTextAlignment(com.itextpdf.layout.property.TextAlignment.CENTER)
                     .add( 
-                        _pdf.paragraph("info@bodylanguage.coach")
+                        _pdf.paragraph(email)
                         .setFont(text)
                         .setFontSize(smallSize)
                         .setFontColor(textColor)

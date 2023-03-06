@@ -23,12 +23,12 @@ import "./index.less";
 
 const { Title, Paragraph, Link } = Typography;
 const layout = {
-  wrapperCol: {
-    xs: { span: 12 },
-    sm: { span: 12 },
-    md: { span: 24 },
-    lg: { span: 24 },
-  },
+  // wrapperCol: {
+  //   xs: { span: 12 },
+  //   sm: { span: 12 },
+  //   md: { span: 24 },
+  //   lg: { span: 24 },
+  // },
   style: { marginBotton: 10, marginTop: 10 },
 };
 const colStyle = { padding: "8px 0px" };
