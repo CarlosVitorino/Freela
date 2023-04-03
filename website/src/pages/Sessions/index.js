@@ -514,7 +514,7 @@ class Session extends React.Component {
   };
 
   handleSave = (row) => {
-    this.setLoading(true);
+    //this.setLoading(true);
 
     const newDataFiltered = [...this.state.sessionsDataFiltered];
     const newData = [...this.state.sessionsData];
