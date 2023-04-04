@@ -46,6 +46,7 @@ const invoice_id = _db.insert(
     .set("paid_at", date)
     .set("status_id", dbPaymentStatus.getInt("id"))
     .set("client_user_id", _user.id())
+
 );
 
 _out.json(_val.map().set("result", true).set("invoice_id", invoice_id));
