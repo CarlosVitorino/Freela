@@ -15,11 +15,11 @@ Technologies Used
 ## Installation
 > To use Freela.world, you can simply visit https://freela.world and create an account. If you prefer to run the application locally, you can follow these steps:
 
-* Clone the repository: git clone https://github.com/CarlosVitorino/Freela.git
-* Install the required packages: npm install
-* Start the application: npm start
+* Clone the repository: `git clone https://github.com/CarlosVitorino/Freela.git`
+* Install the required packages: `npm install`
+* Start the application: `npm start`
 * Open your web browser and navigate to http://localhost:3000
-* Note: The NETUNO platform is required to run the backend. Please refer to the NETUNO documentation for installation instructions.
+* Note: The NETUNO platform is required to run the backend. Please refer to the NETUNO documentation for [installation instructions](https://doc.netuno.org/docs/en/installation/).
 
 ## Usage
 * The dashboard provides an overview of your earnings, best clients, best types of sessions, best subtypes, and best months of work.
