@@ -23,7 +23,7 @@ const dataByMonth = _db.query(`
     INNER JOIN session_type on session.type_id = session_type.id
     WHERE session.client_user_id = ${_user.id()} 
     GROUP BY year, month, month_no, type
-	ORDER BY month_no;`);
+	  ORDER BY month_no;`);
 
 
 const top5Clients = _db.query(`
@@ -42,6 +42,43 @@ const sessions = sessionsDb ? sessionsDb.getFloat("sessions") : 0;
 const spent = paidDb ? paidDb.getFloat("money") : 0;    
 const profit = billed + spent;
 
+/**
+ * Estimated revenue 
+ */
+const estimatedMonthMoneyDb = _db.queryFirst(`SELECT SUM(sessions_per_month * default_price) as estimated FROM client where active = true AND client_user_id = ${_user.id()};`)
+const estimatedMonthMoney = estimatedMonthMoneyDb ? estimatedMonthMoneyDb.getFloat("estimated") : 0;
+const estimatedMoneyLeft = daysInMonth ? (estimatedMonthMoney / daysInMonth) * daysUntilEndOfMonth : 0;
+const partialEstimatedMonthMoney = spent + estimatedMoneyLeft;
+const estimationReceivedYear = partialEstimatedMonthMoney + (estimatedMonthMoney * monthsUntilEndOfYear);
+
+/**
+ * Estimated spend
+ */
+const spentByMonth = _db.query(`
+    SELECT date_trunc('month', paid_at) AS month , sum(total_amount) as spent
+    FROM finance
+    WHERE paid_at IS NOT NULL AND total_amount < 0 AND client_user_id = ${_user.id()}
+    GROUP BY month
+    ORDER BY month desc;`);
+
+let arrWeights = [];
+let arrValues = [];
+let estimatedSpendYear = 0;
+if(spentByMonth){
+    const numberOfMonths = spentByMonth.length;
+    const monthWeight = numberOfMonths ? 1 / numberOfMonths: 0;
+    let iteration = 0;
+    for (const monthSpent of spentByMonth){
+        arrWeights.push(1 - (iteration++ * monthWeight ));
+        arrValues.push(monthSpent.getDouble('spent'));
+        if(moment(monthSpent.getString('month')).isSame(moment(), 'year')) {
+            estimatedSpendYear += monthSpent.getDouble('spent');
+        }
+    }
+}
+const monthSpendWeightedMean = weightedMean(arrValues, arrWeights)
+estimatedSpendYear += (monthSpendWeightedMean * monthsUntilEndOfYear)
+const estimatedProfitYear = estimationReceivedYear + estimatedSpendYear;
 
 /** 
  * Medium Values
