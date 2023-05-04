@@ -1,9 +1,0 @@
-/Users/carlosvitorino/Projectos/Personal/CordGPT/target/release/deps/libfutures_macro-77eff204ecbe9631.dylib: /Users/carlosvitorino/.cargo/registry/src/github.com-1ecc6299db9ec823/futures-macro-0.3.25/src/lib.rs /Users/carlosvitorino/.cargo/registry/src/github.com-1ecc6299db9ec823/futures-macro-0.3.25/src/executor.rs /Users/carlosvitorino/.cargo/registry/src/github.com-1ecc6299db9ec823/futures-macro-0.3.25/src/join.rs /Users/carlosvitorino/.cargo/registry/src/github.com-1ecc6299db9ec823/futures-macro-0.3.25/src/select.rs /Users/carlosvitorino/.cargo/registry/src/github.com-1ecc6299db9ec823/futures-macro-0.3.25/src/stream_select.rs
-
-/Users/carlosvitorino/Projectos/Personal/CordGPT/target/release/deps/futures_macro-77eff204ecbe9631.d: /Users/carlosvitorino/.cargo/registry/src/github.com-1ecc6299db9ec823/futures-macro-0.3.25/src/lib.rs /Users/carlosvitorino/.cargo/registry/src/github.com-1ecc6299db9ec823/futures-macro-0.3.25/src/executor.rs /Users/carlosvitorino/.cargo/registry/src/github.com-1ecc6299db9ec823/futures-macro-0.3.25/src/join.rs /Users/carlosvitorino/.cargo/registry/src/github.com-1ecc6299db9ec823/futures-macro-0.3.25/src/select.rs /Users/carlosvitorino/.cargo/registry/src/github.com-1ecc6299db9ec823/futures-macro-0.3.25/src/stream_select.rs
-
-/Users/carlosvitorino/.cargo/registry/src/github.com-1ecc6299db9ec823/futures-macro-0.3.25/src/lib.rs:
-/Users/carlosvitorino/.cargo/registry/src/github.com-1ecc6299db9ec823/futures-macro-0.3.25/src/executor.rs:
-/Users/carlosvitorino/.cargo/registry/src/github.com-1ecc6299db9ec823/futures-macro-0.3.25/src/join.rs:
-/Users/carlosvitorino/.cargo/registry/src/github.com-1ecc6299db9ec823/futures-macro-0.3.25/src/select.rs:
-/Users/carlosvitorino/.cargo/registry/src/github.com-1ecc6299db9ec823/futures-macro-0.3.25/src/stream_select.rs:
