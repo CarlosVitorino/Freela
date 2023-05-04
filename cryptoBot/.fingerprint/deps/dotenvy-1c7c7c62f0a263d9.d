@@ -1,0 +1,11 @@
+/Users/carlosvitorino/Projectos/Personal/CordGPT/target/release/deps/dotenvy-1c7c7c62f0a263d9.rmeta: /Users/carlosvitorino/.cargo/registry/src/github.com-1ecc6299db9ec823/dotenvy-0.15.6/src/lib.rs /Users/carlosvitorino/.cargo/registry/src/github.com-1ecc6299db9ec823/dotenvy-0.15.6/src/errors.rs /Users/carlosvitorino/.cargo/registry/src/github.com-1ecc6299db9ec823/dotenvy-0.15.6/src/find.rs /Users/carlosvitorino/.cargo/registry/src/github.com-1ecc6299db9ec823/dotenvy-0.15.6/src/iter.rs /Users/carlosvitorino/.cargo/registry/src/github.com-1ecc6299db9ec823/dotenvy-0.15.6/src/parse.rs
+
+/Users/carlosvitorino/Projectos/Personal/CordGPT/target/release/deps/libdotenvy-1c7c7c62f0a263d9.rlib: /Users/carlosvitorino/.cargo/registry/src/github.com-1ecc6299db9ec823/dotenvy-0.15.6/src/lib.rs /Users/carlosvitorino/.cargo/registry/src/github.com-1ecc6299db9ec823/dotenvy-0.15.6/src/errors.rs /Users/carlosvitorino/.cargo/registry/src/github.com-1ecc6299db9ec823/dotenvy-0.15.6/src/find.rs /Users/carlosvitorino/.cargo/registry/src/github.com-1ecc6299db9ec823/dotenvy-0.15.6/src/iter.rs /Users/carlosvitorino/.cargo/registry/src/github.com-1ecc6299db9ec823/dotenvy-0.15.6/src/parse.rs
+
+/Users/carlosvitorino/Projectos/Personal/CordGPT/target/release/deps/dotenvy-1c7c7c62f0a263d9.d: /Users/carlosvitorino/.cargo/registry/src/github.com-1ecc6299db9ec823/dotenvy-0.15.6/src/lib.rs /Users/carlosvitorino/.cargo/registry/src/github.com-1ecc6299db9ec823/dotenvy-0.15.6/src/errors.rs /Users/carlosvitorino/.cargo/registry/src/github.com-1ecc6299db9ec823/dotenvy-0.15.6/src/find.rs /Users/carlosvitorino/.cargo/registry/src/github.com-1ecc6299db9ec823/dotenvy-0.15.6/src/iter.rs /Users/carlosvitorino/.cargo/registry/src/github.com-1ecc6299db9ec823/dotenvy-0.15.6/src/parse.rs
+
+/Users/carlosvitorino/.cargo/registry/src/github.com-1ecc6299db9ec823/dotenvy-0.15.6/src/lib.rs:
+/Users/carlosvitorino/.cargo/registry/src/github.com-1ecc6299db9ec823/dotenvy-0.15.6/src/errors.rs:
+/Users/carlosvitorino/.cargo/registry/src/github.com-1ecc6299db9ec823/dotenvy-0.15.6/src/find.rs:
+/Users/carlosvitorino/.cargo/registry/src/github.com-1ecc6299db9ec823/dotenvy-0.15.6/src/iter.rs:
+/Users/carlosvitorino/.cargo/registry/src/github.com-1ecc6299db9ec823/dotenvy-0.15.6/src/parse.rs:

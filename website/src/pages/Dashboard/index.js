@@ -265,7 +265,7 @@ export default function Dashboard(props) {
                 <Paragraph>
                   After you have logged your first session you will be able use
                   your dashboard to gain insight into your financial performance
-                  and grow your busines
+                  and grow your business
                 </Paragraph>
                 <Divider />
                 <Title level={4}>Settings:</Title>
