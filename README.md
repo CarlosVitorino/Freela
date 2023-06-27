@@ -1,80 +1,35 @@
-# Netuno React AUTH
+# Freela.world
+Freela.world is a web-based application designed to help freelancers manage their clients and track their sessions. Whether you're a teacher, therapist, gym instructor, or any other type of freelancer, Freela.world makes it easy to keep track of your clients' information, session details, and invoicing.
 
-A ready to use boilerplate solution for user registration, authentication, profile editing and reserved area using [Netuno](https://www.netuno.org/), [JWT](https://jwt.io/), [ReactJS](https://reactjs.org/) and [Ant Design](https://ant.design/).
+## Features
+* Easy setup: After logging in, users can quickly configure their company information and create their clients' profiles.
+* Session tracking: Once clients are set up, users can easily record session details such as type, subtype, duration, and value.
+* Invoicing: Freela.world allows users to generate invoices based on the sessions they've recorded, making it easy to bill clients and keep track of payments.
+* Dashboard: The application offers an overview of the user's performance, including their earnings, best clients, best types of sessions, best subtypes, and best months of work.
+Technologies Used
+
+## Freela.world uses the following technologies:
+* ReactJS for the frontend
+* NETUNO platform for the backend
 
 ## Installation
+> To use Freela.world, you can simply visit https://freela.world and create an account. If you prefer to run the application locally, you can follow these steps:
 
-#### Netuno
+* Clone the repository: `git clone https://github.com/CarlosVitorino/Freela.git`
+* Install the required packages: `npm install`
+* Start the application: `npm start`
+* Open your web browser and navigate to http://localhost:3000
+* Note: The NETUNO platform is required to run the backend. Please refer to the NETUNO documentation for [installation instructions](https://doc.netuno.org/docs/en/installation/).
 
-[Follow the steps here](https://doc.netuno.org/docs/en/installation/)
+## Usage
+* The dashboard provides an overview of your earnings, best clients, best types of sessions, best subtypes, and best months of work.
 
-#### React AUTH
+* After logging in, you'll be prompted to set up your company information and create your clients' profiles. Once that's done, you can start recording sessions in session tab. You'll be asked to confirm the session default details or change them: such as type, subtype, duration, and value.
 
-Clone this project to `(Netuno Root directory)/apps/react_auth/`.
+* You can generate invoices in session tab, by selecting the sessions you want to include and clicking on the "Create Invoice". 
 
-Then install the NPM dependencies by running 
+## Contributing
+If you'd like to contribute to Freela.world, feel free to submit a pull request. Before doing so, please make sure that your changes follow our contribution guidelines.
 
-`npm install` 
-
-in the `react_auth/website/` directory.
-
-## Configuration
-
-> The following process is oriented to Linux development environments with a few notes also destined to Microsoft Windows development environments.
-
-1. Copy the app sample configuration file by running (in the app root directory):
-
-    * `cp config/sample.json config/_development.json` (for a development environment)
-
-    * `cp config/sample.json config/_production.json` (for a production environment)
-
-    and adjust the `_development.json` and/or `_production_.json` file accordingly to your environment.
-
-2. You'll need to configure an SMTP connection for the password recovery feature to function properly, [learn how to do it here.](https://doc.netuno.org/docs/en/academy/server/services/sending-emails/)
-
-3. You'll need to configure a PostgreSQL database type connection for this app to work properly, [learn how to do it here.](https://doc.netuno.org/docs/en/academy/server/database/psql/)
-
-4. Locate and replace the word `JWTRandomSecureSecret` by a secret code, as random as possible, since this is what ensures the security of users' credentials. For example: `#J&Az+7(8d+k/9q]` . [Recommended Secure Code Generation tool.](https://passwordsgenerator.net/)
-
-5. You'll also need to configure the website sample config file located in `website/src/config/`:
-
-    1. Change the configurations inside `_development_config.json` and `_production_config.json` for development and production environments respectively.
-
-    2. Inside the same folder run `cp _development_config.json config.json` to create the configuration file based on the development configuration.
-
-    > To create a production ready build just run `bash build.sh` in `(app root directory)/website/` which will momentarily create a `config.json` based on the production configuration file and when it's finished it should revert back to the development configuration.
-
-    > There's also a `build.bat` present in `(app root directory)/website/` for Microsoft Windows development environments.
-
-## Running
-
-In the Netuno root directory run
-
-`./netuno server app=react_auth`
-
-and it should start both the backend and the frontend server.
-
-## Screenshots
-
-Some screenshots below.
-
-### Desktop
-
-##### Login
-![Login](https://raw.githubusercontent.com/netuno-org/react-auth/main/docs/prinstscreens/desktop/login.png)
-##### Register
-![Register](https://raw.githubusercontent.com/netuno-org/react-auth/main/docs/prinstscreens/desktop/registration.png)
-##### Reserved Area
-![Reserved Area](https://raw.githubusercontent.com/netuno-org/react-auth/main/docs/prinstscreens/desktop/reserved-area.png)
-##### Edit Profile
-![Edit Profile](https://raw.githubusercontent.com/netuno-org/react-auth/main/docs/prinstscreens/desktop/edit-profile.png)
-
-### Mobile
-
-Login  |  Registration
-:-------------------------:|:-------------------------:
-![Login](https://raw.githubusercontent.com/netuno-org/react-auth/main/docs/prinstscreens/mobile/login.png)  |  ![Register](https://raw.githubusercontent.com/netuno-org/react-auth/main/docs/prinstscreens/mobile/registration.png)
-
-Reserved Area  |  Edit Profile
-:-------------------------:|:-------------------------:
-![Reserved Area](https://raw.githubusercontent.com/netuno-org/react-auth/main/docs/prinstscreens/mobile/reserved-area.png)  |  ![Edit Profile](https://raw.githubusercontent.com/netuno-org/react-auth/main/docs/prinstscreens/mobile/edit-profile.png)
+## License
+Freela.world is licensed under the MIT License.

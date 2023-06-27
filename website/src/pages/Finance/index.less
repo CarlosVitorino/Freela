@@ -1,7 +1,16 @@
-@import '../../styles/variables.less';
+@import "../../styles/variables.less";
 
-.finance .content-title .big-title{
-    span:before,  span:after {
-        width: calc((100vw - 450px)/2 - 25px);
+.finance {
+  .content-title .big-title {
+    span:before,
+    span:after {
+      width: calc((100vw - 450px) / 2 - 25px);
     }
-} 
+  }
+
+  .content-body {
+    .ant-btn-icon-only {
+      height: 20px;
+    }
+  }
+}

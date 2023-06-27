@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Redirect } from "react-router-dom";
-import { Layout, Typography, Form, Input, Button, notification } from 'antd';
+import { Layout, Typography, Form, Input, Button, notification, Divider } from 'antd';
 import { PasswordInput } from "antd-password-input-strength";
 import _auth from '@netuno/auth-client';
 import _service from '@netuno/service-client';
@@ -93,7 +93,7 @@ export default function Register(props) {
         return <Redirect to="/login" />;
     } else {
         return (
-            <Layout>
+            <Layout className="layout register-layout">
                 <Content className="register-container">
                     <div className="content-title">
                         <Title>Create Account.</Title>
@@ -169,7 +169,13 @@ export default function Register(props) {
                             <Form.Item>
                                 <Button type="primary" htmlType="submit" loading={submitting}>
                                     Create Account
-                                    </Button>
+                                </Button>
+                            </Form.Item> 
+                            <Divider />  
+                            <Form.Item>
+                                <Button type="link"  onClick={() => props.history.push("/login")}>
+                                    Already have an account? Login
+                                </Button>
                             </Form.Item>
                         </Form>
                     </div>

@@ -7,6 +7,7 @@ const endOfYear   = moment().endOf('year').format('YYYY-MM-DD');
 const monthsUntilEndOfYear = moment().endOf('year').diff(moment(), 'months');
 const daysPassFromStartOfYear = moment().diff(moment().startOf('year'), 'days');
 const daysUntilEndOfMonth = moment().endOf('month').diff(moment(), 'days');
+const daysUntilEndOfYear = moment().endOf('year').diff(moment(), 'days');
 const daysInMonth = moment().daysInMonth();
 
 
@@ -17,12 +18,12 @@ const data = _val.map();
  * */
 
 const dataByMonth = _db.query(`
-    SELECT TO_CHAR(date_trunc('month', date), 'Month') AS month, date_trunc('month', date) AS month_no, session_type.label AS type, sum(price) as revenue
+    SELECT TO_CHAR(date, 'YYYY-MM') AS month, EXTRACT('Year' FROM date) AS year, date_trunc('month', date) AS month_no, session_type.label AS type, sum(price) as revenue
     FROM session
     INNER JOIN session_type on session.type_id = session_type.id
     WHERE session.client_user_id = ${_user.id()} 
-    GROUP BY month, month_no, type
-	ORDER BY month_no;`);
+    GROUP BY year, month, month_no, type
+	  ORDER BY month_no;`);
 
 
 const top5Clients = _db.query(`
@@ -41,44 +42,6 @@ const sessions = sessionsDb ? sessionsDb.getFloat("sessions") : 0;
 const spent = paidDb ? paidDb.getFloat("money") : 0;    
 const profit = billed + spent;
 
-/**
- * Estimated revenue 
- */
-const estimatedMonthMoneyDb = _db.queryFirst(`SELECT SUM(sessions_per_month * default_price) as estimated FROM client where active = true AND client_user_id = ${_user.id()};`)
-const estimatedMonthMoney = estimatedMonthMoneyDb ? estimatedMonthMoneyDb.getFloat("estimated") : 0;
-const estimatedMoneyLeft = daysInMonth ? (estimatedMonthMoney / daysInMonth) * daysUntilEndOfMonth : 0;
-const partialEstimatedMonthMoney = spent + estimatedMoneyLeft;
-const estimationReceivedYear = partialEstimatedMonthMoney + (estimatedMonthMoney * monthsUntilEndOfYear);
-
-/**
- * Estimated spend
- */
-const spentByMonth = _db.query(`
-    SELECT date_trunc('month', paid_at) AS month , sum(total_amount) as spent
-    FROM finance
-    WHERE paid_at IS NOT NULL AND total_amount < 0 AND client_user_id = ${_user.id()}
-    GROUP BY month
-    ORDER BY month desc;`);
-
-let arrWeights = [];
-let arrValues = [];
-let estimatedSpendYear = 0;
-if(spentByMonth){
-    const numberOfMonths = spentByMonth.length;
-    const monthWeight = numberOfMonths ? 1 / numberOfMonths: 0;
-    let iteration = 0;
-    for (const monthSpent of spentByMonth){
-        arrWeights.push(1 - (iteration++ * monthWeight ));
-        arrValues.push(monthSpent.getDouble('spent'));
-        if(moment(monthSpent.getString('month')).isSame(moment(), 'year')) {
-            estimatedSpendYear += monthSpent.getDouble('spent');
-        }
-    }
-}
-const monthSpendWeightedMean = weightedMean(arrValues, arrWeights)
-estimatedSpendYear += (monthSpendWeightedMean * monthsUntilEndOfYear)
-const estimatedProfitYear = estimationReceivedYear + estimatedSpendYear;
-
 /** 
  * Medium Values
  * */
@@ -94,6 +57,18 @@ const sessionsPerMonth = sessionsPerMonthDb.getInt('sessions_per_month')
 const sessionsPerDay = daysPassFromStartOfYear ? sessions / daysPassFromStartOfYear : 0;
 const expectedSessionsPerDay = sessionsPerMonth / (365/12)
 const atendance = expectedSessionsPerDay ? Math.round((sessionsPerDay / expectedSessionsPerDay) * 100) : 0;
+
+/**
+ * Estimated revenue 
+ */
+ const estimatedMonthMoneyDb = _db.queryFirst(`SELECT SUM(sessions_per_month * default_price) as estimated FROM client where active = true AND client_user_id = ${_user.id()};`)
+ const estimatedMonthMoney = estimatedMonthMoneyDb ? estimatedMonthMoneyDb.getFloat("estimated") : 0;
+ 
+ const estimatedMoneyUntilEndOfYear = daysInMonth ? ((estimatedMonthMoney / daysInMonth) * daysUntilEndOfYear ) * (atendance / 100): 0;
+ const averageSpentPerDay = (spent / daysPassFromStartOfYear) ;
+ const estimatedSpentUntilEndOfYear = averageSpentPerDay ? averageSpentPerDay * daysUntilEndOfYear : 0;
+ const estimatedProfitYear = estimatedMoneyUntilEndOfYear + estimatedSpentUntilEndOfYear + profit;
+
 
 /**
  * Revenue vs Type - sunburst chart

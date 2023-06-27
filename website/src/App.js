@@ -1,50 +1,77 @@
 import React, { useEffect, useState } from "react";
+import { useMediaQuery } from "react-responsive";
+
 import { Switch, Route, useLocation, Link, Redirect } from "react-router-dom";
 
-import { ConfigProvider, Layout, Menu, Typography } from 'antd';
-import { PieChartOutlined, CarryOutOutlined, LogoutOutlined, MenuOutlined, UserOutlined, WalletOutlined, SettingOutlined } from '@ant-design/icons';
-import { ReactSVG } from 'react-svg'
+import { ConfigProvider, Layout, Menu, Typography } from "antd";
+import { MenuOutlined } from "@ant-design/icons";
+import { ReactSVG } from "react-svg";
 
-import antLocale_ptPT from 'antd/lib/locale/pt_PT';
-import classNames from 'classnames';
+import antLocale_ptPT from "antd/lib/locale/pt_PT";
+import classNames from "classnames";
 
-import _auth from '@netuno/auth-client';
-import './common/Config';
+import _auth from "@netuno/auth-client";
+import "./common/Config";
 
-import LoginPage from './pages/Login';
-import RegisterPage from './pages/Register';
-import Dashboard from './pages/Dashboard';
-import Clients from './pages/Clients';
-import Sessions from './pages/Sessions';
-import Invoice from './pages/Finance/Invoice';
-import Expense from './pages/Finance/Expense';
-import Finance from './pages/Finance';
-import Detail from './pages/Clients/Detail';
-import Settings from './pages/Settings';
-import RecoveryPage from './pages/Recovery';
-import NotFoundPage from './pages/NotFound';
-import { isMobile } from 'react-device-detect';
+import LoginPage from "./pages/Login";
+import RegisterPage from "./pages/Register";
+import Dashboard from "./pages/Dashboard";
+import Clients from "./pages/Clients";
+import Sessions from "./pages/Sessions";
+import Invoice from "./pages/Finance/Invoice";
+import Expense from "./pages/Finance/Expense";
+import Finance from "./pages/Finance";
+import Detail from "./pages/Clients/Detail";
+import Settings from "./pages/Settings";
+import RecoveryPage from "./pages/Recovery";
+import NotFoundPage from "./pages/NotFound";
+import {
+  CardIcon,
+  PieChartIcon,
+  OptionsIcon,
+  TimeIcon,
+  UserIcon,
+  ExitIcon,
+  MenuIcon,
+} from "./components/Icons";
 
-import './styles/App.less';
+import "./styles/App.less";
 
-const { Content, Sider, Footer } = Layout;
+const { Content, Sider } = Layout;
 const { Text } = Typography;
 
 export default function App(props) {
-
   const location = useLocation();
 
-  const [headerButtonMode, setHeaderButtonMode] = useState('login');
-  const [collapsed, setCollapsed] = useState(false);
-  const [menu, setMenu] = useState('dashboard');
+  const [headerButtonMode, setHeaderButtonMode] = useState("login");
+  const [collapsed, setCollapsed] = useState(true);
+  const [menu, setMenu] = useState("dashboard");
   const [logo, setLogo] = useState(false);
   const [sideMenuMobileMode, setSideMenuMobileMode] = useState(false);
+  const isMobile = useMediaQuery({ query: `(max-width: 760px)` });
 
   useEffect(() => {
     setHeaderButtonMode(location.pathname);
     setMenu(location.pathname);
-    setLogo(<ReactSVG className={classNames(!_auth.isLogged() ? "login-logo" : "logo")} alt="logo" src="images/logo.svg" />)
   }, [location]);
+
+  useEffect(() => {
+    setLogo(
+      !collapsed ? (
+        <ReactSVG
+          className={classNames(!_auth.isLogged() ? "login-logo" : "logo")}
+          alt="logo"
+          src="images/logo.svg"
+        />
+      ) : (
+        <ReactSVG
+          className={classNames(isMobile ? "logo logo-mobile" : "logo logo-small")}
+          alt="logo"
+          src="images/logo-small.svg"
+        />
+      )
+    );
+  }, [collapsed, isMobile]);
 
   function onLogout() {
     _auth.logout();
@@ -52,77 +79,126 @@ export default function App(props) {
 
   function onCollapse() {
     if (!collapsed) {
-      setLogo(<ReactSVG className="logo logo-small" alt="logo" src="images/logo-small.svg" />)
+      setLogo(
+        <ReactSVG
+          className={classNames(isMobile ? "logo logo-mobile" : "logo logo-small")}
+          alt="logo"
+          src="images/logo-small.svg"
+        />
+      );
     } else {
-      setLogo(<ReactSVG className={classNames(!_auth.isLogged() ? "login-logo" : "logo")} alt="logo" src="images/logo.svg" />)
+      setLogo(
+        <ReactSVG
+          className={classNames(!_auth.isLogged() ? "login-logo" : "logo")}
+          alt="logo"
+          src="images/logo.svg"
+        />
+      );
     }
-    setCollapsed(!collapsed)
+    setCollapsed(!collapsed);
   }
 
   return (
     <ConfigProvider locale={antLocale_ptPT}>
-      <Layout className={'page ' + classNames({ 'auth ': _auth.isLogged(), 'collapsed ': collapsed }, !_auth.isLogged() && ' page-login')}>
-        {_auth.isLogged() &&
-              <Sider
-                className="menu-side"
-                onBreakpoint={mobile => {
-                  setSideMenuMobileMode(mobile)
-                }}
-                collapsedWidth={sideMenuMobileMode ? '0' : '80'}
-                breakpoint={"md"}
-                collapsible
-                collapsed={collapsed}
-                onCollapse={onCollapse}
-                trigger={<MenuOutlined />}
-                theme="light"
-              >
-                <div className="logo-container">
-                  {logo}
-                </div>
-                <Menu selectedKeys={[menu]} mode="inline">
-
-                  <div className={collapsed ? "menu-group-wrapper-collapsed" : "menu-group-wrapper"}>
-                    <Text className="menu-group">ANALIZE</Text>
-                  </div>
-                  <Menu.Item key="/dashboard" icon={<PieChartOutlined />}>
-                    <Link to="/dashboard" onClick={() => isMobile ? setCollapsed(true) : ""} >Dashboard</Link>
-                  </Menu.Item>
-
-                  <div className={collapsed ? "menu-group-wrapper-collapsed" : "menu-group-wrapper"}>
-                    <Text className="menu-group">TRACK</Text>
-                  </div>
-                  <Menu.Item key="/sessions" icon={<CarryOutOutlined />}>
-                    <Link to="/sessions" onClick={() => isMobile ? setCollapsed(true) : ""}>Sessions</Link>
-                  </Menu.Item>
-
-                  <div className={collapsed ? "menu-group-wrapper-collapsed" : "menu-group-wrapper"}>
-                    <Text className="menu-group">MANAGE</Text>
-                  </div>
-                  <Menu.Item key="/clients" icon={<UserOutlined />}>
-                    <Link to="/clients" onClick={() => isMobile ? setCollapsed(true) : ""}>Clients</Link>
-                  </Menu.Item>
-
-                  <Menu.Item key="/finance" icon={<WalletOutlined />}>
-                    <Link to="/finance">Finance</Link>
-                  </Menu.Item>
-                  <Menu.Item key="/settings" icon={<SettingOutlined />}>
-                    <Link to="/settings" onClick={() => isMobile ? setCollapsed(true) : ""}>Settings</Link>
-                  </Menu.Item>
-                  <Menu.Item className="logout" key="lougout" onClick={onLogout}>
-                    {!collapsed && <Link to="/login" className="lougout-link"><LogoutOutlined /> Logout</Link>}
-                  </Menu.Item>
-                </Menu>
-              </Sider>
+      <Layout
+        className={
+          "page " +
+          classNames(
+            { "auth ": _auth.isLogged(), "collapsed ": collapsed },
+            !_auth.isLogged() && " page-login"
+          )
         }
+      >
+        {_auth.isLogged() && (
+          <Sider
+            className="menu-side"
+            onBreakpoint={(breakpoint) => {
+              console.log(breakpoint);
+              setSideMenuMobileMode(breakpoint);
+            }}
+            collapsedWidth={isMobile ? "60" : "100"}
+            breakpoint={("sm", "lg")}
+            collapsible
+            collapsed={collapsed}
+            onCollapse={setCollapsed}
+            trigger={isMobile ? <MenuOutlined /> : null}
+            theme="light"
+          >
+            <div className="logo-container">{logo}</div>
+            <Menu selectedKeys={[menu]} mode="inline" className="inner-menu">
+              <Menu.Item
+                key="collapse"
+                onClick={() => onCollapse()}
+                icon={<MenuIcon />}
+              >
+                <span className="menu-trigger">MENU</span>
+              </Menu.Item>
+              <div
+                className={
+                  collapsed
+                    ? "menu-group-wrapper-collapsed"
+                    : "menu-group-wrapper"
+                }
+              >
+                <Text className="menu-group">ANALIZE</Text>
+              </div>
+              <Menu.Item key="/dashboard" icon={<PieChartIcon />}>
+                <Link to="/dashboard">Dashboard</Link>
+              </Menu.Item>
+              <div
+                className={
+                  collapsed
+                    ? "menu-group-wrapper-collapsed"
+                    : "menu-group-wrapper"
+                }
+              >
+                <Text className="menu-group">TRACK</Text>
+              </div>
+              <Menu.Item key="/sessions" icon={<TimeIcon />}>
+                <Link to="/sessions">Sessions</Link>
+              </Menu.Item>
+              <div
+                className={
+                  collapsed
+                    ? "menu-group-wrapper-collapsed"
+                    : "menu-group-wrapper"
+                }
+              >
+                <Text className="menu-group">MANAGE</Text>
+              </div>
+              <Menu.Item key="/clients" icon={<UserIcon />}>
+                <Link to="/clients">Clients</Link>
+              </Menu.Item>
+              <Menu.Item key="/finance" icon={<CardIcon />}>
+                <Link to="/finance">Finance</Link>
+              </Menu.Item>
+              <Menu.Item key="/settings" icon={<OptionsIcon />}>
+                <Link to="/settings">Settings</Link>
+              </Menu.Item>
+              <Menu.Item
+                className="logout"
+                key="/login"
+                onClick={onLogout}
+                icon={<ExitIcon />}
+              >
+                {!collapsed && (
+                  <Link to="/login" onClick={onLogout} className="lougout-link">
+                    Logout
+                  </Link>
+                )}
+              </Menu.Item>
+            </Menu>
+          </Sider>
+        )}
         <Layout>
-          <Content className={classNames({ 'auth ': _auth.isLogged() })}>
+          <Content className={classNames({ "auth ": _auth.isLogged() })}>
             <Switch>
               <Route exact path="/">
-                {_auth.isLogged() ?
+                {_auth.isLogged() ? (
                   <Redirect to="/dashboard" />
-                  :
+                ) : (
                   <Redirect to="/login" />
-                }
+                )}
               </Route>
               <Route path="/dashboard" component={Dashboard} />
               <Route path="/clients" component={Clients} />
@@ -139,9 +215,7 @@ export default function App(props) {
               <Route component={NotFoundPage} />
             </Switch>
           </Content>
-          {!_auth.isLogged() &&
-            <Footer>© sitana.pt 2021</Footer>
-          }
+          {/*!_auth.isLogged() && <Footer>© sitana.pt 2021</Footer>*/}
         </Layout>
       </Layout>
     </ConfigProvider>

@@ -108,7 +108,7 @@ _form.createComponentIfNotExists(
 	.set("tdheight", 0)
 	.set("tdwidth", 0)
 	.set("type", "date")
-	.set("uid", "41bb2009-7953-48a5-9953-f16d424c9677")
+	.set("uid", "7fcdd077-3225-4f01-aae8-0259d8f54744")
 	.set("user_id", 0)
 	.set("whenedit", true)
 	.set("whenexport", true)
