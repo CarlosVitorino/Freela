@@ -12,6 +12,7 @@
 
     &.collapsed {
       padding-left: 100px;
+
     }
   }
 
@@ -23,7 +24,7 @@
 
   @media screen and (max-width: @mobile-width) {
     .content-body {
-      padding: 2px !important;
+      padding: 15px !important;
     }
   }
   @media screen and (max-width: @mobile-width) {
@@ -32,7 +33,7 @@
       transition: all 0.2s;
 
       &.collapsed {
-        padding-left: 100px;
+        padding-left: 60px;
       }
     }
   }
@@ -103,6 +104,11 @@
           .logo-small {
             width: 40px;
             margin-left: 30px;
+          }
+
+          .logo-mobile {
+            width: 40px;
+            margin-left: 5px;
           }
 
           @media screen and (max-width: @mobile-width) {
@@ -372,6 +378,11 @@
         margin-left: 30px;
       }
 
+      .logo-mobile {
+        width: 40px;
+        margin-left: 10px;
+      }
+
       @media screen and (max-width: @mobile-width) {
         max-width: 50%;
       }
@@ -405,6 +416,10 @@
     padding: 20px 10px 10px 10px;
     margin-bottom: 50px;
     //background: @primary-color;
+
+    @media screen and (max-width: @mobile-width) {
+      font-size: 32px;
+    }
   }
 
   .big-title span {

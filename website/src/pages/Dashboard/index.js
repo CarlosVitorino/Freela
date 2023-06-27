@@ -101,7 +101,7 @@ export default function Dashboard(props) {
         setMonthLoading(false);
         notification["error"]({
           message: "Error!",
-          description: "There was an error, please contact your boyfriend.",
+          description: "There was an error, please contact the support.",
         });
       },
     });
@@ -132,7 +132,7 @@ export default function Dashboard(props) {
         setAnualLoading(false);
         notification["error"]({
           message: "Error!",
-          description: "There was an error, please contact your boyfriend.",
+          description: "There was an error, please contact the support.",
         });
       },
     });
@@ -313,7 +313,7 @@ export default function Dashboard(props) {
               <Card className="card-left">
                 <Title level={4}>Made in {moment().format("MMMM")}</Title>
                 <Row {...layout}>
-                  <Col span={12} style={colStyle}>
+                  <Col xs={{ span: 24 }} lg={{ span: 12 }} style={colStyle}>
                     <Statistic
                       title="Revenue"
                       value={monthData.totalMoney}
@@ -322,14 +322,14 @@ export default function Dashboard(props) {
                       loading={monthLoading}
                     />
                   </Col>
-                  <Col span={12} style={colStyle}>
+                  <Col xs={{ span: 24 }} lg={{ span: 12 }} style={colStyle}>
                     <Statistic
                       title="Time Worked "
                       value={monthTime}
                       loading={monthLoading}
                     />
                   </Col>
-                  <Col span={12} style={colStyle}>
+                  <Col xs={{ span: 24 }} lg={{ span: 12 }} style={colStyle}>
                     <Statistic
                       title="You Made"
                       value={monthData.diffMoney}
@@ -351,7 +351,7 @@ export default function Dashboard(props) {
                     />
                     <p className="statistic-suffix">than last month</p>
                   </Col>
-                  <Col span={12} style={colStyle}>
+                  <Col xs={{ span: 24 }} lg={{ span: 12 }} style={colStyle}>
                     <Statistic
                       title={`Total ${moment().format("MMMM")} Estimated`}
                       value={monthData.estimatedMoney}
@@ -368,7 +368,7 @@ export default function Dashboard(props) {
               <Card className="card-right">
                 <Title level={4}>Received in {moment().format("MMMM")}</Title>
                 <Row {...layout}>
-                  <Col span={12} style={colStyle}>
+                  <Col xs={{ span: 24 }} lg={{ span: 12 }} style={colStyle}>
                     <Statistic
                       title="Received"
                       value={monthData.received}
@@ -377,7 +377,7 @@ export default function Dashboard(props) {
                       loading={monthLoading}
                     />
                   </Col>
-                  <Col span={12} style={colStyle}>
+                  <Col xs={{ span: 24 }} lg={{ span: 12 }} style={colStyle}>
                     <Statistic
                       title="Spent"
                       value={monthData.paid * -1}
@@ -386,7 +386,7 @@ export default function Dashboard(props) {
                       loading={monthLoading}
                     />
                   </Col>
-                  <Col span={12} style={colStyle}>
+                  <Col xs={{ span: 24 }} lg={{ span: 12 }} style={colStyle}>
                     <Statistic
                       title="Total Invoice Progress"
                       value={`${monthData.invoicesPaid}/${monthData.invoices}`}
@@ -394,7 +394,7 @@ export default function Dashboard(props) {
                       loading={monthLoading}
                     />
                   </Col>
-                  <Col span={12} style={colStyle}>
+                  <Col xs={{ span: 24 }} lg={{ span: 12 }} style={colStyle}>
                     <Statistic
                       title="You Profit"
                       value={monthData.diffInvoice}
@@ -433,7 +433,7 @@ export default function Dashboard(props) {
               <Card className="card-left">
                 <Title level={4}>Finance {moment().format("YYYY")}</Title>
                 <Row {...layout}>
-                  <Col span={12} style={colStyle}>
+                  <Col xs={{ span: 24 }} lg={{ span: 12 }} style={colStyle}>
                     <Statistic
                       title="Billed "
                       value={yearData.billed}
@@ -442,7 +442,7 @@ export default function Dashboard(props) {
                       loading={anualLoading}
                     />
                   </Col>
-                  <Col span={12} style={colStyle}>
+                  <Col xs={{ span: 24 }} lg={{ span: 12 }} style={colStyle}>
                     <Statistic
                       title="Spent"
                       value={yearData.spent * -1}
@@ -451,7 +451,7 @@ export default function Dashboard(props) {
                       loading={anualLoading}
                     />
                   </Col>
-                  <Col span={12} style={colStyle}>
+                  <Col xs={{ span: 24 }} lg={{ span: 12 }} style={colStyle}>
                     <Statistic
                       title="Profit"
                       value={yearData.profit}
@@ -460,7 +460,7 @@ export default function Dashboard(props) {
                       loading={anualLoading}
                     />
                   </Col>
-                  <Col span={12} style={colStyle}>
+                  <Col xs={{ span: 24 }} lg={{ span: 12 }} style={colStyle}>
                     <Statistic
                       title={`Estimated Profit ${moment().format("YYYY")}`}
                       value={yearData.estimatedProfitYear}
@@ -476,14 +476,14 @@ export default function Dashboard(props) {
               <Card className="card-right">
                 <Title level={4}>Sessions {moment().format("YYYY")}</Title>
                 <Row {...layout}>
-                  <Col span={12} style={colStyle}>
+                  <Col xs={{ span: 24 }} lg={{ span: 12 }} style={colStyle}>
                     <Statistic
                       title="Total hours"
                       value={yearTime}
                       loading={anualLoading}
                     />
                   </Col>
-                  <Col span={12} style={colStyle}>
+                  <Col xs={{ span: 24 }} lg={{ span: 12 }} style={colStyle}>
                     <Statistic
                       title="Atendance"
                       value={yearData.atendance}
@@ -491,7 +491,7 @@ export default function Dashboard(props) {
                       loading={anualLoading}
                     />
                   </Col>
-                  <Col span={12} style={colStyle}>
+                  <Col xs={{ span: 24 }} lg={{ span: 12 }} style={colStyle}>
                     <Statistic
                       title="Average Price/Hour"
                       value={yearData.mediumPriceHour}
@@ -500,7 +500,7 @@ export default function Dashboard(props) {
                       loading={anualLoading}
                     />
                   </Col>
-                  <Col span={12} style={colStyle}>
+                  <Col xs={{ span: 24 }} lg={{ span: 12 }} style={colStyle}>
                     <Statistic
                       title="Average Session Duration"
                       value={moment

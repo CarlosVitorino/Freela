@@ -110,7 +110,7 @@ export default function Detail(props) {
         setSubmitting(false);
         notification["error"]({
           message: "Error!",
-          description: "There was an error, please contact your boyfriend.",
+          description: "There was an error, please contact the support.",
         });
       },
     });

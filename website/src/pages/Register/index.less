@@ -1,23 +1,100 @@
 @import '../../styles/variables.less';
 
-.register-container {
+.register-layout {
+  .register-container {
+    margin: auto;
+    display: block;
+    width: 600px;
+
     form {
-        .ant-btn {
-            width: 100%;
+      .ant-btn-primary {
+        background-color: #30b2bc;
+        border: 2px solid #5b5a5a;
+        padding: 10px 50px;
+        font-weight: bold;
+        font-size: 20px;
+        color: #5b5a5a;
+        height: 50px;
+        box-shadow: 5px 5px 0px 0px #5b5a5a;
+        width: 100%;
+      }
+
+      .ant-btn-default {
+        border: 2px solid #5b5a5a;
+        padding: 10px 50px;
+        font-weight: bold;
+        font-size: 20px;
+        color: #5b5a5a;
+        height: 50px;
+        box-shadow: 5px 5px 0px 0px #5b5a5a;
+        width: 100%;
+      }
+
+      .ant-input-affix-wrapper,
+      .ant-input[type='text'] {
+        background-color: white;
+        border: 2px solid #5b5a5a;
+        box-shadow: 3px 4px 0px 1px #5b5a5a;
+        font-weight: bold;
+        font-size: 20px;
+      }
+
+      .ant-form-item-explain-error {
+        padding: 5px 0;
+      }
+
+      > hr {
+        height: 1px;
+        border-bottom: 0;
+        border-left: 0;
+        border-right: 0;
+      }
+
+      > span {
+        text-align: center;
+        display: block;
+        margin-top: -21px;
+        margin-bottom: 10px;
+        z-index: 1;
+        position: relative;
+
+        p {
+          font-size: 14px !important;
+          padding: 0 10px;
+          background-color: #ffffff;
+          display: inline-block;
         }
+      }
     }
-    .ant-layout-sider-children{
-        display: flex;
-        justify-content: center;
-        margin: 50px  0;
-        
-        .sider-login{
-            //margin: 15% 0 10% 10%;
-            //margin: auto;
-            max-width: 500px;
-            //width: 60%;
-            margin: auto;
-            display: block;
-        }
+    // form {
+    //     .ant-btn {
+    //         width: 100%;
+    //     }
+    // }
+  }
+  .ant-layout-sider-children {
+    display: flex;
+    justify-content: center;
+    margin: 50px 0;
+
+    .sider-login {
+      //margin: 15% 0 10% 10%;
+      //margin: auto;
+      max-width: 500px;
+      //width: 60%;
+      margin: auto;
+      display: block;
     }
+  }
+  @media screen and (max-width: 768px) {
+    .content-title {
+      text-align: center;
+      margin-top: 50px;
+    }
+
+    .ant-form-item {
+      margin-left: 8px;
+      margin-right: 8px;
+    }
+  }
 }

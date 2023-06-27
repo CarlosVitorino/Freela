@@ -153,12 +153,6 @@ export default function Invoice(props) {
             message: "Invoice Created",
             description: "New invoice created successfully.",
           });
-          const file = new Blob([response.json.data.pdf], {
-            type: "application/pdf",
-          });
-          const fileURL = URL.createObjectURL(file);
-          window.open(fileURL);
-          setSubmitting(false);
           props.history.goBack();
         } else {
           notification["warning"]({
@@ -173,7 +167,7 @@ export default function Invoice(props) {
         setSubmitting(false);
         notification["error"]({
           message: "Error!",
-          description: "There was an error, please contact your boyfriend.",
+          description: "There was an error, please contact the support.",
         });
       },
     });

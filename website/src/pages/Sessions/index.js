@@ -359,7 +359,7 @@ class Session extends React.Component {
         this.setLoading(false);
         notification["error"]({
           message: "Error!",
-          description: "There was an error, please contact your boyfriend.",
+          description: "There was an error, please contact the support.",
         });
       },
     });
@@ -386,7 +386,7 @@ class Session extends React.Component {
         this.setLoading(false);
         notification["error"]({
           message: "Error!",
-          description: "There was an error, please contact your boyfriend.",
+          description: "There was an error, please contact the support.",
         });
       },
     });
@@ -427,7 +427,7 @@ class Session extends React.Component {
         this.setLoading(false);
         notification["error"]({
           message: "Error!",
-          description: "There was an error, please contact your boyfriend.",
+          description: "There was an error, please contact the support.",
         });
       },
     });

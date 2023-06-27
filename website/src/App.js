@@ -44,7 +44,7 @@ export default function App(props) {
   const location = useLocation();
 
   const [headerButtonMode, setHeaderButtonMode] = useState("login");
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
   const [menu, setMenu] = useState("dashboard");
   const [logo, setLogo] = useState(false);
   const [sideMenuMobileMode, setSideMenuMobileMode] = useState(false);
@@ -53,6 +53,9 @@ export default function App(props) {
   useEffect(() => {
     setHeaderButtonMode(location.pathname);
     setMenu(location.pathname);
+  }, [location]);
+
+  useEffect(() => {
     setLogo(
       !collapsed ? (
         <ReactSVG
@@ -62,13 +65,13 @@ export default function App(props) {
         />
       ) : (
         <ReactSVG
-          className="logo logo-small"
+          className={classNames(isMobile ? "logo logo-mobile" : "logo logo-small")}
           alt="logo"
           src="images/logo-small.svg"
         />
       )
     );
-  }, [location]);
+  }, [collapsed, isMobile]);
 
   function onLogout() {
     _auth.logout();
@@ -78,7 +81,7 @@ export default function App(props) {
     if (!collapsed) {
       setLogo(
         <ReactSVG
-          className="logo logo-small"
+          className={classNames(isMobile ? "logo logo-mobile" : "logo logo-small")}
           alt="logo"
           src="images/logo-small.svg"
         />
@@ -113,11 +116,11 @@ export default function App(props) {
               console.log(breakpoint);
               setSideMenuMobileMode(breakpoint);
             }}
-            collapsedWidth={isMobile ? "100" : "100"}
+            collapsedWidth={isMobile ? "60" : "100"}
             breakpoint={("sm", "lg")}
             collapsible
             collapsed={collapsed}
-            onCollapse={onCollapse}
+            onCollapse={setCollapsed}
             trigger={isMobile ? <MenuOutlined /> : null}
             theme="light"
           >
