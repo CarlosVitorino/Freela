@@ -5,7 +5,7 @@ export default function UserIcon() {
     <span
       role="img"
       aria-label="user"
-      class="anticon anticon-user ant-menu-item-icon"
+      className="anticon anticon-user ant-menu-item-icon"
     >
       <svg
         width="2em"
@@ -21,8 +21,8 @@ export default function UserIcon() {
           height="68"
           fill="black"
           stroke="black"
-          stroke-width="4"
-          stroke-linejoin="round"
+          strokeWidth="4"
+          strokeLinejoin="round"
         />
         <rect
           x="10"
@@ -31,15 +31,15 @@ export default function UserIcon() {
           height="68"
           fill="#DD7DFF"
           stroke="black"
-          stroke-width="4"
-          stroke-linejoin="round"
+          strokeWidth="4"
+          strokeLinejoin="round"
         />
         <path
           d="M25 70.4009C25.4129 44.6641 63.3115 47.0988 62.5 70.4009"
           stroke="black"
-          stroke-width="5"
+          strokeWidth="5"
         />
-        <circle cx="44" cy="32" r="11.5" stroke="black" stroke-width="5" />
+        <circle cx="44" cy="32" r="11.5" stroke="black" strokeWidth="5" />
       </svg>
     </span>
   );

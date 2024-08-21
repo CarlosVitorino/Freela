@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useLocation, useHistory, useParams } from "react-router-dom";
-import { Redirect } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import {
   Typography,
   Card,
@@ -44,7 +44,7 @@ export default function Settings(props) {
   const supplierForm = useRef(null);
   const typeForm = useRef(null);
   const subTypeForm = useRef(null);
-  const history = useHistory();
+  const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
@@ -78,7 +78,7 @@ export default function Settings(props) {
         });
 
         _auth.logout();
-        history.push("/login");
+        navigate.push("/login");
       },
     });
   };
@@ -473,6 +473,6 @@ export default function Settings(props) {
       </div>
     );
   } else {
-    return <Redirect to="/login" />;
+    return <Navigate to="/login" />;
   }
 }

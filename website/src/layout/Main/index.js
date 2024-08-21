@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Switch, Route, useLocation, Link, Redirect } from "react-router-dom";
+import { Switch, Route, useLocation, Link, Navigate } from "react-router-dom";
 
 import { ConfigProvider, Layout, Menu, Button } from "antd";
 import {
@@ -164,9 +164,9 @@ export default function Main(props) {
             <Switch>
               <Route exact path="/">
                 {_auth.isLogged() ? (
-                  <Redirect to="/dashboard" />
+                  <Navigate to="/dashboard" />
                 ) : (
-                  <Redirect to="/login" />
+                  <Navigate to="/login" />
                 )}
               </Route>
               <Route path="/dashboard" component={Dashboard} />

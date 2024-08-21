@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useLocation, useHistory, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import {
   Typography,
@@ -32,7 +32,7 @@ export default function Detail(props) {
   const [submitting, setSubmitting] = useState(false);
   const [suppliersData, setSuppliersData] = useState(false);
   const location = useLocation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const expenseForm = useRef(null);
 
   const layout = {
@@ -75,7 +75,7 @@ export default function Detail(props) {
         });
 
         _auth.logout();
-        history.push("/login");
+        navigate.push("/login");
       },
     });
   };
@@ -97,7 +97,7 @@ export default function Detail(props) {
             description: "New invoice created successfully.",
           });
           setSubmitting(false);
-          props.history.goBack();
+          navigate(-1);
         } else {
           notification["warning"]({
             message: "Invoice not created",
@@ -134,7 +134,7 @@ export default function Detail(props) {
     return (
       <div className="expense">
         <div className="content-title">
-          <Button className="go-back-btn" type="link" onClick={() => props.history.goBack()}>
+          <Button className="go-back-btn" type="link" onClick={() => navigate(-1)}>
             <ArrowLeftOutlined /> Back
           </Button>
           <Title className="big-title">
@@ -197,7 +197,7 @@ export default function Detail(props) {
                   <Button type="primary" htmlType="submit" loading={submitting}>
                     Save
                   </Button>
-                  <Button onClick={() => props.history.goBack()}>Cancel</Button>
+                  <Button onClick={() => navigate(-1)}>Cancel</Button>
                 </Space>
               </Form.Item>
             </div>

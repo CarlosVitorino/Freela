@@ -5,7 +5,7 @@ export default function OptionsIcon() {
     <span
       role="img"
       aria-label="user"
-      class="anticon anticon-user ant-menu-item-icon"
+      className="anticon anticon-user ant-menu-item-icon"
     >
       <svg
         width="2em"
@@ -21,8 +21,8 @@ export default function OptionsIcon() {
           height="68"
           fill="black"
           stroke="black"
-          stroke-width="4"
-          stroke-linejoin="round"
+          strokeWidth="4"
+          strokeLinejoin="round"
         />
         <rect
           x="10"
@@ -31,11 +31,11 @@ export default function OptionsIcon() {
           height="68"
           fill="#FFB443"
           stroke="black"
-          stroke-width="4"
-          stroke-linejoin="round"
+          strokeWidth="4"
+          strokeLinejoin="round"
         />
-        <path d="M33 64L33 24" stroke="black" stroke-width="6" />
-        <path d="M55 64L55 24" stroke="black" stroke-width="6" />
+        <path d="M33 64L33 24" stroke="black" strokeWidth="6" />
+        <path d="M55 64L55 24" stroke="black" strokeWidth="6" />
         <rect x="48" y="24" width="14" height="14" fill="black" />
         <rect x="26" y="42" width="14" height="14" fill="black" />
       </svg>

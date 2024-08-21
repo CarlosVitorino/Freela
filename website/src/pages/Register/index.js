@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Redirect } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { Layout, Typography, Form, Input, Button, notification, Divider } from 'antd';
 import { PasswordInput } from "antd-password-input-strength";
 import _auth from '@netuno/auth-client';
@@ -68,7 +68,7 @@ export default function Register(props) {
             password,
             success: () => {
                 setSubmitting(false);
-                props.history.push("/dashboard");
+                props.navigate.push("/dashboard");
             },
             fail: () => {
                 setSubmitting(false);
@@ -87,10 +87,10 @@ export default function Register(props) {
     }
 
     if (_auth.isLogged()) {
-        return <Redirect to="/dashboard" />;
+        return <Navigate to="/dashboard" />;
     }
     else if (ready) {
-        return <Redirect to="/login" />;
+        return <Navigate to="/login" />;
     } else {
         return (
             <Layout className="layout register-layout">
@@ -173,7 +173,7 @@ export default function Register(props) {
                             </Form.Item> 
                             <Divider />  
                             <Form.Item>
-                                <Button type="link"  onClick={() => props.history.push("/login")}>
+                                <Button type="link"  onClick={() => props.navigate.push("/login")}>
                                     Already have an account? Login
                                 </Button>
                             </Form.Item>

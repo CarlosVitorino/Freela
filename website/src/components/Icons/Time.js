@@ -5,7 +5,7 @@ export default function TimeIcon() {
     <span
       role="img"
       aria-label="user"
-      class="anticon anticon-user ant-menu-item-icon"
+      className="anticon anticon-user ant-menu-item-icon"
     >
       <svg
         width="2em"
@@ -21,8 +21,8 @@ export default function TimeIcon() {
           height="68"
           fill="black"
           stroke="black"
-          stroke-width="4"
-          stroke-linejoin="round"
+          strokeWidth="4"
+          strokeLinejoin="round"
         />
         <rect
           x="10"
@@ -31,10 +31,10 @@ export default function TimeIcon() {
           height="68"
           fill="#39DBFF"
           stroke="black"
-          stroke-width="4"
-          stroke-linejoin="round"
+          strokeWidth="4"
+          strokeLinejoin="round"
         />
-        <path d="M64 48H40V20" stroke="black" stroke-width="8" />
+        <path d="M64 48H40V20" stroke="black" strokeWidth="8" />
       </svg>
     </span>
   );

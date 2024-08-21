@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Redirect, useLocation, useHistory, Link } from "react-router-dom";
+import { Navigate, useLocation, useNavigate, Link } from "react-router-dom";
 import {
   Typography,
   Space,
@@ -35,7 +35,7 @@ export default function Finance(props) {
   const [record, setRecord] = useState(false);
   const [paidAt, setPaidAt] = useState(moment());
   const location = useLocation();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const columns = [
     {
@@ -149,7 +149,7 @@ export default function Finance(props) {
           description: "Ocorreu um erro a carregar os dados, por favor tente novamente.",
         });
         _auth.logout();
-        history.push("/login");
+        navigate.push("/login");
       },
     });
   };
@@ -333,6 +333,6 @@ export default function Finance(props) {
       );
     }
   } else {
-    return <Redirect to="/login" />;
+    return <Navigate to="/login" />;
   }
 }

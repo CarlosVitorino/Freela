@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Redirect, useLocation, useHistory, Link } from "react-router-dom";
+import { Navigate, useLocation, useNavigate, Link } from "react-router-dom";
 import { Typography, Space, Button, Input, Table, notification, Spin, Card } from "antd";
 import { JellyTriangle } from "@uiball/loaders";
 import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
@@ -17,7 +17,7 @@ export default function Clients(props) {
   const [clientsData, setClientsData] = useState(false);
   const [clientsDataFiltered, setClientsDataFiltered] = useState(false);
 
-  const history = useHistory();
+  const navigate = useNavigate();
   const location = useLocation();
 
   const columns = [
@@ -133,7 +133,7 @@ export default function Clients(props) {
         });
 
         _auth.logout();
-        history.push("/login");
+        navigate.push("/login");
       },
     });
   }
@@ -193,7 +193,7 @@ export default function Clients(props) {
                 onRow={(record, rowIndex) => {
                   return {
                     onClick: (event) => {
-                      history.push(`/detail/${record.id}`);
+                      navigate.push(`/detail/${record.id}`);
                     },
                   };
                 }}
@@ -204,6 +204,6 @@ export default function Clients(props) {
       );
     }
   } else {
-    return <Redirect to="/login" />;
+    return <Navigate to="/login" />;
   }
 }

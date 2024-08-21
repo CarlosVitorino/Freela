@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Redirect, Link } from "react-router-dom";
+import { Navigate, Link } from "react-router-dom";
 import {
   Layout,
   Typography,
@@ -21,6 +21,7 @@ const { Content, Sider } = Layout;
 export default function Login(props) {
   const [submitting, setSubmitting] = useState(false);
   const [visible, setVisible] = useState(false);
+
 
   useEffect(() => {
     if (_auth.isLogged()) {
@@ -63,7 +64,7 @@ export default function Login(props) {
   }
 
   if (_auth.isLogged()) {
-    return <Redirect to="/dashboard" />;
+    return <Navigate to="/dashboard" />;
   } else {
     return (
       <Layout className="layout login-layout">
@@ -83,7 +84,7 @@ export default function Login(props) {
                   name="username"
                   rules={[{ required: true, message: "Insert your username." }]}
                 >
-                  <Input loading={submitting} />
+                    <Input disabled={submitting} />
                 </Form.Item>
 
                 <Form.Item
@@ -91,7 +92,7 @@ export default function Login(props) {
                   name="password"
                   rules={[{ required: true, message: "Insert your password." }]}
                 >
-                  <Input.Password loading={submitting} />
+                  <Input.Password disabled={submitting} />
                 </Form.Item>
 
                 <Form.Item name="remember" valuePropName="checked">

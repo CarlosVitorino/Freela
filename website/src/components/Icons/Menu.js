@@ -5,7 +5,7 @@ export default function MenuIcon() {
     <span
       role="img"
       aria-label="user"
-      class="anticon anticon-user ant-menu-item-icon"
+      className="anticon anticon-user ant-menu-item-icon"
     >
       <svg
         width="2em"
@@ -21,8 +21,8 @@ export default function MenuIcon() {
           height="68"
           fill="black"
           stroke="black"
-          stroke-width="4"
-          stroke-linejoin="round"
+          strokeWidth="4"
+          strokeLinejoin="round"
         />
         <rect
           x="10"
@@ -31,12 +31,12 @@ export default function MenuIcon() {
           height="68"
           fill="#9C9DAF"
           stroke="black"
-          stroke-width="4"
-          stroke-linejoin="round"
+          strokeWidth="4"
+          strokeLinejoin="round"
         />
-        <path d="M24 58H64" stroke="black" stroke-width="8" />
-        <path d="M24 44H64" stroke="black" stroke-width="8" />
-        <path d="M24 30H64" stroke="black" stroke-width="8" />
+        <path d="M24 58H64" stroke="black" strokeWidth="8" />
+        <path d="M24 44H64" stroke="black" strokeWidth="8" />
+        <path d="M24 30H64" stroke="black" strokeWidth="8" />
       </svg>
     </span>
   );

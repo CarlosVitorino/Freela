@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useLocation, useHistory } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { Button, Card, Col, DatePicker, Form, notification, Row, Select, Space, Spin, Table, Typography } from "antd";
 import { JellyTriangle } from "@uiball/loaders";
@@ -20,7 +20,7 @@ export default function Invoice(props) {
   const [clientsData, setClientsData] = useState(false);
   const [totalValue, setTotalValue] = useState(false);
   const location = useLocation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const invoiceForm = useRef(null);
 
   const { Option } = Select;
@@ -127,7 +127,7 @@ export default function Invoice(props) {
         });
 
         _auth.logout();
-        history.push("/login");
+        navigate.push("/login");
       },
     });
   };
@@ -153,7 +153,7 @@ export default function Invoice(props) {
             message: "Invoice Created",
             description: "New invoice created successfully.",
           });
-          props.history.goBack();
+          navigate(-1);
         } else {
           notification["warning"]({
             message: "Invoice not created",
@@ -191,7 +191,7 @@ export default function Invoice(props) {
     return (
       <div className="invoice">
         <div className="content-title">
-          <Button className="go-back-btn" type="link" onClick={() => props.history.goBack()}>
+          <Button className="go-back-btn" type="link" onClick={() => navigate(-1)}>
             <ArrowLeftOutlined /> Back
           </Button>
           <Title className="big-title">
@@ -290,7 +290,7 @@ export default function Invoice(props) {
                   <Button type="primary" htmlType="submit" loading={submitting}>
                     Save
                   </Button>
-                  <Button onClick={() => props.history.goBack()}>Cancel</Button>
+                  <Button onClick={() => navigate(-1)}>Cancel</Button>
                 </Space>
               </Form.Item>
             </div>

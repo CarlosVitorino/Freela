@@ -5,7 +5,7 @@ export default function ExitIcon() {
     <span
       role="img"
       aria-label="user"
-      class="anticon anticon-user ant-menu-item-icon"
+      className="anticon anticon-user ant-menu-item-icon"
     >
       <svg
         width="2em"
@@ -21,8 +21,8 @@ export default function ExitIcon() {
           height="68"
           fill="black"
           stroke="black"
-          stroke-width="4"
-          stroke-linejoin="round"
+          strokeWidth="4"
+          strokeLinejoin="round"
         />
         <rect
           x="10"
@@ -31,18 +31,18 @@ export default function ExitIcon() {
           height="68"
           fill="#FF5E5E"
           stroke="black"
-          stroke-width="4"
-          stroke-linejoin="round"
+          strokeWidth="4"
+          strokeLinejoin="round"
         />
         <path
           d="M60.9705 27.0295L27.0293 60.9707"
           stroke="black"
-          stroke-width="8"
+          strokeWidth="8"
         />
         <path
           d="M27.0295 27.0295L60.9707 60.9707"
           stroke="black"
-          stroke-width="8"
+          strokeWidth="8"
         />
       </svg>
     </span>

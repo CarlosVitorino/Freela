@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useMediaQuery } from "react-responsive";
-
-import { Switch, Route, useLocation, Link, Redirect } from "react-router-dom";
-
+import { Routes, Route, useLocation, Link, Navigate } from "react-router-dom";
 import { ConfigProvider, Layout, Menu, Typography } from "antd";
 import { MenuOutlined } from "@ant-design/icons";
 import { ReactSVG } from "react-svg";
-
-import antLocale_ptPT from "antd/lib/locale/pt_PT";
+import antLocale_en from "antd/lib/locale/en_GB";
 import classNames from "classnames";
 
+import _service from "@netuno/service-client";
 import _auth from "@netuno/auth-client";
 import "./common/Config";
+import themeConfig from "./theme"; 
 
 import LoginPage from "./pages/Login";
 import RegisterPage from "./pages/Register";
@@ -40,9 +39,11 @@ import "./styles/App.less";
 const { Content, Sider } = Layout;
 const { Text } = Typography;
 
-export default function App(props) {
-  const location = useLocation();
+console.log('Imported _auth:', _auth);
+console.log('isLogged function:', _auth.isLogged);
 
+const App = () => {
+  const location = useLocation();
   const [headerButtonMode, setHeaderButtonMode] = useState("login");
   const [collapsed, setCollapsed] = useState(true);
   const [menu, setMenu] = useState("dashboard");
@@ -73,11 +74,11 @@ export default function App(props) {
     );
   }, [collapsed, isMobile]);
 
-  function onLogout() {
+  const onLogout = () => {
     _auth.logout();
-  }
+  };
 
-  function onCollapse() {
+  const onCollapse = () => {
     if (!collapsed) {
       setLogo(
         <ReactSVG
@@ -96,16 +97,16 @@ export default function App(props) {
       );
     }
     setCollapsed(!collapsed);
-  }
+  };
 
   return (
-    <ConfigProvider locale={antLocale_ptPT}>
+    <ConfigProvider locale={antLocale_en} theme={themeConfig}>
       <Layout
         className={
           "page " +
           classNames(
-            { "auth ": _auth.isLogged(), "collapsed ": collapsed },
-            !_auth.isLogged() && " page-login"
+            { "auth": _auth.isLogged(), "collapsed": collapsed },
+            !_auth.isLogged() && "page-login"
           )
         }
       >
@@ -117,7 +118,7 @@ export default function App(props) {
               setSideMenuMobileMode(breakpoint);
             }}
             collapsedWidth={isMobile ? "60" : "100"}
-            breakpoint={("sm", "lg")}
+            breakpoint="sm"
             collapsible
             collapsed={collapsed}
             onCollapse={setCollapsed}
@@ -128,7 +129,7 @@ export default function App(props) {
             <Menu selectedKeys={[menu]} mode="inline" className="inner-menu">
               <Menu.Item
                 key="collapse"
-                onClick={() => onCollapse()}
+                onClick={onCollapse}
                 icon={<MenuIcon />}
               >
                 <span className="menu-trigger">MENU</span>
@@ -140,7 +141,7 @@ export default function App(props) {
                     : "menu-group-wrapper"
                 }
               >
-                <Text className="menu-group">ANALIZE</Text>
+                <Text className="menu-group">ANALYZE</Text>
               </div>
               <Menu.Item key="/dashboard" icon={<PieChartIcon />}>
                 <Link to="/dashboard">Dashboard</Link>
@@ -182,7 +183,7 @@ export default function App(props) {
                 icon={<ExitIcon />}
               >
                 {!collapsed && (
-                  <Link to="/login" onClick={onLogout} className="lougout-link">
+                  <Link to="/login" onClick={onLogout} className="logout-link">
                     Logout
                   </Link>
                 )}
@@ -191,33 +192,35 @@ export default function App(props) {
           </Sider>
         )}
         <Layout>
-          <Content className={classNames({ "auth ": _auth.isLogged() })}>
-            <Switch>
-              <Route exact path="/">
-                {_auth.isLogged() ? (
-                  <Redirect to="/dashboard" />
+          <Content className={classNames({ "auth": _auth.isLogged() })}>
+            <Routes>
+              <Route path="/" element={
+                _auth.isLogged() ? (
+                  <Navigate to="/dashboard" />
                 ) : (
-                  <Redirect to="/login" />
-                )}
-              </Route>
-              <Route path="/dashboard" component={Dashboard} />
-              <Route path="/clients" component={Clients} />
-              <Route path="/sessions" component={Sessions} />
-              <Route path="/detail/:id" component={Detail} />
-              <Route path="/detail" component={Detail} />
-              <Route path="/finance/invoice" component={Invoice} />
-              <Route path="/finance/expense" component={Expense} />
-              <Route path="/finance" component={Finance} />
-              <Route path="/settings" component={Settings} />
-              <Route path="/login" component={LoginPage} />
-              <Route path="/register" component={RegisterPage} />
-              <Route path="/recovery" component={RecoveryPage} />
-              <Route component={NotFoundPage} />
-            </Switch>
+                  <Navigate to="/login" />
+                )
+              } />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/clients" element={<Clients />} />
+              <Route path="/sessions" element={<Sessions />} />
+              <Route path="/detail/:id" element={<Detail />} />
+              <Route path="/detail" element={<Detail />} />
+              <Route path="/finance/invoice" element={<Invoice />} />
+              <Route path="/finance/expense" element={<Expense />} />
+              <Route path="/finance" element={<Finance />} />
+              <Route path="/settings" element={<Settings />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/register" element={<RegisterPage />} />
+              <Route path="/recovery" element={<RecoveryPage />} />
+              <Route path="*" element={<NotFoundPage />} />
+            </Routes>
           </Content>
           {/*!_auth.isLogged() && <Footer>© sitana.pt 2021</Footer>*/}
         </Layout>
       </Layout>
     </ConfigProvider>
   );
-}
+};
+
+export default App;

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useLocation, useHistory, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import {
   Typography,
@@ -40,7 +40,7 @@ export default function Detail(props) {
   const [contries, setContries] = useState([]);
   const { id } = useParams();
   const location = useLocation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const clientForm = useRef(null);
 
   const { Option } = Select;
@@ -106,7 +106,7 @@ export default function Detail(props) {
         });
 
         _auth.logout();
-        history.push("/login");
+        navigate.push("/login");
       },
     });
   };
@@ -187,7 +187,7 @@ export default function Detail(props) {
         });
 
         _auth.logout();
-        history.push("/login");
+        navigate.push("/login");
       },
     });
   };
@@ -232,7 +232,7 @@ export default function Detail(props) {
             message: "Client Saved",
             description: "Client saved successfully.",
           });
-          props.history.goBack();
+          navigate(-1);
           setSubmitting(false);
         } else {
           notification["warning"]({
@@ -304,7 +304,7 @@ export default function Detail(props) {
             message: "Status updated!",
             description: "Status updated successfully.",
           });
-          props.history.goBack();
+          navigate(-1);
           setLoading(false);
         } else {
           notification["warning"]({
@@ -360,7 +360,7 @@ export default function Detail(props) {
             <span>Client</span>
           </Title>
           <div>
-            <Button className="go-back-btn" type="link" onClick={() => props.history.goBack()}>
+            <Button className="go-back-btn" type="link" onClick={() => navigate(-1)}>
               <ArrowLeftOutlined /> Back
             </Button>
             {id && (
