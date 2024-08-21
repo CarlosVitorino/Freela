@@ -6,6 +6,7 @@ node_modules/
 .idea/
 .metadata/
 .vscode
+/ui/.npm
 /images
 package-lock.json
 ./website/src/config/config.json

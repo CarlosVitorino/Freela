@@ -15533,7 +15533,6 @@ function isObject(obj) {
 function createEmpty(source) {
   return Array.isArray(source) ? [] : {};
 }
-var keys = typeof Reflect === 'undefined' ? Object.keys : Reflect.ownKeys;
 
 /**
  * Merge objects which will create
@@ -15560,7 +15559,7 @@ function merge() {
             // Init container if not exist
             clone = set(clone, path, createEmpty(value));
           }
-          keys(value).forEach(function (key) {
+          Object.keys(value).forEach(function (key) {
             internalMerge([].concat(Object(_babel_runtime_helpers_esm_toConsumableArray__WEBPACK_IMPORTED_MODULE_2__["default"])(path), [key]), loopSet);
           });
         }
