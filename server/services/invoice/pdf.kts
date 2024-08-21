@@ -235,7 +235,7 @@ processed.add( _pdf.paragraph("\n").setFontSize(smallSize)
             .setFont(text)
             .setFontSize(smallSize)
             .setFontColor(textColor)
-            .setTextAlignment(com.itextpdf.layout.property.TextAlignment.CENTER)
+            .setTextAlignment(com.itextpdf.layout.properties.TextAlignment.CENTER)
         )
 );
 
@@ -399,7 +399,7 @@ pdfDocument.add(
                     .setFont(text)
                     .setFontSize(smallSize)
                     .setFontColor(lightTextColor)
-                    .setTextAlignment(com.itextpdf.layout.property.TextAlignment.CENTER)
+                    .setTextAlignment(com.itextpdf.layout.properties.TextAlignment.CENTER)
                     .add( 
                         _pdf.paragraph(company_name)
                         .setFont(text)
@@ -417,7 +417,7 @@ pdfDocument.add(
                     .setFont(text)
                     .setFontSize(smallSize)
                     .setFontColor(lightTextColor)
-                    .setTextAlignment(com.itextpdf.layout.property.TextAlignment.CENTER)
+                    .setTextAlignment(com.itextpdf.layout.properties.TextAlignment.CENTER)
                     .add( 
                         _pdf.paragraph(phone_number)
                         .setFont(text)
@@ -434,7 +434,7 @@ pdfDocument.add(
                     .setFont(text)
                     .setFontSize(smallSize)
                     .setFontColor(lightTextColor)
-                    .setTextAlignment(com.itextpdf.layout.property.TextAlignment.CENTER)
+                    .setTextAlignment(com.itextpdf.layout.properties.TextAlignment.CENTER)
                     .add( 
                         _pdf.paragraph(email)
                         .setFont(text)
