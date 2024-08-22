@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import { Typography, Form, Input, Button, notification, Spin, Row, Col, Select, Upload } from "antd";
-import { JellyTriangle } from "@uiball/loaders";
+
 import _service from "@netuno/service-client";
 
 import "./index.less";
@@ -17,7 +17,7 @@ export default function Company(props) {
   const [contries, setContries] = useState([]);
   const [companyId, setCompanyId] = useState([]);
   const [image, setImage] = useState(false);
-  const companyForm = useRef(null);
+  const [form] = Form.useForm();
 
   const location = useLocation();
 
@@ -26,11 +26,11 @@ export default function Company(props) {
   };
 
   useEffect(() => {
-    if (companyForm.current) {
+    if (form.current) {
       onFetchCompany();
     }
     onFetchCountries();
-  }, [location]);
+  }, []);
 
   const onFetchCompany = () => {
     setLoading(true);
@@ -43,10 +43,11 @@ export default function Company(props) {
           const data = response.json.data;
           setImage("data/" + data.logo);
           setCompanyId(data.id);
-          companyForm.current.setFieldsValue(data);
+          console.log(data);
+          form.current.setFieldsValue(data);
         } else {
           notification["warning"]({
-            message: "An error has occurred while loading the data",
+            message: "An error has occurred while loading the company data",
             description: response.json.error,
           });
           setLoading(false);
@@ -55,8 +56,8 @@ export default function Company(props) {
       fail: () => {
         setLoading(false);
         notification["error"]({
-          message: "An error has occurred while loading the data",
-          description: "An error has occurred while loading the data, please try again after some smart moves.",
+          message: "An error has occurred while loading the company data",
+          description: "An error has occurred while loading the data, please try again or give up.",
         });
       },
     });
@@ -71,11 +72,6 @@ export default function Company(props) {
           label: country.name,
         }));
         setContries(countries);
-        if (companyForm.current.country === undefined) {
-          companyForm.current.setFieldsValue({
-            country: countries.find((country) => country.value === "Portugal").value,
-          });
-        }
       });
   };
 
@@ -166,7 +162,6 @@ export default function Company(props) {
     beforeUpload: beforeUpload,
     onChange: handleChange,
     customRequest: ({ file, onSuccess, onError }) => {
-      console.log(file);
       const formData = new FormData();
       formData.append("file", file);
       formData.append("companyId", companyId);
@@ -181,7 +176,7 @@ export default function Company(props) {
             setCompanyId(response.json.data);
           } else {
             notification["warning"]({
-              message: "An error has occurred while loading the data",
+              message: "An error has occurred while loading the company photo",
               description: response.json.error,
             });
             onError(response.json.error);
@@ -189,7 +184,7 @@ export default function Company(props) {
         },
         fail: () => {
           notification["error"]({
-            message: "An error has occurred while loading the data",
+            message: "An error has occurred while loading the company photo",
             description: "An error has occurred while loading the data, please try again after some tribal dance.",
           });
           onError("An error has occurred while loading the data, please try again after some tribal dance.");
@@ -205,134 +200,144 @@ export default function Company(props) {
     </div>
   );
 
-  if (loading) {
-    return (
-      <div className="loading-wrapper">
-        <div className="content-title">
-          <div aria-live="polite" aria-busy={loading}>
-            {loading && <JellyTriangle color="papayawhip" />}
-          </div>
-        </div>
-      </div>
-    );
-  } else {
-    return (
-      <div>
-        <div className="content-title">
-          <Title level={4}>Your Company Data</Title>
-        </div>
-        <div className="content-body">
-          <Form
-            {...layout}
-            ref={companyForm}
-            layout="vertical"
-            name="basic"
-            initialValues={{ remember: true }}
-            onFinish={onSubmit}
-            onFinishFailed={onFinishFailed}
-          >
-            <Row {...layout}>
-              <Col xs={{ span: 24 }} lg={{ span: 12 }}>
-                <FormItem
-                  label="Brand Logo"
-                  name="logo"
-                  valuePropName="image"
-                  rules={[{ required: true, message: "Insert the logo" }]}
-                >
-                  <Upload {...propsPhoto}>
-                    {image ? <img src={image} alt="avatar" style={{ width: "100%" }} /> : uploadButton}
-                  </Upload>
-                </FormItem>
-                <Form.Item
-                  label="Company Name"
-                  name="company"
-                  rules={[
-                    { required: true, message: "Insert the name" },
-                    { type: "string", message: "Insert a valid name" },
-                  ]}
-                >
-                  <Input style={{ maxWidth: 257 }} disabled={submitting} />
-                </Form.Item>
-                <FormItem
-                  label="VAT"
-                  name="vat"
-                  rules={[
-                    { required: true, message: "Insert the VAT" },
-                    { type: "string", message: "Insert a valid VAT" },
-                  ]}
-                >
-                  <Input style={{ maxWidth: 257 }} disabled={submitting} />
-                </FormItem>
-              </Col>
-              <Col xs={{ span: 24 }} lg={{ span: 12 }}>
-                <Form.Item
-                  label="Address"
-                  name="address"
-                  rules={[
-                    { required: true, message: "Insert the address" },
-                    { type: "string", message: "Insert a valid address" },
-                  ]}
-                >
-                  <Input.TextArea rows={1} style={{ maxWidth: 257 }} disabled={submitting} />
-                </Form.Item>
-                <Form.Item
-                  label="City"
-                  name="city"
-                  rules={[
-                    { required: true, message: "Insert the city" },
-                    { type: "string", message: "Insert a valid city" },
-                  ]}
-                >
-                  <Input style={{ maxWidth: 257 }} disabled={submitting} />
-                </Form.Item>
-                <Form.Item
-                  label="Postal Code"
-                  name="postal_code"
-                  rules={[
-                    { required: true, message: "Insert the postal code" },
-                    { type: "string", message: "Insert a valid postal code" },
-                  ]}
-                >
-                  <Input style={{ maxWidth: 257 }} disabled={submitting} />
-                </Form.Item>
-                <Form.Item
-                  label="Country"
-                  name="country"
-                  rules={[
-                    { required: true, message: "Insert the country" },
-                    { type: "string", message: "Insert a valid country" },
-                  ]}
-                >
-                  <Select
-                    disabled={submitting}
-                    placeholder="Select a country"
-                    options={contries}
-                    style={{ maxWidth: 257 }}
-                  ></Select>
-                </Form.Item>
-              </Col>
-              <Col xs={{ span: 24 }} lg={{ span: 24 }}>
-                <FormItem
-                  label="Terms of Service"
-                  name="terms"
-                  rules={[
-                    { required: true, message: "Insert the terms of your service" },
-                    { type: "string", message: "Insert a valid terms of service" },
-                  ]}
-                >
-                  <Input.TextArea rows={3} style={{ maxWidth: "calc(50% + 257px)" }} disabled={submitting} />
-                </FormItem>
-              </Col>
-            </Row>
 
-            <Form.Item>
-              <Button type="primary" htmlType="submit" loading={submitting}>
-                Save
-              </Button>
-            </Form.Item>
-          </Form>
-        </div>
+  return (
+    <div>
+      <div className="content-title">
+        <Title level={4}>Your Company Data</Title>
       </div>
-    );
-  }
+      <div className="content-body">
+        <Form
+          {...layout}
+          ref={form}
+          layout="vertical"
+          name="basic"
+          initialValues={{ remember: true }}
+          onFinish={onSubmit}
+          onFinishFailed={onFinishFailed}
+        >
+          <Row {...layout}>
+            <Col xs={{ span: 24 }} lg={{ span: 12 }}>
+              <FormItem
+                label="Brand Logo"
+                name="logo"
+                valuePropName="image"
+                rules={[{ required: true, message: "Insert the logo" }]}
+              >
+                <Upload {...propsPhoto}>
+                  {image ? <img src={image} alt="avatar" style={{ width: "100%" }} /> : uploadButton}
+                </Upload>
+              </FormItem>
+              <Form.Item
+                label="Company Name"
+                name="company"
+                rules={[
+                  { required: true, message: "Insert the name" },
+                  { type: "string", message: "Insert a valid name" },
+                ]}
+              >
+                <Input style={{ maxWidth: 257 }} disabled={submitting} />
+              </Form.Item>
+              <Form.Item
+                label="E-mail"
+                name="email"
+                rules={[
+                  { type: "email", message: "O e-mail inserido não é válido." },
+                  { required: true, message: "Insira o e-mail." },
+                ]}
+              >
+                <Input style={{ maxWidth: 257 }} disabled={submitting} />
+              </Form.Item>
+              <FormItem
+                label="VAT"
+                name="vat"
+                rules={[
+                  { required: true, message: "Insert the VAT" },
+                  { type: "string", message: "Insert a valid VAT" },
+                ]}
+              >
+                <Input style={{ maxWidth: 257 }} disabled={submitting} />
+              </FormItem>
+            </Col>
+            <Col xs={{ span: 24 }} lg={{ span: 12 }}>
+              <Form.Item
+                label="Phone Number"
+                name="phone_number"
+                rules={[
+                  { required: true, message: "Insert the phone number" },
+                  { pattern: /^[0-9]{10,15}$/, message: "Insert a valid phone number" },
+                ]}
+              >
+                <Input style={{ maxWidth: 257 }} disabled={submitting} />
+              </Form.Item>
+              <Form.Item
+                label="Address"
+                name="address"
+                rules={[
+                  { required: true, message: "Insert the address" },
+                  { type: "string", message: "Insert a valid address" },
+                ]}
+              >
+                <Input.TextArea rows={1} style={{ maxWidth: 257 }} disabled={submitting} />
+              </Form.Item>
+              <Form.Item
+                label="City"
+                name="city"
+                rules={[
+                  { required: true, message: "Insert the city" },
+                  { type: "string", message: "Insert a valid city" },
+                ]}
+              >
+                <Input style={{ maxWidth: 257 }} disabled={submitting} />
+              </Form.Item>
+              <Form.Item
+                label="Postal Code"
+                name="postal_code"
+                rules={[
+                  { required: true, message: "Insert the postal code" },
+                  { type: "string", message: "Insert a valid postal code" },
+                ]}
+              >
+                <Input style={{ maxWidth: 257 }} disabled={submitting} />
+              </Form.Item>
+              <Form.Item
+                label="Country"
+                name="country"
+                rules={[
+                  { required: true, message: "Insert the country" },
+                  { type: "string", message: "Insert a valid country" },
+                ]}
+              >
+                <Select
+                  disabled={submitting}
+                  placeholder="Select a country"
+                  options={contries}
+                  style={{ maxWidth: 257 }}
+                ></Select>
+              </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} lg={{ span: 24 }}>
+              <FormItem
+                label="Terms of Service"
+                name="terms"
+                rules={[
+                  { required: true, message: "Insert the terms of your service" },
+                  { type: "string", message: "Insert a valid terms of service" },
+                ]}
+              >
+                <Input.TextArea rows={3} style={{ maxWidth: "calc(50% + 257px)" }} disabled={submitting} />
+              </FormItem>
+            </Col>
+          </Row>
+
+          <Form.Item>
+            <Button type="primary" htmlType="submit" loading={submitting}>
+              Save
+            </Button>
+          </Form.Item>
+        </Form>
+      </div>
+    </div>
+  );
+
 }

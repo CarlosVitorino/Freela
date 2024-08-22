@@ -12,7 +12,7 @@ if (file !== null) {
 		companyId = _db.insert(
 			"company",
 			_val.init()
-				.set("client_user_id", file)
+				.set("client_user_id", user)
 				.set("logo", file)
 		);
 	} else {
@@ -22,7 +22,7 @@ if (file !== null) {
 			"company",
 			companyId,
 			_val.init()
-				.set("client_user_id", file)
+				.set("client_user_id", user)
 				.set("logo", file)
 		);
 	}

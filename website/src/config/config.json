@@ -1,6 +1,5 @@
 {
     "api": {
-        "data": "data",
-        "services": "services"
+        "services": "http://localhost:9000/services/"
     }
 }

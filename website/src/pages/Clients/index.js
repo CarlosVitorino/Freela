@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Navigate, useLocation, useNavigate, Link } from "react-router-dom";
 import { Typography, Space, Button, Input, Table, notification, Spin, Card } from "antd";
-import { JellyTriangle } from "@uiball/loaders";
+
 import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import _auth from "@netuno/auth-client";
 import _service from "@netuno/service-client";
@@ -105,7 +105,7 @@ export default function Clients(props) {
 
   useEffect(() => {
     onFetchClients();
-  }, [location]);
+  }, []);
 
   function onFetchClients() {
     setLoading(true);
@@ -119,7 +119,7 @@ export default function Clients(props) {
           setClientsDataFiltered(response.json.data);
         } else {
           notification["warning"]({
-            message: "Ocorreu um erro a carregar os dados",
+            message: "Data not loaded",
             description: response.json.error,
           });
           setLoading(false);
@@ -128,12 +128,12 @@ export default function Clients(props) {
       fail: () => {
         setLoading(false);
         notification["error"]({
-          message: "Ocorreu um erro a carregar os dados",
-          description: "Ocorreu um erro a carregar os dados, por favor tente novamente.",
+          message: "Session error",
+          description: "Error loading data, please login again.",
         });
 
         _auth.logout();
-        navigate.push("/login");
+        navigate("/login");
       },
     });
   }
@@ -162,7 +162,7 @@ export default function Clients(props) {
         <div className="loading-wrapper">
           <div className="content-title">
             <div aria-live="polite" aria-busy={loading}>
-              {loading && <JellyTriangle color="papayawhip" />}
+              {loading && <div class="loader"></div>}
             </div>
           </div>
         </div>
@@ -193,7 +193,7 @@ export default function Clients(props) {
                 onRow={(record, rowIndex) => {
                   return {
                     onClick: (event) => {
-                      navigate.push(`/detail/${record.id}`);
+                      navigate(`/clients/detail/${record.id}`);
                     },
                   };
                 }}

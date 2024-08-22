@@ -204,8 +204,8 @@ const App = () => {
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/clients" element={<Clients />} />
               <Route path="/sessions" element={<Sessions />} />
-              <Route path="/detail/:id" element={<Detail />} />
-              <Route path="/detail" element={<Detail />} />
+              <Route path="/clients/detail/:id" element={<Detail />} />
+              <Route path="/clients/detail" element={<Detail />} />
               <Route path="/finance/invoice" element={<Invoice />} />
               <Route path="/finance/expense" element={<Expense />} />
               <Route path="/finance" element={<Finance />} />

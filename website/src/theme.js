@@ -1,5 +1,5 @@
 const themeConfig = {
-    token: {
+      primaryColor: "#30b2bc",
       colorPrimary: "#30b2bc",
       colorLink: "#30b2bc",
       colorSuccess: "#52c41a",
@@ -20,7 +20,6 @@ const themeConfig = {
       layoutTriggerColor: "#002140",
       layoutZeroTriggerHeight: "64px",
       layoutZeroTriggerWidth: "70px",
-    },
   };
   
   export default themeConfig;

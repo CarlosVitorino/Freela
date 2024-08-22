@@ -5,6 +5,7 @@
   "author": "netuno.org",
   "license": "ISC",
   "dependencies": {
-    "moment": "^2.29.1"
+    "dayjs": "^1.11.13",
+    "moment": "^2.30.1"
   }
 }

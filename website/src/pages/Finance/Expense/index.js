@@ -16,7 +16,7 @@ import {
   Card,
   Space,
 } from "antd";
-import { JellyTriangle } from "@uiball/loaders";
+
 import moment from "moment";
 import _auth from "@netuno/auth-client";
 import _service from "@netuno/service-client";
@@ -48,7 +48,7 @@ export default function Detail(props) {
 
   useEffect(() => {
     onFetchSuppliers();
-  }, [location]);
+  }, []);
 
   const onFetchSuppliers = () => {
     setLoading(true);
@@ -61,7 +61,7 @@ export default function Detail(props) {
           setSuppliersData(response.json.data);
         } else {
           notification["warning"]({
-            message: "Ocorreu um erro a carregar os dados",
+            message: "Data not loaded",
             description: response.json.error,
           });
           setLoading(false);
@@ -70,12 +70,12 @@ export default function Detail(props) {
       fail: () => {
         setLoading(false);
         notification["error"]({
-          message: "Ocorreu um erro a carregar os dados",
-          description: "Ocorreu um erro a carregar os dados, por favor tente novamente.",
+          message: "Session error",
+          description: "Error loading data, please login again.",
         });
 
         _auth.logout();
-        navigate.push("/login");
+        navigate("/login");
       },
     });
   };
@@ -125,7 +125,7 @@ export default function Detail(props) {
       <div className="loading-wrapper">
         <div className="content-title">
           <div aria-live="polite" aria-busy={loading}>
-            {loading && <JellyTriangle color="papayawhip" />}
+            {loading && <div class="loader"></div>}
           </div>
         </div>
       </div>

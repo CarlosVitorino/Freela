@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { Layout, Typography, Form, Input, Button, notification, Divider } from 'antd';
 import { PasswordInput } from "antd-password-input-strength";
 import _auth from '@netuno/auth-client';
@@ -15,14 +15,15 @@ export default function Register(props) {
     const [ready, setReady] = useState(false);
     const [submitting, setSubmitting] = useState(false);
     const registerForm = useRef(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (_auth.isLogged()) {
             window.scrollTo(0, 0)
         }
         window.scrollTo(0, 0)
-    });
-
+    }, []);
+    
     function onFinish(values) {
         setSubmitting(true);
         const { username, password, mail, name } = values;
@@ -68,7 +69,7 @@ export default function Register(props) {
             password,
             success: () => {
                 setSubmitting(false);
-                props.navigate.push("/dashboard");
+                navigate("/dashboard");
             },
             fail: () => {
                 setSubmitting(false);
@@ -173,7 +174,7 @@ export default function Register(props) {
                             </Form.Item> 
                             <Divider />  
                             <Form.Item>
-                                <Button type="link"  onClick={() => props.navigate.push("/login")}>
+                                <Button type="link"  onClick={() => navigate("/login")}>
                                     Already have an account? Login
                                 </Button>
                             </Form.Item>

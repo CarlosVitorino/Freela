@@ -19,7 +19,7 @@ import {
   Checkbox,
 } from "antd";
 import moment from "moment";
-import { JellyTriangle } from "@uiball/loaders";
+
 import _service from "@netuno/service-client";
 import _auth from "@netuno/auth-client";
 
@@ -62,7 +62,7 @@ export default function Detail(props) {
     onFetchClients();
     onFetchCountries();
     if (clientForm.current && id) onFetchDetail();
-  }, [location]);
+  }, []);
 
   useEffect(() => {
     if (sessionTypeValue && sessionType && sessionSubType && clientForm.current && !sessionSubTypeOptions)
@@ -92,7 +92,7 @@ export default function Detail(props) {
           clientForm.current.setFieldsValue(data);
         } else {
           notification["warning"]({
-            message: "Ocorreu um erro a carregar os dados",
+            message: "Data not loaded",
             description: response.json.error,
           });
           setLoading(false);
@@ -101,12 +101,12 @@ export default function Detail(props) {
       fail: (error) => {
         setLoading(false);
         notification["error"]({
-          message: "Ocorreu um erro a carregar os dados",
-          description: "Detail - Ocorreu um erro a carregar os dados, por favor tente novamente.",
+          message: "Session error",
+          description: "Detail - Error loading data, please login again.",
         });
 
         _auth.logout();
-        navigate.push("/login");
+        navigate("/login");
       },
     });
   };
@@ -174,7 +174,7 @@ export default function Detail(props) {
           setClients(response.json.data);
         } else {
           notification["warning"]({
-            message: "Ocorreu um erro a carregar os dados",
+            message: "Data not loaded",
             description: response.json.error,
           });
         }
@@ -182,12 +182,12 @@ export default function Detail(props) {
       fail: () => {
         setLoading(false);
         notification["error"]({
-          message: "Ocorreu um erro a carregar os dados",
-          description: "Ocorreu um erro a carregar os dados, por favor tente novamente.",
+          message: "Session error",
+          description: "Error loading data, please login again.",
         });
 
         _auth.logout();
-        navigate.push("/login");
+        navigate("/login");
       },
     });
   };
@@ -201,11 +201,11 @@ export default function Detail(props) {
           label: country.name,
         }));
         setContries(countries);
-        if (clientForm.current.country === undefined) {
-          clientForm.current.setFieldsValue({
-            country: countries.find((country) => country.value === "Portugal").value,
-          });
-        }
+        // if (clientForm?.current?.country === undefined) {
+        //   clientForm.current.setFieldsValue({
+        //     country: countries.find((country) => country.value === "Portugal").value,
+        //   });
+        // }
       });
   };
 
@@ -347,7 +347,7 @@ export default function Detail(props) {
       <div className="loading-wrapper">
         <div className="content-title">
           <div className="loader" aria-live="polite" aria-busy={loading}>
-            {loading && <JellyTriangle color="#4b4848" />}
+            {loading &&  <div class="loader"></div>}
           </div>
         </div>
       </div>

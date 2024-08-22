@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { Typography, Form, Input, Button, notification, Spin, Row, Col } from "antd";
 import { PasswordInput } from "antd-password-input-strength";
-import { JellyTriangle } from "@uiball/loaders";
+
 import _service from "@netuno/service-client";
 
 import "./index.less";
@@ -17,17 +17,15 @@ export default function Profile(props) {
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [passwordRequired, setPasswordRequired] = useState(false);
-  const profileForm = useRef(null);
-
-  const location = useLocation();
+  const [form] = Form.useForm();
 
   const layout = {
     wrapperCol: { xs: { span: 24 }, sm: { span: 24 }, md: { span: 24 }, lg: { span: 12 } },
   };
 
   useEffect(() => {
-    if (profileForm.current) onFetchProfile();
-  }, [location]);
+    if (form.current) onFetchProfile();
+  }, []);
 
   function onFetchProfile() {
     setLoading(true);
@@ -36,25 +34,22 @@ export default function Profile(props) {
       url: "user",
       success: (response) => {
         setLoading(false);
-        if (response.json.result) {
-          profileForm.current.setFieldsValue({
-            name: response.json.data[0].name,
-            username: response.json.data[0].username,
-            mail: response.json.data[0].email,
-          });
-        } else {
-          notification["warning"]({
-            message: "An error has occurred while loading the data",
-            description: response.json.error,
-          });
-          setLoading(false);
-        }
+          if (response.json.data && response.json.data.length > 0) {
+            const data = response.json.data[0]
+            form.current.setFieldsValue(data);
+          } else {
+            notification["warning"]({
+              message: "An error has occurred while parsing the user data",
+              description: response.json.error,
+            });
+            setLoading(false);
+          }
       },
       fail: () => {
         setLoading(false);
         notification["error"]({
-          message: "An error has occurred while loading the data",
-          description: "An error has occurred while loading the data, please try again after some smart moves.",
+          message: "An error has occurred while loading the user data",
+          description: "An error has occurred while loading the data, please try again.",
         });
       },
     });
@@ -62,7 +57,7 @@ export default function Profile(props) {
 
   function onFinish(values) {
     setSubmitting(true);
-    const { name, username, password, mail, old_password } = values;
+    const { name, username, password, email, old_password } = values;
     _service({
       method: "PUT",
       url: "user",
@@ -70,7 +65,7 @@ export default function Profile(props) {
         name,
         username,
         password,
-        mail,
+        email,
         old_password,
       },
       success: (response) => {
@@ -80,7 +75,7 @@ export default function Profile(props) {
             description: "Os dados do seu perfil foram alterados com sucesso.",
           });
           setSubmitting(false);
-          profileForm.current.setFieldsValue({
+          form.current.setFieldsValue({
             password: "",
             password_confirm: "",
             old_password: "",
@@ -99,7 +94,7 @@ export default function Profile(props) {
           }
 
           setSubmitting(false);
-          profileForm.current.setFieldsValue({
+          form.current.setFieldsValue({
             password: "",
             password_confirm: "",
             old_password: "",
@@ -128,118 +123,107 @@ export default function Profile(props) {
     console.log("Failed:", errorInfo);
   }
 
-  if (loading) {
-    return (
-      <div className="loading-wrapper">
-        <div className="content-title">
-          <div aria-live="polite" aria-busy={loading}>
-            {loading && <JellyTriangle color="papayawhip" />}
-          </div>
-        </div>
-      </div>
-    );
-  } else {
-    return (
-      <div>
-        <div className="content-title">
-          <Title level={4}>Profile</Title>
-        </div>
-        <div className="content-body">
-          <Form
-            {...layout}
-            onValuesChange={onValuesChange}
-            ref={profileForm}
-            layout="vertical"
-            name="basic"
-            initialValues={{ remember: true }}
-            onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
-          >
-            <Row {...layout}>
-              <Col xs={{ span: 24 }} lg={{ span: 12 }}>
-                <Form.Item
-                  label="Name"
-                  name="name"
-                  rules={[
-                    { required: true, message: "Insert the name" },
-                    {
-                      type: "string",
-                      message: "Invalid name, only lowercase and uppercase letters.",
-                      pattern:
-                        "^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$",
-                    },
-                  ]}
-                >
-                  <Input disabled={submitting} />
-                </Form.Item>
-                <Form.Item
-                  label="Username"
-                  name="username"
-                  rules={[
-                    { required: true, message: "Insert the username" },
-                    {
-                      type: "string",
-                      message: "Invalid name, only lowercase and uppercase letters.",
-                      pattern:
-                        "^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$",
-                    },
-                  ]}
-                >
-                  <Input disabled={submitting} />
-                </Form.Item>
-                <Form.Item
-                  label="E-mail"
-                  name="mail"
-                  rules={[
-                    { type: "email", message: "O e-mail inserido não é válido." },
-                    { required: true, message: "Insira o e-mail." },
-                  ]}
-                >
-                  <Input disabled={submitting} />
-                </Form.Item>
-              </Col>
-              <Col xs={{ span: 24 }} lg={{ span: 12 }}>
-                <Form.Item label="Old Password" name="old_password" rules={[{ type: "string" }]}>
-                  <Input.Password />
-                </Form.Item>
-                <Form.Item
-                  label="New Password"
-                  name="password"
-                  rules={[
-                    { type: "string", message: "Password should be between 8 to 25 characters.", min: 8, max: 25 },
-                  ]}
-                >
-                  <PasswordInput />
-                </Form.Item>
-                <Form.Item
-                  label="Confirm new Password"
-                  name="password_confirm"
-                  rules={[
-                    { required: passwordRequired, message: "Enter the new password again." },
-                    { type: "string", message: "Password should be between 8 to 25 characters.", min: 8, max: 25 },
-                    ({ getFieldValue }) => ({
-                      validator(_, value) {
-                        if (!value || getFieldValue("password") === value) {
-                          return Promise.resolve();
-                        }
-                        return Promise.reject("The passwords are not the same.");
-                      },
-                    }),
-                  ]}
-                >
-                  <Input.Password />
-                </Form.Item>
-              </Col>
-            </Row>
 
-            <Form.Item>
-              <Button type="primary" htmlType="submit" loading={submitting}>
-                Update Profile
-              </Button>
-            </Form.Item>
-          </Form>
-        </div>
+  return (
+    <div>
+      <div className="content-title">
+        <Title level={4}>Profile</Title>
       </div>
-    );
-  }
+      <div className="content-body">
+        <Form
+          {...layout}
+          onValuesChange={onValuesChange}
+          ref={form}
+          layout="vertical"
+          name="basic"
+          initialValues={{ remember: true }}
+          onFinish={onFinish}
+          onFinishFailed={onFinishFailed}
+        >
+          <Row {...layout}>
+            <Col xs={{ span: 24 }} lg={{ span: 12 }}>
+              <Form.Item
+                label="Name"
+                name="name"
+                rules={[
+                  { required: true, message: "Insert the name" },
+                  {
+                    type: "string",
+                    message: "Invalid name, only lowercase and uppercase letters.",
+                    pattern:
+                      "^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$",
+                  },
+                ]}
+              >
+                <Input disabled={submitting} />
+              </Form.Item>
+              <Form.Item
+                label="Username"
+                name="username"
+                rules={[
+                  { required: true, message: "Insert the username" },
+                  {
+                    type: "string",
+                    message: "Invalid name, only lowercase and uppercase letters.",
+                    pattern:
+                      "^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$",
+                  },
+                ]}
+              >
+                <Input disabled={submitting} />
+              </Form.Item>
+              <Form.Item
+                label="E-mail"
+                name="email"
+                rules={[
+                  { type: "email", message: "O e-mail inserido não é válido." },
+                  { required: true, message: "Insira o e-mail." },
+                ]}
+              >
+                <Input disabled={submitting} />
+              </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} lg={{ span: 12 }}>
+              <Form.Item label="Old Password" name="old_password" rules={[{ type: "string" }]}>
+                <Input.Password />
+              </Form.Item>
+              <Form.Item
+                label="New Password"
+                name="password"
+                rules={[
+                  { type: "string", message: "Password should be between 8 to 25 characters.", min: 8, max: 25 },
+                ]}
+              >
+                <PasswordInput />
+              </Form.Item>
+              <Form.Item
+                label="Confirm new Password"
+                name="password_confirm"
+                rules={[
+                  { required: passwordRequired, message: "Enter the new password again." },
+                  { type: "string", message: "Password should be between 8 to 25 characters.", min: 8, max: 25 },
+                  ({ getFieldValue }) => ({
+                    validator(_, value) {
+                      if (!value || getFieldValue("password") === value) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject("The passwords are not the same.");
+                    },
+                  }),
+                ]}
+              >
+                <Input.Password />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Form.Item>
+            <Button type="primary" htmlType="submit" loading={submitting}>
+              Update Profile
+            </Button>
+          </Form.Item>
+        </Form>
+      </div>
+    </div>
+  );
 }

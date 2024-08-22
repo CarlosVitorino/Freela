@@ -18,7 +18,7 @@ export default function RecoverModal(props) {
             window.scrollTo(0, 0)
         }
         window.scrollTo(0, 0)
-    });
+    }, []);
 
     function onFinish(values) {
         setSubmitting(true);

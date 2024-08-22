@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@ant-design/charts": "^2.0.0",
     "@ant-design/compatible": "^5.1.2",
+    "@ant-design/moment-webpack-plugin": "^1.0.0",
     "@ant-design/plots": "^2.2.8",
     "@craco/craco": "^7.0.0",
     "@netuno/auth-client": "^1.1.1",
@@ -57,6 +59,7 @@
     ]
   },
   "devDependencies": {
-    "craco-esbuild": "^0.6.1"
+    "craco-esbuild": "^0.6.1",
+    "source-map-loader": "^5.0.0"
   }
 }

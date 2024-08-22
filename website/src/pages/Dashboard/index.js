@@ -145,7 +145,7 @@ export default function Dashboard(props) {
     yField: "revenue",
     seriesField: "type",
     label: {
-      position: "middle",
+      position: "bottom",
       layout: [
         {
           type: "interval-adjust-position",
@@ -193,7 +193,6 @@ export default function Dashboard(props) {
     colorField: "client",
     radius: 0.9,
     label: {
-      type: "inner",
       offset: "-30%",
       content: ({ percent }) => `${(percent * 100).toFixed(0)}%`,
       style: {
@@ -236,7 +235,7 @@ export default function Dashboard(props) {
                   There is not enough information yet to show your Dashboard
                 </Title>
                 <Paragraph>
-                  To start using freela.biz to streamlines your billing process,
+                  To start using freela.wourld to streamlines your billing process,
                   it only takes 3 simple steps:
                 </Paragraph>
                 <Paragraph>

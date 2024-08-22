@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { Button, Card, Col, DatePicker, Form, notification, Row, Select, Space, Spin, Table, Typography } from "antd";
-import { JellyTriangle } from "@uiball/loaders";
+
 import moment from "moment";
 import _auth from "@netuno/auth-client";
 import _service from "@netuno/service-client";
@@ -65,16 +65,19 @@ export default function Invoice(props) {
   const colStyle = { padding: "8px 10px" };
 
   useEffect(() => {
-    if (location.ids) onFetchSessions();
-    onFetchClients();
+    if (location?.state?.ids) onFetchSessions();
   }, [location]);
+  
+  useEffect(() => {
+    onFetchClients();
+  }, []);
 
   const onFetchSessions = () => {
     setLoading(true);
     _service({
       method: "POST",
       url: "session/list",
-      data: { sessionIds: location.ids.join(", ") },
+      data: { sessionIds: location?.state?.ids.join(", ") },
       success: (response) => {
         setLoading(false);
         if (response.json.result) {
@@ -113,7 +116,7 @@ export default function Invoice(props) {
           setClientsData(response.json.data);
         } else {
           notification["warning"]({
-            message: "Ocorreu um erro a carregar os dados",
+            message: "Data not loaded",
             description: response.json.error,
           });
           setLoading(false);
@@ -122,12 +125,12 @@ export default function Invoice(props) {
       fail: () => {
         setLoading(false);
         notification["error"]({
-          message: "Ocorreu um erro a carregar os dados",
-          description: "Ocorreu um erro a carregar os dados, por favor tente novamente.",
+          message: "Session error",
+          description: "Error loading data, please login again.",
         });
 
         _auth.logout();
-        navigate.push("/login");
+        navigate("/login");
       },
     });
   };
@@ -139,7 +142,7 @@ export default function Invoice(props) {
     values["created_at"] = moment().format("YYYY-MM-DD");
     values["billing_period"] =
       values["billing_period"][0].format("YYYY-MM-DD") + " - " + values["billing_period"][1].format("YYYY-MM-DD");
-    values["sessions"] = location.ids.toString();
+    values["sessions"] = location?.state?.ids.toString();
     const valueStr = total_amount.replace("€", "");
     values["total_amount"] = parseFloat(valueStr);
 
@@ -182,7 +185,7 @@ export default function Invoice(props) {
       <div className="loading-wrapper">
         <div className="content-title">
           <div aria-live="polite" aria-busy={loading}>
-            {loading && <JellyTriangle color="papayawhip" />}
+            {loading && <div class="loader"></div>}
           </div>
         </div>
       </div>

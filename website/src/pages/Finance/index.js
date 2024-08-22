@@ -15,7 +15,7 @@ import {
   Modal,
 } from "antd";
 import { DeleteOutlined, CheckSquareFilled, MinusSquareFilled, FilePdfOutlined } from "@ant-design/icons";
-import { JellyTriangle } from "@uiball/loaders";
+
 
 import config from "../../config/config.json";
 import _auth from "@netuno/auth-client";
@@ -122,7 +122,7 @@ export default function Finance(props) {
 
   useEffect(() => {
     onFetchFinance();
-  }, [location]);
+  }, []);
 
   const onFetchFinance = () => {
     setLoading(true);
@@ -136,7 +136,7 @@ export default function Finance(props) {
           setFinanceDataFiltered(response.json.data);
         } else {
           notification["warning"]({
-            message: "Ocorreu um erro a carregar os dados",
+            message: "Data not loaded",
             description: response.json.error,
           });
           setLoading(false);
@@ -145,11 +145,11 @@ export default function Finance(props) {
       fail: () => {
         setLoading(false);
         notification["error"]({
-          message: "Ocorreu um erro a carregar os dados",
-          description: "Ocorreu um erro a carregar os dados, por favor tente novamente.",
+          message: "Session error",
+          description: "Error loading data, please login again.",
         });
         _auth.logout();
-        navigate.push("/login");
+        navigate("/login");
       },
     });
   };
@@ -290,7 +290,7 @@ export default function Finance(props) {
         <div className="loading-wrapper">
           <div className="content-title">
             <div aria-live="polite" aria-busy={loading}>
-              {loading && <JellyTriangle color="papayawhip" />}
+              {loading && <div class="loader"></div>}
             </div>
           </div>
         </div>

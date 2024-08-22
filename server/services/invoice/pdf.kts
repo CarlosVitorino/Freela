@@ -39,7 +39,7 @@ val country = if (company.getString("country") !== null) company.getString("coun
 val vat = if (company.getString("vat") !== null) company.getString("vat") else "";
 val terms = if (company.getString("terms") !== null) company.getString("terms") else "";
 val phone_number = if (company.getString("phone_number") !== null) company.getString("phone_number") else "";
-val email = if (company.getString("email") !== null) company.getString("email") else "";
+val email = if (company.getString("email") !== null) company.getString("email") else "carlos.vitorino@kister.de";
 
 /* Client Data */
 val client_name = if (client.getString("legal_name") !== null) client.getString("legal_name") else client.getString("name");
