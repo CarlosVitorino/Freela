@@ -149,7 +149,7 @@ const EditableCell = ({
       );
     }
     if (inputType === "date") {
-      input = <DatePicker ref={inputRef} onPressEnter={customSave} onBlur={customSave} />;
+      input = <DatePicker ref={inputRef} onChange={save} />;
     }
 
     childNode = editing ? (

@@ -99,7 +99,7 @@ export default function Clients(props) {
       dataIndex: "active",
       key: "active",
       render: (_, record) => (record.active ? <CheckOutlined /> : <CloseOutlined />),
-      width: 55,
+      width: 60,
     },
   ];
 

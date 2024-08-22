@@ -68,7 +68,6 @@ const colors = [
 export default function Dashboard(props) {
   const [monthData, setMonthData] = useState([]);
   const [pieData, setPieData] = useState([]);
-  const [profit, setProfit] = useState(0);
   const [sunburstData, setSunburstData] = useState([]);
   const [columnsData, setColumnsData] = useState([]);
   const [yearData, setYearData] = useState([]);
@@ -121,7 +120,6 @@ export default function Dashboard(props) {
           setPieData(response.json.data.top5Clients);
           setColumnsData(response.json.data.dataByMonth);
           setSunburstData(response.json.data.sunburst);
-          setProfit(response.json.data.profit)
         } else {
           notification["warning"]({
             message: "There was an error loading data",
@@ -142,15 +140,25 @@ export default function Dashboard(props) {
 
   const configColumn = {
     data: columnsData,
-    stack: true,    
-    colorField: 'type',
+    isStack: true,
     xField: "month",
     yField: "revenue",
+    seriesField: "type",
     label: {
-      text: 'revenue',
-      textBaseline: 'bottom',
-      position: 'inside',
+      position: "bottom",
+      layout: [
+        {
+          type: "interval-adjust-position",
+        },
+        {
+          type: "interval-hide-overlap",
+        },
+        {
+          type: "adjust-color",
+        },
+      ],
     },
+    color: ["#30b2bc", "#ffbe0b", "#ff006e", "#3a86ff", "#8338ec", "#fb5607"],
     xAxis: {
       label: {
         autoRotate: false,
@@ -163,97 +171,47 @@ export default function Dashboard(props) {
       },
     },
     slider: {
-      x : {
-        start: !isMobile ? 0 : 0.5,
-        end: 1,
-      }
+      start: !isMobile ? 0 : 0.5,
+      end: 1,
     },
-    interaction: {
-      elementHighlightByColor: {
-        link: true,
-      },
-    },
-    state: {
-      active: { linkFill: 'rgba(0,0,0,0.25)', stroke: 'black', lineWidth: 0.5 },
-      inactive: { opacity: 0.5 },
-    },
-    scale: {
-      type:'band',
-      color: {
-        palette: ["#30b2bc", "#ffbe0b", "#ff006e", "#3a86ff", "#8338ec", "#fb5607"],
-        offset: (t) => t * 0.8 + 0.1,
+    tooltip: {
+      customItems: (originalItems) => {
+        // process originalItems,
+        console.log(originalItems);
+        originalItems.forEach((item) => {
+          //item.data.revenue = item.data.revenue.toString().includes("€") ? item.data.revenue : item.data.revenue + " €";
+        });
+        return originalItems;
       },
     },
   };
 
   const configPie = {
     appendPadding: 10,
-    data: {value: pieData},
-    angleField: "value",
+    data: pieData,
+    angleField: "amount",
     colorField: "client",
-    innerRadius: 0.2,
-    labels: [
-      {
-        text: (d) => {
-          //debugger;
-          return  `${((d.value / profit) * 100).toFixed(0)}%`
-       },
-        style: {
-          fontSize: 12,
-          dy: 12,
-        },
-      },
-    ],
-    style: {
-      stroke: '#fff',
-      inset: 0,
-      radius: 10,
-      opacity: 30,
-    },
-    scale: {
-      color: {
-        palette: ["#30b2bc", "#ffbe0b", "#ff006e", "#3a86ff", "#8338ec", "#fb5607"],
-        offset: (t) => t * 0.8 + 0.1,
+    radius: 0.9,
+    label: {
+      offset: "-30%",
+      content: ({ percent }) => `${(percent * 100).toFixed(0)}%`,
+      style: {
+        fontSize: 14,
+        textAlign: "center",
       },
     },
-    legend: {
-      color: {
-        title: true,
-        position: 'right',
-        rowPadding: 5,
-      },
-    },
+    color: colors,
     interactions: [
       {
         type: "element-active",
       },
     ],
   };
+
   const configSunburst = {
-    appendPadding: 10,
-    data: {value: sunburstData},
-    innerRadius: 0.2,
-    scale: {
-      color: {
-        palette: ["#30b2bc", "#ffbe0b", "#ff006e", "#3a86ff", "#8338ec", "#fb5607"],
-        offset: (t) => t * 0.8 + 0.1,
-      },
-    },
-    style: {
-      stroke: '#fff',
-      inset: 0,
-      radius: 10,
-    },
-    legend: {
-      color: {
-        title: false,
-        position: 'right',
-        rowPadding: 5,
-      },
-    },
-    animate: {
-      enter: { type: "waveIn"}
-    },
+    data: sunburstData,
+    innerRadius: 0.3,
+    color: colors,
     interactions: [
       {
         type: "element-active",
@@ -277,7 +235,7 @@ export default function Dashboard(props) {
                   There is not enough information yet to show your Dashboard
                 </Title>
                 <Paragraph>
-                  To start using freela.biz to streamlines your billing process,
+                  To start using freela.wourld to streamlines your billing process,
                   it only takes 3 simple steps:
                 </Paragraph>
                 <Paragraph>
@@ -465,21 +423,7 @@ export default function Dashboard(props) {
             <Col xs={{ span: 24 }} lg={{ span: 24 }} style={colStyle}>
               <Card>
                 <Title level={4}>Revenue by Month</Title>
-                <Column {...configColumn} className="custom-height"/>
-              </Card>
-            </Col>
-          </Row>
-          <Row {...layout}>
-            <Col xs={{ span: 24 }} lg={{ span: 12 }} style={colStyle}>
-              <Card className="card-left">
-                <Title level={4}>Revenue by Type</Title>
-                <Sunburst {...configSunburst} className="custom-height"/>
-              </Card>
-            </Col>
-            <Col xs={{ span: 24 }} lg={{ span: 12 }} style={colStyle}>
-              <Card className="card-right">
-                <Title level={4}>Revenue by Client</Title>
-                <Pie {...configPie} className="custom-height"/>
+                <Column {...configColumn} />
               </Card>
             </Col>
           </Row>
@@ -569,7 +513,20 @@ export default function Dashboard(props) {
               </Card>
             </Col>
           </Row>
-         
+          <Row {...layout}>
+            <Col xs={{ span: 24 }} lg={{ span: 12 }} style={colStyle}>
+              <Card className="card-left">
+                <Title level={4}>Revenue / Type</Title>
+                <Sunburst {...configSunburst} />
+              </Card>
+            </Col>
+            <Col xs={{ span: 24 }} lg={{ span: 12 }} style={colStyle}>
+              <Card className="card-right">
+                <Title level={4}>Clients/ Revenue</Title>
+                <Pie {...configPie} />
+              </Card>
+            </Col>
+          </Row>
         </div>
       </div>
     );

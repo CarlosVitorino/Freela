@@ -26,12 +26,12 @@ const dataByMonth = _db.query(`
     ORDER BY month_no;`);
 
 const top5Clients = _db.query(`
-    SELECT client.name AS client, SUM(price) AS amount 
+    SELECT client.name AS client, SUM(price) AS value 
     FROM session
     INNER JOIN client on session.client_id = client.id
     WHERE session.client_user_id = ${_user.id()} 
     GROUP BY client
-    ORDER BY amount desc;`);
+    ORDER BY value desc;`);
 
 const sessionsDb = _db.queryFirst(`SELECT SUM(price) as money, SUM(duration) as duration, SUM(1) as sessions 
     FROM session 
@@ -107,10 +107,14 @@ for (type of dataByType) {
     const children = _val.list();
     for (subType of dataBySubType) {
         if (subType.getInt('type_id') === type.getInt('id')) {
+            delete subType["type_id"];
             children.add(subType);
+
         }
     } 
     type.set("children", children);
+    delete type["id"];
+
 }
 sunburst.set("children", dataByType);  
 sunburst.set("name", "All");

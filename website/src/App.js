@@ -39,9 +39,6 @@ import "./styles/App.less";
 const { Content, Sider } = Layout;
 const { Text } = Typography;
 
-console.log('Imported _auth:', _auth);
-console.log('isLogged function:', _auth.isLogged);
-
 const App = () => {
   const location = useLocation();
   const [headerButtonMode, setHeaderButtonMode] = useState("login");
