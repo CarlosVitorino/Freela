@@ -5,6 +5,7 @@
   "dependencies": {
     "@ant-design/charts": "^2.0.0",
     "@ant-design/compatible": "^5.1.2",
+    "@ant-design/icons": "^5.4.0",
     "@ant-design/moment-webpack-plugin": "^1.0.0",
     "@ant-design/plots": "^2.2.8",
     "@craco/craco": "^7.0.0",

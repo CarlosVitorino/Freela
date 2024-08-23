@@ -4,10 +4,9 @@ import { Routes, Route, useLocation, Link, Navigate } from 'react-router-dom';
 import { ConfigProvider, Layout, Menu, Typography } from 'antd';
 import { MenuOutlined } from '@ant-design/icons';
 import { ReactSVG } from 'react-svg';
-import antLocale_en from 'antd/lib/locale/en_GB';
+import antLocaleEn from 'antd/lib/locale/en_GB';
 import classNames from 'classnames';
 
-import _service from '@netuno/service-client';
 import _auth from '@netuno/auth-client';
 import './common/Config';
 import themeConfig from './theme';
@@ -97,7 +96,7 @@ function App() {
   };
 
   return (
-    <ConfigProvider locale={antLocale_en} theme={themeConfig}>
+    <ConfigProvider locale={antLocaleEn} theme={themeConfig}>
       <Layout
         className={`page ${classNames(
           { auth: _auth.isLogged(), collapsed },

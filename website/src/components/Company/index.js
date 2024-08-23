@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import {
@@ -7,7 +7,6 @@ import {
   Input,
   Button,
   notification,
-  Spin,
   Row,
   Col,
   Select,
@@ -21,7 +20,7 @@ import FormItem from 'antd/lib/form/FormItem';
 
 const { Title } = Typography;
 
-export default function Company(props) {
+export default function Company() {
   const [loading, setLoading] = useState(false);
   const [uploadLoading, setUploadLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -29,9 +28,6 @@ export default function Company(props) {
   const [companyId, setCompanyId] = useState([]);
   const [image, setImage] = useState(false);
   const [form] = Form.useForm();
-
-  const location = useLocation();
-
   const layout = {
     wrapperCol: {
       xs: { span: 24 },

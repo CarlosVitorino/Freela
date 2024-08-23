@@ -1,7 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useLocation } from 'react-router-dom';
-import { ArrowLeftOutlined } from '@ant-design/icons';
-import { Typography, Form, Input, Button, notification, Spin, Row, Col } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Typography, Form, Input, Button, notification, Row, Col } from 'antd';
 import { PasswordInput } from 'antd-password-input-strength';
 
 import _service from '@netuno/service-client';
@@ -9,16 +7,8 @@ import _service from '@netuno/service-client';
 import './index.less';
 
 const { Title } = Typography;
-const layout = {
-  wrapperCol: {
-    xs: { span: 12 },
-    sm: { span: 12 },
-    md: { span: 24 },
-    lg: { span: 24 },
-  },
-  style: { marginBotton: 10, marginTop: 10 },
-};
-export default function Profile(props) {
+
+export default function Profile() {
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [passwordRequired, setPasswordRequired] = useState(false);
