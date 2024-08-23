@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Navigate, useLocation } from "react-router-dom";
+import { Navigate, useLocation } from 'react-router-dom';
 import { Layout, Typography, Form, Input, Button, notification } from 'antd';
-import { PasswordInput } from "antd-password-input-strength";
+import { PasswordInput } from 'antd-password-input-strength';
 import _service from '@netuno/service-client';
 
 import './index.less';
@@ -10,117 +10,129 @@ const { Title } = Typography;
 const { Content, Sider } = Layout;
 
 export default function Recovery(props) {
+  const [ready, setReady] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [hash, setHash] = useState(false);
+  const recoveryForm = useRef(null);
 
-    const [ready, setReady] = useState(false);
-    const [submitting, setSubmitting] = useState(false);
-    const [hash, setHash] = useState(false);
-    const recoveryForm = useRef(null);
+  const location = useLocation();
 
-    const location = useLocation();
+  useEffect(() => {
+    setHash(location.hash.substring(1));
+  }, [location]);
 
-    useEffect(() => {
-        setHash(location.hash.substring(1))
-    }, [location]);
-
-    function onFinish(values) {
-        setSubmitting(true);
-        const { password } = values;
-        _service({
-            method: 'POST',
-            url: 'recovery',
-            data: {
-                password,
-                key: hash
-            },
-            success: (response) => {
-                if (response.json.result) {
-                    notification["success"]({
-                        message: 'Password change',
-                        description: 'Your password was successfully changed.',
-                    });
-                    setSubmitting(false);
-                    setReady(true);
-                }
-            },
-            fail: () => {
-                setSubmitting(false);
-                notification["error"]({
-                    message: 'Password change error',
-                    description: 'Unable to change your password, please try again after doing a few dance steps.',
-                });
-            }
+  function onFinish(values) {
+    setSubmitting(true);
+    const { password } = values;
+    _service({
+      method: 'POST',
+      url: 'recovery',
+      data: {
+        password,
+        key: hash,
+      },
+      success: (response) => {
+        if (response.json.result) {
+          notification.success({
+            message: 'Password change',
+            description: 'Your password was successfully changed.',
+          });
+          setSubmitting(false);
+          setReady(true);
+        }
+      },
+      fail: () => {
+        setSubmitting(false);
+        notification.error({
+          message: 'Password change error',
+          description:
+            'Unable to change your password, please try again after doing a few dance steps.',
         });
-    }
+      },
+    });
+  }
 
-    function onFinishFailed(errorInfo) {
-        console.log('Failed:', errorInfo);
-    }
+  function onFinishFailed(errorInfo) {
+    console.log('Failed:', errorInfo);
+  }
 
-    if (ready) {
-        return <Navigate to="/login" />;
-    } else if (window.location.hash && window.location.hash !== "") {
-        return (
-            <Layout>
-                <Content className="recovery-container">
-                    <div className="content-title">
-                        <Title>Recuperar Acesso</Title>
-                    </div>
-                    <div className="content-body">
-                        <p>Alteração da palavra-passe da sua conta.</p>
-                        <Form
-                            ref={recoveryForm}
-                            layout="vertical"
-                            name="basic"
-                            initialValues={{ remember: true }}
-                            onFinish={onFinish}
-                            onFinishFailed={onFinishFailed}
-                        >
-                            <Form.Item
-                                label="Palavra-passe"
-                                name="password"
-                                rules={[
-                                    { required: true, message: 'Insira a palavra-passe.' },
-                                    { type: 'string', message: 'Palavra-Passe deverá ter entre 8 a 25 caracteres.', min: 8, max: 25 },
-                                ]}
-                            >
-                                <PasswordInput disabled={submitting} maxLength={25} />
-                            </Form.Item>
-                            <Form.Item
-                                label="Confirmar a Palavra-passe"
-                                name="password_confirm"
-                                rules={[
-                                    { required: true, message: 'Insira a confirmação da palavra-passe.' },
-                                    { type: 'string', message: 'Palavra-Passe deverá ter entre 8 a 25 caracteres.', min: 8, max: 25 },
-                                    ({ getFieldValue }) => ({
-                                        validator(_, value) {
-                                            if (!value || getFieldValue('password') === value) {
-                                                return Promise.resolve();
-                                            }
-                                            return Promise.reject('As palavras-passes não são iguais.');
-                                        },
-                                    })
-                                ]}
-                            >
-                                <Input.Password disabled={submitting} maxLength={25} />
-                            </Form.Item>
-                            <Form.Item>
-                                <Button type="primary" htmlType="submit" loading={submitting}>
-                                    Redefinir Palavra-passe
-                                </Button>
-                            </Form.Item>
-
-                        </Form>
-
-                    </div>
-                </Content>
-                <Sider width={'50%'}>
-                    <span className="helper" /><img alt="sider-recovery" src={"/images/sider-recovery.png"} />
-                </Sider>
-            </Layout>
-        );
-    }
-    /* else {
+  if (ready) {
+    return <Navigate to="/login" />;
+  }
+  if (window.location.hash && window.location.hash !== '') {
+    return (
+      <Layout>
+        <Content className="recovery-container">
+          <div className="content-title">
+            <Title>Recuperar Acesso</Title>
+          </div>
+          <div className="content-body">
+            <p>Alteração da palavra-passe da sua conta.</p>
+            <Form
+              ref={recoveryForm}
+              layout="vertical"
+              name="basic"
+              initialValues={{ remember: true }}
+              onFinish={onFinish}
+              onFinishFailed={onFinishFailed}
+            >
+              <Form.Item
+                label="Palavra-passe"
+                name="password"
+                rules={[
+                  { required: true, message: 'Insira a palavra-passe.' },
+                  {
+                    type: 'string',
+                    message: 'Palavra-Passe deverá ter entre 8 a 25 caracteres.',
+                    min: 8,
+                    max: 25,
+                  },
+                ]}
+              >
+                <PasswordInput disabled={submitting} maxLength={25} />
+              </Form.Item>
+              <Form.Item
+                label="Confirmar a Palavra-passe"
+                name="password_confirm"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Insira a confirmação da palavra-passe.',
+                  },
+                  {
+                    type: 'string',
+                    message: 'Palavra-Passe deverá ter entre 8 a 25 caracteres.',
+                    min: 8,
+                    max: 25,
+                  },
+                  ({ getFieldValue }) => ({
+                    validator(_, value) {
+                      if (!value || getFieldValue('password') === value) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject('As palavras-passes não são iguais.');
+                    },
+                  }),
+                ]}
+              >
+                <Input.Password disabled={submitting} maxLength={25} />
+              </Form.Item>
+              <Form.Item>
+                <Button type="primary" htmlType="submit" loading={submitting}>
+                  Redefinir Palavra-passe
+                </Button>
+              </Form.Item>
+            </Form>
+          </div>
+        </Content>
+        <Sider width="50%">
+          <span className="helper" />
+          <img alt="sider-recovery" src="/images/sider-recovery.png" />
+        </Sider>
+      </Layout>
+    );
+  }
+  /* else {
         return <NotFoundPage />;
     } */
-
 }

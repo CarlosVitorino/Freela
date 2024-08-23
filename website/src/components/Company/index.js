@@ -1,12 +1,23 @@
-import React, { useState, useEffect, useRef } from "react";
-import { useLocation } from "react-router-dom";
-import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
-import { Typography, Form, Input, Button, notification, Spin, Row, Col, Select, Upload } from "antd";
+import React, { useState, useEffect, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
+import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
+import {
+  Typography,
+  Form,
+  Input,
+  Button,
+  notification,
+  Spin,
+  Row,
+  Col,
+  Select,
+  Upload,
+} from 'antd';
 
-import _service from "@netuno/service-client";
+import _service from '@netuno/service-client';
 
-import "./index.less";
-import FormItem from "antd/lib/form/FormItem";
+import './index.less';
+import FormItem from 'antd/lib/form/FormItem';
 
 const { Title } = Typography;
 
@@ -22,7 +33,12 @@ export default function Company(props) {
   const location = useLocation();
 
   const layout = {
-    wrapperCol: { xs: { span: 24 }, sm: { span: 24 }, md: { span: 24 }, lg: { span: 12 } },
+    wrapperCol: {
+      xs: { span: 24 },
+      sm: { span: 24 },
+      md: { span: 24 },
+      lg: { span: 12 },
+    },
   };
 
   useEffect(() => {
@@ -35,18 +51,18 @@ export default function Company(props) {
   const onFetchCompany = () => {
     setLoading(true);
     _service({
-      method: "GET",
-      url: "company",
+      method: 'GET',
+      url: 'company',
       success: (response) => {
         setLoading(false);
         if (response.json.result) {
-          const data = response.json.data;
-          setImage("data/" + data.logo);
+          const { data } = response.json;
+          setImage(`data/${data.logo}`);
           setCompanyId(data.id);
           form.current.setFieldsValue(data);
         } else {
-          notification["warning"]({
-            message: "An error has occurred while loading the company data",
+          notification.warning({
+            message: 'An error has occurred while loading the company data',
             description: response.json.error,
           });
           setLoading(false);
@@ -54,16 +70,16 @@ export default function Company(props) {
       },
       fail: () => {
         setLoading(false);
-        notification["error"]({
-          message: "An error has occurred while loading the company data",
-          description: "An error has occurred while loading the data, please try again or give up.",
+        notification.error({
+          message: 'An error has occurred while loading the company data',
+          description: 'An error has occurred while loading the data, please try again or give up.',
         });
       },
     });
   };
 
   const onFetchCountries = () => {
-    fetch("https://restcountries.com/v2/all?fields=name")
+    fetch('https://restcountries.com/v2/all?fields=name')
       .then((response) => response.json())
       .then((data) => {
         const countries = data.map((country) => ({
@@ -76,22 +92,22 @@ export default function Company(props) {
 
   const onSubmit = (values) => {
     setSubmitting(true);
-    delete values["logo"];
+    delete values.logo;
     values.companyId = companyId;
     _service({
-      method: "PUT",
-      url: "company",
+      method: 'PUT',
+      url: 'company',
       data: values,
       success: (response) => {
         setSubmitting(false);
         if (response.json.result) {
-          notification["success"]({
-            message: "Company saved successfully",
-            description: "Company saved successfully",
+          notification.success({
+            message: 'Company saved successfully',
+            description: 'Company saved successfully',
           });
         } else {
-          notification["warning"]({
-            message: "An error has occurred while saving your company data",
+          notification.warning({
+            message: 'An error has occurred while saving your company data',
             description: response.json.error,
           });
           setSubmitting(false);
@@ -99,9 +115,10 @@ export default function Company(props) {
       },
       fail: () => {
         setSubmitting(false);
-        notification["error"]({
-          message: "An error has occurred while saving your company data",
-          description: "An error has occurred while saving your company data, please try again after some yoga.",
+        notification.error({
+          message: 'An error has occurred while saving your company data',
+          description:
+            'An error has occurred while saving your company data, please try again after some yoga.',
         });
       },
     });
@@ -113,79 +130,82 @@ export default function Company(props) {
 
   const getBase64 = (img, callback) => {
     const reader = new FileReader();
-    reader.addEventListener("load", () => callback(reader.result));
+    reader.addEventListener('load', () => callback(reader.result));
     reader.readAsDataURL(img);
   };
 
   const beforeUpload = (file) => {
-    const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
+    const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
     if (!isJpgOrPng) {
-      notification["error"]({
-        message: "File format not valid",
-        description: "You can only upload JPG/PNG file!",
+      notification.error({
+        message: 'File format not valid',
+        description: 'You can only upload JPG/PNG file!',
       });
     }
     const isLt2M = file.size / 1024 / 1024 < 2;
     if (!isLt2M) {
-      notification["error"]({
-        message: "File size too large",
-        description: "Image must smaller than 2MB!",
+      notification.error({
+        message: 'File size too large',
+        description: 'Image must smaller than 2MB!',
       });
     }
     return isJpgOrPng && isLt2M;
   };
 
   const handleChange = (info) => {
-    if (info.file.status === "uploading") {
+    if (info.file.status === 'uploading') {
       getBase64(info.file.originFileObj, (imageUrl) => {
         setImage(imageUrl);
         setUploadLoading(false);
       });
     }
-    if (info.file.status === "done") {
+    if (info.file.status === 'done') {
       console.log(info.file.status);
-      notification["success"]({
-        message: "File uploaded successfully",
-        description: "The file has been uploaded successfully",
+      notification.success({
+        message: 'File uploaded successfully',
+        description: 'The file has been uploaded successfully',
       });
     }
   };
 
   const propsPhoto = {
-    name: "avatar",
-    listType: "picture-card",
-    className: "avatar-uploader",
-    accept: "image/png, image/jpeg",
+    name: 'avatar',
+    listType: 'picture-card',
+    className: 'avatar-uploader',
+    accept: 'image/png, image/jpeg',
     showUploadList: false,
-    beforeUpload: beforeUpload,
+    beforeUpload,
     onChange: handleChange,
     customRequest: ({ file, onSuccess, onError }) => {
       const formData = new FormData();
-      formData.append("file", file);
-      formData.append("companyId", companyId);
+      formData.append('file', file);
+      formData.append('companyId', companyId);
 
       _service({
-        method: "POST",
-        url: "company/photo",
+        method: 'POST',
+        url: 'company/photo',
         data: formData,
         success: (response) => {
           if (response.json.result) {
             onSuccess(response.json.data);
             setCompanyId(response.json.data);
           } else {
-            notification["warning"]({
-              message: "An error has occurred while loading the company photo",
+            notification.warning({
+              message: 'An error has occurred while loading the company photo',
               description: response.json.error,
             });
             onError(response.json.error);
           }
         },
         fail: () => {
-          notification["error"]({
-            message: "An error has occurred while loading the company photo",
-            description: "An error has occurred while loading the data, please try again after some tribal dance.",
+          notification.error({
+            message: 'An error has occurred while loading the company photo',
+            description:
+              'An error has occurred while loading the data, please try again after some tribal dance.',
           });
-          onError("An error has occurred while loading the data, please try again after some tribal dance.");
+          onError(
+            'An error has occurred while loading the data, please try again after some tribal dance.',
+          );
         },
       });
     },
@@ -197,7 +217,6 @@ export default function Company(props) {
       <div style={{ marginTop: 8 }}>Upload</div>
     </div>
   );
-
 
   return (
     <div>
@@ -220,18 +239,22 @@ export default function Company(props) {
                 label="Brand Logo"
                 name="logo"
                 valuePropName="image"
-                rules={[{ required: true, message: "Insert the logo" }]}
+                rules={[{ required: true, message: 'Insert the logo' }]}
               >
                 <Upload {...propsPhoto}>
-                  {image ? <img src={image} alt="avatar" style={{ width: "100%" }} /> : uploadButton}
+                  {image ? (
+                    <img src={image} alt="avatar" style={{ width: '100%' }} />
+                  ) : (
+                    uploadButton
+                  )}
                 </Upload>
               </FormItem>
               <Form.Item
                 label="Company Name"
                 name="company"
                 rules={[
-                  { required: true, message: "Insert the name" },
-                  { type: "string", message: "Insert a valid name" },
+                  { required: true, message: 'Insert the name' },
+                  { type: 'string', message: 'Insert a valid name' },
                 ]}
               >
                 <Input style={{ maxWidth: 257 }} disabled={submitting} />
@@ -240,8 +263,8 @@ export default function Company(props) {
                 label="E-mail"
                 name="email"
                 rules={[
-                  { type: "email", message: "O e-mail inserido não é válido." },
-                  { required: true, message: "Insira o e-mail." },
+                  { type: 'email', message: 'O e-mail inserido não é válido.' },
+                  { required: true, message: 'Insira o e-mail.' },
                 ]}
               >
                 <Input style={{ maxWidth: 257 }} disabled={submitting} />
@@ -250,8 +273,8 @@ export default function Company(props) {
                 label="VAT"
                 name="vat"
                 rules={[
-                  { required: true, message: "Insert the VAT" },
-                  { type: "string", message: "Insert a valid VAT" },
+                  { required: true, message: 'Insert the VAT' },
+                  { type: 'string', message: 'Insert a valid VAT' },
                 ]}
               >
                 <Input style={{ maxWidth: 257 }} disabled={submitting} />
@@ -262,8 +285,11 @@ export default function Company(props) {
                 label="Phone Number"
                 name="phone_number"
                 rules={[
-                  { required: true, message: "Insert the phone number" },
-                  { pattern: /^[0-9]{10,15}$/, message: "Insert a valid phone number" },
+                  { required: true, message: 'Insert the phone number' },
+                  {
+                    pattern: /^[0-9]{10,15}$/,
+                    message: 'Insert a valid phone number',
+                  },
                 ]}
               >
                 <Input style={{ maxWidth: 257 }} disabled={submitting} />
@@ -272,8 +298,8 @@ export default function Company(props) {
                 label="Address"
                 name="address"
                 rules={[
-                  { required: true, message: "Insert the address" },
-                  { type: "string", message: "Insert a valid address" },
+                  { required: true, message: 'Insert the address' },
+                  { type: 'string', message: 'Insert a valid address' },
                 ]}
               >
                 <Input.TextArea rows={1} style={{ maxWidth: 257 }} disabled={submitting} />
@@ -282,8 +308,8 @@ export default function Company(props) {
                 label="City"
                 name="city"
                 rules={[
-                  { required: true, message: "Insert the city" },
-                  { type: "string", message: "Insert a valid city" },
+                  { required: true, message: 'Insert the city' },
+                  { type: 'string', message: 'Insert a valid city' },
                 ]}
               >
                 <Input style={{ maxWidth: 257 }} disabled={submitting} />
@@ -292,8 +318,8 @@ export default function Company(props) {
                 label="Postal Code"
                 name="postal_code"
                 rules={[
-                  { required: true, message: "Insert the postal code" },
-                  { type: "string", message: "Insert a valid postal code" },
+                  { required: true, message: 'Insert the postal code' },
+                  { type: 'string', message: 'Insert a valid postal code' },
                 ]}
               >
                 <Input style={{ maxWidth: 257 }} disabled={submitting} />
@@ -302,8 +328,8 @@ export default function Company(props) {
                 label="Country"
                 name="country"
                 rules={[
-                  { required: true, message: "Insert the country" },
-                  { type: "string", message: "Insert a valid country" },
+                  { required: true, message: 'Insert the country' },
+                  { type: 'string', message: 'Insert a valid country' },
                 ]}
               >
                 <Select
@@ -311,7 +337,7 @@ export default function Company(props) {
                   placeholder="Select a country"
                   options={contries}
                   style={{ maxWidth: 257 }}
-                ></Select>
+                />
               </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} lg={{ span: 24 }}>
@@ -319,11 +345,21 @@ export default function Company(props) {
                 label="Terms of Service"
                 name="terms"
                 rules={[
-                  { required: true, message: "Insert the terms of your service" },
-                  { type: "string", message: "Insert a valid terms of service" },
+                  {
+                    required: true,
+                    message: 'Insert the terms of your service',
+                  },
+                  {
+                    type: 'string',
+                    message: 'Insert a valid terms of service',
+                  },
                 ]}
               >
-                <Input.TextArea rows={3} style={{ maxWidth: "calc(50% + 257px)" }} disabled={submitting} />
+                <Input.TextArea
+                  rows={3}
+                  style={{ maxWidth: 'calc(50% + 257px)' }}
+                  disabled={submitting}
+                />
               </FormItem>
             </Col>
           </Row>
@@ -337,5 +373,4 @@ export default function Company(props) {
       </div>
     </div>
   );
-
 }

@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
-import { Navigate, useLocation, useNavigate, Link } from "react-router-dom";
-import { Typography, Space, Button, Input, Table, notification, Spin, Card } from "antd";
+import React, { useState, useEffect } from 'react';
+import { Navigate, useLocation, useNavigate, Link } from 'react-router-dom';
+import { Typography, Space, Button, Input, Table, notification, Spin, Card } from 'antd';
 
-import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
-import _auth from "@netuno/auth-client";
-import _service from "@netuno/service-client";
-import classNames from "classnames";
+import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
+import _auth from '@netuno/auth-client';
+import _service from '@netuno/service-client';
+import classNames from 'classnames';
 
-import "./index.less";
+import './index.less';
 
 const { Title } = Typography;
 const { Search } = Input;
@@ -22,22 +22,22 @@ export default function Clients(props) {
 
   const columns = [
     {
-      title: "Name",
-      dataIndex: "name",
-      key: "name",
+      title: 'Name',
+      dataIndex: 'name',
+      key: 'name',
       ellipsis: true,
     },
     {
-      title: "Email",
-      dataIndex: "email",
-      key: "email",
+      title: 'Email',
+      dataIndex: 'email',
+      key: 'email',
       ellipsis: true,
     },
     {
-      title: "Phone Number",
-      dataIndex: "phone_number",
-      key: "phone_number",
-      responsive: ["xl"],
+      title: 'Phone Number',
+      dataIndex: 'phone_number',
+      key: 'phone_number',
+      responsive: ['xl'],
       ellipsis: true,
     },
     /*     {
@@ -46,58 +46,62 @@ export default function Clients(props) {
       key: "start_date",
     }, */
     {
-      title: "Duration",
-      dataIndex: "session_duration",
-      key: "session_duration",
-      responsive: ["lg"],
+      title: 'Duration',
+      dataIndex: 'session_duration',
+      key: 'session_duration',
+      responsive: ['lg'],
       width: 75,
     },
     {
-      title: "Sessions",
-      dataIndex: "sessions_per_month",
-      key: "sessions_per_month",
-      render: (_, record) => record.sessions_per_month + " x",
-      responsive: ["lg"],
+      title: 'Sessions',
+      dataIndex: 'sessions_per_month',
+      key: 'sessions_per_month',
+      render: (_, record) => `${record.sessions_per_month} x`,
+      responsive: ['lg'],
       width: 75,
     },
     {
-      title: "Price",
-      dataIndex: "default_price",
-      key: "default_price",
-      render: (_, record) => record.default_price + "€",
-      responsive: ["xl"],
+      title: 'Price',
+      dataIndex: 'default_price',
+      key: 'default_price',
+      render: (_, record) => `${record.default_price}€`,
+      responsive: ['xl'],
       width: 60,
     },
     {
-      title: "Price/Hour",
-      dataIndex: "price_hour",
-      key: "price_hour",
+      title: 'Price/Hour',
+      dataIndex: 'price_hour',
+      key: 'price_hour',
       render: (_, record) => {
         let priceHour = 0;
-        if ("default_price" in record && "session_duration" in record && record.session_duration > 0) {
+        if (
+          'default_price' in record &&
+          'session_duration' in record &&
+          record.session_duration > 0
+        ) {
           priceHour = (60 * record.default_price) / record.session_duration;
         }
-        return Math.round(priceHour * 100) / 100 + "€/h";
+        return `${Math.round(priceHour * 100) / 100}€/h`;
       },
       width: 100,
     },
     {
-      title: "Type",
-      dataIndex: "default_session_type",
-      key: "default_session_type",
+      title: 'Type',
+      dataIndex: 'default_session_type',
+      key: 'default_session_type',
       ellipsis: true,
     },
     {
-      title: "Sub Type",
-      dataIndex: "default_session_sub_type",
-      key: "default_session_sub_type",
-      responsive: ["md"],
+      title: 'Sub Type',
+      dataIndex: 'default_session_sub_type',
+      key: 'default_session_sub_type',
+      responsive: ['md'],
       ellipsis: true,
     },
     {
-      title: "Active",
-      dataIndex: "active",
-      key: "active",
+      title: 'Active',
+      dataIndex: 'active',
+      key: 'active',
       render: (_, record) => (record.active ? <CheckOutlined /> : <CloseOutlined />),
       width: 60,
     },
@@ -110,16 +114,16 @@ export default function Clients(props) {
   function onFetchClients() {
     setLoading(true);
     _service({
-      method: "GET",
-      url: "client",
+      method: 'GET',
+      url: 'client',
       success: (response) => {
         setLoading(false);
         if (response.json.result) {
           setClientsData(response.json.data);
           setClientsDataFiltered(response.json.data);
         } else {
-          notification["warning"]({
-            message: "Data not loaded",
+          notification.warning({
+            message: 'Data not loaded',
             description: response.json.error,
           });
           setLoading(false);
@@ -127,25 +131,25 @@ export default function Clients(props) {
       },
       fail: () => {
         setLoading(false);
-        notification["error"]({
-          message: "Session error",
-          description: "Error loading data, please login again.",
+        notification.error({
+          message: 'Session error',
+          description: 'Error loading data, please login again.',
         });
 
         _auth.logout();
-        navigate("/login");
+        navigate('/login');
       },
     });
   }
 
   function filter(e) {
-    const value = e.target.value;
+    const { value } = e.target;
     if (!value) {
       setClientsDataFiltered(clientsData);
     } else {
-      let filteredData = clientsData.filter((client) => {
+      const filteredData = clientsData.filter((client) => {
         let exist = false;
-        for (var prop in client) {
+        for (const prop in client) {
           if (Object.prototype.hasOwnProperty.call(client, prop)) {
             if (client[prop].toString().indexOf(value) !== -1) exist = true;
           }
@@ -162,48 +166,46 @@ export default function Clients(props) {
         <div className="loading-wrapper">
           <div className="content-title">
             <div aria-live="polite" aria-busy={loading}>
-              {loading && <div class="loader"></div>}
+              {loading && <div className="loader" />}
             </div>
           </div>
         </div>
       );
-    } else {
-      return (
-        <div className="clients">
-          <div className="content-title">
-            <Title className="big-title">
-              <span>Clients</span>
-            </Title>
-          </div>
-          <div className={classNames("content-body", "content-table")}>
-            <Card>
-              <div className="actions-n-filters">
-                <Space style={{ marginBottom: 16 }}>
-                  <Button type="primary">
-                    <Link to="detail">Add Client</Link>
-                  </Button>
-                  <Input placeholder="Search..." onChange={filter} />
-                </Space>
-              </div>
-              <Table
-                dataSource={clientsDataFiltered}
-                columns={columns}
-                size="small"
-                scroll={{ x: "" }}
-                onRow={(record, rowIndex) => {
-                  return {
-                    onClick: (event) => {
-                      navigate(`/clients/detail/${record.id}`);
-                    },
-                  };
-                }}
-              />
-            </Card>
-          </div>
-        </div>
-      );
     }
-  } else {
-    return <Navigate to="/login" />;
+    return (
+      <div className="clients">
+        <div className="content-title">
+          <Title className="big-title">
+            <span>Clients</span>
+          </Title>
+        </div>
+        <div className={classNames('content-body', 'content-table')}>
+          <Card>
+            <div className="actions-n-filters">
+              <Space style={{ marginBottom: 16 }}>
+                <Button type="primary">
+                  <Link to="detail">Add Client</Link>
+                </Button>
+                <Input placeholder="Search..." onChange={filter} />
+              </Space>
+            </div>
+            <Table
+              dataSource={clientsDataFiltered}
+              columns={columns}
+              size="small"
+              scroll={{ x: '' }}
+              onRow={(record, rowIndex) => {
+                return {
+                  onClick: (event) => {
+                    navigate(`/clients/detail/${record.id}`);
+                  },
+                };
+              }}
+            />
+          </Card>
+        </div>
+      </div>
+    );
   }
+  return <Navigate to="/login" />;
 }

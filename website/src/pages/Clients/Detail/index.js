@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { ArrowLeftOutlined } from "@ant-design/icons";
+import React, { useState, useEffect, useRef } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { ArrowLeftOutlined } from '@ant-design/icons';
 import {
   Typography,
   Form,
@@ -17,13 +17,13 @@ import {
   Switch,
   Popconfirm,
   Checkbox,
-} from "antd";
-import moment from "moment";
+} from 'antd';
+import moment from 'moment';
 
-import _service from "@netuno/service-client";
-import _auth from "@netuno/auth-client";
+import _service from '@netuno/service-client';
+import _auth from '@netuno/auth-client';
 
-import "./index.less";
+import './index.less';
 
 const { Title, Text } = Typography;
 
@@ -54,7 +54,7 @@ export default function Detail(props) {
     },
   };
 
-  const colStyle = { padding: "8px 0px" };
+  const colStyle = { padding: '8px 0px' };
 
   useEffect(() => {
     onFetchSessionType();
@@ -65,34 +65,41 @@ export default function Detail(props) {
   }, []);
 
   useEffect(() => {
-    if (sessionTypeValue && sessionType && sessionSubType && clientForm.current && !sessionSubTypeOptions)
+    if (
+      sessionTypeValue &&
+      sessionType &&
+      sessionSubType &&
+      clientForm.current &&
+      !sessionSubTypeOptions
+    )
       handleTypeChange(sessionTypeValue);
   }, [sessionTypeValue, sessionType, sessionSubType]);
 
   const onFetchDetail = () => {
     setLoading(true);
     _service({
-      method: "GET",
-      url: "client/detail",
+      method: 'GET',
+      url: 'client/detail',
       data: { clientId: parseInt(id) },
       success: (response) => {
         setLoading(false);
         if (response.json.result && response.json.data.length === 1) {
-          let data = response.json.data[0];
-          if (data["start_date"]) {
-            data["start_date"] = moment(data["start_date"]);
+          const data = response.json.data[0];
+          if (data.start_date) {
+            data.start_date = moment(data.start_date);
           }
-          if (data["date_of_birth"]) {
-            data["date_of_birth"] = moment(data["date_of_birth"]);
+          if (data.date_of_birth) {
+            data.date_of_birth = moment(data.date_of_birth);
           }
-          data["client_association_id"] = data.client_association_id === 0 ? null : data.client_association_id;
+          data.client_association_id =
+            data.client_association_id === 0 ? null : data.client_association_id;
           data.is_company && setIsCompany(true);
-          setActive(data["active"]);
+          setActive(data.active);
           setSessionTypeValue(data.default_session_type);
           clientForm.current.setFieldsValue(data);
         } else {
-          notification["warning"]({
-            message: "Data not loaded",
+          notification.warning({
+            message: 'Data not loaded',
             description: response.json.error,
           });
           setLoading(false);
@@ -100,13 +107,13 @@ export default function Detail(props) {
       },
       fail: (error) => {
         setLoading(false);
-        notification["error"]({
-          message: "Session error",
-          description: "Detail - Error loading data, please login again.",
+        notification.error({
+          message: 'Session error',
+          description: 'Detail - Error loading data, please login again.',
         });
 
         _auth.logout();
-        navigate("/login");
+        navigate('/login');
       },
     });
   };
@@ -114,24 +121,24 @@ export default function Detail(props) {
   const onFetchSessionType = () => {
     setLoading(true);
     _service({
-      method: "GET",
-      url: "sessionType",
+      method: 'GET',
+      url: 'sessionType',
       success: (response) => {
         setLoading(false);
         if (response.json.result) {
           setSessionType(response.json.data);
         } else {
-          notification["warning"]({
-            message: "There was an error loading data",
+          notification.warning({
+            message: 'There was an error loading data',
             description: response.json.error,
           });
         }
       },
       fail: (error) => {
         setLoading(false);
-        notification["error"]({
-          message: "Error!",
-          description: "There was an error, please contact the support.",
+        notification.error({
+          message: 'Error!',
+          description: 'There was an error, please contact the support.',
         });
       },
     });
@@ -140,24 +147,24 @@ export default function Detail(props) {
   const onFetchSessionSubType = () => {
     setLoading(true);
     _service({
-      method: "GET",
-      url: "sessionSubType",
+      method: 'GET',
+      url: 'sessionSubType',
       success: (response) => {
         setLoading(false);
         if (response.json.result) {
           setSessionSubType(response.json.data);
         } else {
-          notification["warning"]({
-            message: "There was an error loading data",
+          notification.warning({
+            message: 'There was an error loading data',
             description: response.json.error,
           });
         }
       },
       fail: (error) => {
         setLoading(false);
-        notification["error"]({
-          message: "Error!",
-          description: "There was an error, please contact the support.",
+        notification.error({
+          message: 'Error!',
+          description: 'There was an error, please contact the support.',
         });
       },
     });
@@ -166,34 +173,34 @@ export default function Detail(props) {
   const onFetchClients = () => {
     setLoading(true);
     _service({
-      method: "GET",
-      url: "client/list",
+      method: 'GET',
+      url: 'client/list',
       success: (response) => {
         setLoading(false);
         if (response.json.result) {
           setClients(response.json.data);
         } else {
-          notification["warning"]({
-            message: "Data not loaded",
+          notification.warning({
+            message: 'Data not loaded',
             description: response.json.error,
           });
         }
       },
       fail: () => {
         setLoading(false);
-        notification["error"]({
-          message: "Session error",
-          description: "Error loading data, please login again.",
+        notification.error({
+          message: 'Session error',
+          description: 'Error loading data, please login again.',
         });
 
         _auth.logout();
-        navigate("/login");
+        navigate('/login');
       },
     });
   };
 
   const onFetchCountries = () => {
-    fetch("https://restcountries.com/v2/all?fields=name")
+    fetch('https://restcountries.com/v2/all?fields=name')
       .then((response) => response.json())
       .then((data) => {
         const countries = data.map((country) => ({
@@ -211,32 +218,32 @@ export default function Detail(props) {
 
   const onFinish = (values) => {
     setSubmitting(true);
-    if (values["start_date"]) {
-      values["start_date"] = values["start_date"].format("YYYY-MM-DD");
+    if (values.start_date) {
+      values.start_date = values.start_date.format('YYYY-MM-DD');
     }
-    if (values["date_of_birth"]) {
-      values["date_of_birth"] = values["date_of_birth"].format("YYYY-MM-DD");
+    if (values.date_of_birth) {
+      values.date_of_birth = values.date_of_birth.format('YYYY-MM-DD');
     }
     if (id) {
-      values["id"] = parseInt(id);
+      values.id = parseInt(id);
     }
 
-    values["is_company"] = isCompany;
+    values.is_company = isCompany;
     _service({
-      method: "PUT",
-      url: "client",
+      method: 'PUT',
+      url: 'client',
       data: values,
       success: (response) => {
         if (response.json.result) {
-          notification["success"]({
-            message: "Client Saved",
-            description: "Client saved successfully.",
+          notification.success({
+            message: 'Client Saved',
+            description: 'Client saved successfully.',
           });
           navigate(-1);
           setSubmitting(false);
         } else {
-          notification["warning"]({
-            message: "Client not saved",
+          notification.warning({
+            message: 'Client not saved',
             description: response.json.error,
           });
           setSubmitting(false);
@@ -244,37 +251,37 @@ export default function Detail(props) {
       },
       fail: () => {
         setSubmitting(false);
-        notification["error"]({
-          message: "Error!",
-          description: "There was an error, please contact the support.",
+        notification.error({
+          message: 'Error!',
+          description: 'There was an error, please contact the support.',
         });
       },
     });
   };
 
   const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
+    console.log('Failed:', errorInfo);
   };
 
   const toggleActivation = () => {
     _service({
-      method: "PUT",
-      url: "client/toggle",
+      method: 'PUT',
+      url: 'client/toggle',
       data: {
         active: !active,
         clientId: id,
       },
       success: (response) => {
         if (response.json.result) {
-          notification["success"]({
-            message: !active ? "Client Actived!" : "Client Inactived!",
-            description: "Client Activated successfully.",
+          notification.success({
+            message: !active ? 'Client Actived!' : 'Client Inactived!',
+            description: 'Client Activated successfully.',
           });
           setActive(!active);
           setSubmitting(false);
         } else {
-          notification["warning"]({
-            message: "Client activation toggle error!",
+          notification.warning({
+            message: 'Client activation toggle error!',
             description: response.json.error,
           });
           setSubmitting(false);
@@ -282,9 +289,9 @@ export default function Detail(props) {
       },
       fail: () => {
         setSubmitting(false);
-        notification["error"]({
-          message: "Error!",
-          description: "There was an error, please contact the support.",
+        notification.error({
+          message: 'Error!',
+          description: 'There was an error, please contact the support.',
         });
       },
     });
@@ -293,22 +300,22 @@ export default function Detail(props) {
   const handleDeleteRecord = () => {
     setLoading(true);
     _service({
-      method: "DELETE",
-      url: "client",
+      method: 'DELETE',
+      url: 'client',
       data: {
-        id: id,
+        id,
       },
       success: (response) => {
         if (response.json.result) {
-          notification["success"]({
-            message: "Status updated!",
-            description: "Status updated successfully.",
+          notification.success({
+            message: 'Status updated!',
+            description: 'Status updated successfully.',
           });
           navigate(-1);
           setLoading(false);
         } else {
-          notification["warning"]({
-            message: "Status toggle error!",
+          notification.warning({
+            message: 'Status toggle error!',
             description: response.json.error,
           });
           setLoading(false);
@@ -316,9 +323,9 @@ export default function Detail(props) {
       },
       fail: () => {
         setLoading(false);
-        notification["error"]({
-          message: "Error!",
-          description: "There was an error, please contact the support.",
+        notification.error({
+          message: 'Error!',
+          description: 'There was an error, please contact the support.',
         });
       },
     });
@@ -332,7 +339,9 @@ export default function Detail(props) {
       });
       const fields = clientForm.current.getFieldsValue();
       if (fields && fields.default_session_sub_type) {
-        if (!newSessionSubTypeOptions.find((item) => item.value === fields.default_session_sub_type)) {
+        if (
+          !newSessionSubTypeOptions.find((item) => item.value === fields.default_session_sub_type)
+        ) {
           clientForm.current.setFieldsValue({
             default_session_sub_type: undefined,
           });
@@ -347,281 +356,305 @@ export default function Detail(props) {
       <div className="loading-wrapper">
         <div className="content-title">
           <div className="loader" aria-live="polite" aria-busy={loading}>
-            {loading &&  <div class="loader"></div>}
+            {loading && <div className="loader" />}
           </div>
-        </div>
-      </div>
-    );
-  } else {
-    return (
-      <div className="client">
-        <div className="content-title">
-          <Title className="big-title">
-            <span>Client</span>
-          </Title>
-          <div>
-            <Button className="go-back-btn" type="link" onClick={() => navigate(-1)}>
-              <ArrowLeftOutlined /> Back
-            </Button>
-            {id && (
-              <Switch
-                className="switch-client"
-                checkedChildren="Active"
-                unCheckedChildren="Inactive"
-                checked={active}
-                onChange={toggleActivation}
-              />
-            )}
-          </div>
-        </div>
-
-        <div className="content-body">
-          <Form
-            {...layout}
-            ref={clientForm}
-            layout="vertical"
-            name="basic"
-            initialValues={{ remember: true }}
-            onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
-          >
-            <Row className="columns-wrapper" gutter={[24, 24]}>
-              <Col xs={{ span: 24 }} lg={{ span: 12 }} className="gutter-row">
-                <Card title="General Info" className="two-col" bordered={false}>
-                  <Form.Item name="is_company">
-                    <Checkbox
-                      disabled={submitting || !active}
-                      checked={isCompany}
-                      onChange={() => setIsCompany(!isCompany)}
-                    >
-                      This client is a company
-                    </Checkbox>
-                  </Form.Item>
-                  <Form.Item
-                    label="Name"
-                    name="name"
-                    rules={[
-                      { required: true, message: "Insert Client's name" },
-                      {
-                        type: "string",
-                        message: "Invalid name, please use only letters and numbers.",
-                        pattern:
-                          "^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-123456789]+$",
-                      },
-                    ]}
-                  >
-                    <Input disabled={submitting || !active} maxLength={25} />
-                  </Form.Item>
-                  <Form.Item
-                    label="E-mail"
-                    name="email"
-                    rules={[
-                      { required: true, message: "Insert the e-mail." },
-                      { type: "email", message: "Email not valid." },
-                    ]}
-                  >
-                    <Input disabled={submitting || !active} maxLength={250} />
-                  </Form.Item>
-                  <Form.Item label="Phone" name="phone_number">
-                    <Input disabled={submitting || !active} maxLength={250} />
-                  </Form.Item>
-                  <Space wrap>
-                    <Text className="info">This client is associated with:</Text>
-                    <Form.Item label="" name="client_association_id">
-                      <Select
-                        disabled={submitting || !active}
-                        placeholder="Client"
-                        allowClear
-                        style={{ minWidth: 150 }}
-                      >
-                        {clients && clients.map((client) => <Option value={client.id}>{client.name}</Option>)}
-                      </Select>
-                    </Form.Item>
-                  </Space>
-                </Card>
-              </Col>
-              <Col xs={{ span: 24 }} lg={{ span: 12 }} className="gutter-row">
-                {!isCompany ? (
-                  <Card title="Bio Data" className="two-col" bordered={false}>
-                    <Form.Item name="gender" label="Gender">
-                      <Select disabled={submitting || !active} placeholder="Select a option" allowClear>
-                        <Option value="male">male</Option>
-                        <Option value="female">female</Option>
-                        <Option value="other">other</Option>
-                      </Select>
-                    </Form.Item>
-
-                    <Space wrap>
-                      <Form.Item label="Date of Birth" name="date_of_birth" rules={[{ type: "date" }]}>
-                        <DatePicker disabled={submitting || !active} />
-                      </Form.Item>
-                      <Form.Item label="Weight" name="weight" rules={[{ type: "number" }]}>
-                        <InputNumber disabled={submitting || !active} maxLength={250} />
-                      </Form.Item>
-                      <Form.Item label="Height" name="height" rules={[{ type: "number" }]}>
-                        <InputNumber disabled={submitting || !active} maxLength={250} />
-                      </Form.Item>
-                    </Space>
-                  </Card>
-                ) : (
-                  <Card title="Company Info" className="two-col" bordered={false}>
-                    <Form.Item label="Legal Name" name="legal_name">
-                      <Input />
-                    </Form.Item>
-                    <Form.Item
-                      label="Website"
-                      name="website"
-                      rules={[
-                        { type: "url", warningOnly: true },
-                        { type: "string", min: 6 },
-                      ]}
-                    >
-                      <Input />
-                    </Form.Item>
-                  </Card>
-                )}
-              </Col>
-
-              <Col xs={{ span: 24 }} lg={{ span: 24 }}>
-                <Card title="Default Session Info" bordered={false}>
-                  <Space size={24} wrap>
-                    <Form.Item label="Session Type" name="default_session_type">
-                      <Select
-                        disabled={submitting || !active}
-                        placeholder="Select a option"
-                        allowClear
-                        options={sessionType}
-                        onChange={handleTypeChange}
-                      />
-                    </Form.Item>
-                    <Form.Item label="Session Sub Type" name="default_session_sub_type">
-                      <Select
-                        disabled={submitting || !active}
-                        placeholder="Select a option"
-                        allowClear
-                        options={sessionSubTypeOptions}
-                      />
-                    </Form.Item>
-                    <Form.Item label="Session Duration" name="session_duration" rules={[{ type: "number" }]}>
-                      <InputNumber disabled={submitting || !active} maxLength={10} addonAfter="min" />
-                    </Form.Item>
-                    <Form.Item label="Price" name="default_price" rules={[{ type: "number" }]}>
-                      <InputNumber disabled={submitting || !active} maxLength={10} addonAfter="€" />
-                    </Form.Item>
-                    <Form.Item label="No. Session/Month" name="sessions_per_month" rules={[{ type: "number" }]}>
-                      <InputNumber disabled={submitting || !active} style={{ width: 120 }} />
-                    </Form.Item>
-                    <Form.Item label="Start Date" name="start_date" rules={[{ type: "date" }]}>
-                      <DatePicker disabled={submitting || !active} />
-                    </Form.Item>
-                  </Space>
-                  <Text>
-                    {" "}
-                    <blockquote>
-                      Default information - The data entered in these fields will be used for automatic filling. The
-                      same customer may have sessions with varying information which can be changed manually.
-                    </blockquote>
-                  </Text>
-                </Card>
-              </Col>
-              <Col xs={{ span: 24 }} lg={{ span: 24 }}>
-                <Card className="client-card-big" title="Preferences" bordered={false}>
-                  <Form.Item label="Goals" name="goals">
-                    <TextArea disabled={submitting || !active} rows={4} />
-                  </Form.Item>
-                  <Form.Item label="Likes" name="likes">
-                    <TextArea disabled={submitting || !active} rows={4} />
-                  </Form.Item>
-                  <Form.Item label="Dislikes" name="dislikes">
-                    <TextArea disabled={submitting || !active} rows={4} />
-                  </Form.Item>
-                  <Form.Item label="Conditions" name="injuries_conditions">
-                    <TextArea disabled={submitting || !active} rows={4} />
-                  </Form.Item>
-                </Card>
-              </Col>
-              <Col xs={{ span: 24 }} lg={{ span: 24 }}>
-                <Card className="client-card-big" title="Legal Information - For Invoicing" bordered={false}>
-                  <Row>
-                    <Col xs={{ span: 24 }} lg={{ span: 24 }}>
-                      <Form.Item
-                        label="Address"
-                        name="address"
-                        rules={[
-                          { required: true, message: "Insert the address" },
-                          { type: "string", message: "Insert a valid address" },
-                        ]}
-                      >
-                        <Input.TextArea rows={2} style={{ width: "100%" }} disabled={submitting} />
-                      </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} lg={{ span: 12 }}>
-                      <Form.Item label="VAT Number" name="vat">
-                        <InputNumber style={{ width: "100%" }} disabled={submitting} />
-                      </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} lg={{ span: 12 }}>
-                      <Form.Item
-                        label="City"
-                        name="city"
-                        rules={[
-                          { required: true, message: "Insert the city" },
-                          { type: "string", message: "Insert a valid city" },
-                        ]}
-                      >
-                        <Input style={{ width: "100%" }} disabled={submitting} />
-                      </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} lg={{ span: 12 }}>
-                      <Form.Item
-                        label="Postal Code"
-                        name="postal_code"
-                        rules={[
-                          { required: true, message: "Insert the postal code" },
-                          { type: "string", message: "Insert a valid postal code" },
-                        ]}
-                      >
-                        <Input style={{ width: "100%" }} disabled={submitting} />
-                      </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} lg={{ span: 12 }}>
-                      <Form.Item
-                        label="Country"
-                        name="country"
-                        rules={[
-                          { required: true, message: "Insert the country" },
-                          { type: "string", message: "Insert a valid country" },
-                        ]}
-                      >
-                        <Select
-                          disabled={submitting}
-                          placeholder="Select a country"
-                          options={contries}
-                          style={{ width: "100%" }}
-                        ></Select>
-                      </Form.Item>
-                    </Col>
-                  </Row>
-                </Card>
-              </Col>
-            </Row>
-
-            <Form.Item>
-              <Space>
-                <Button type="primary" htmlType="submit" loading={submitting} disabled={!active}>
-                  Save
-                </Button>
-                <Popconfirm
-                  title="Are you sure you want to delete this CLIENT, all SESSIONS and INVOICES associated?"
-                  onConfirm={() => handleDeleteRecord()}
-                >
-                  <Button danger>Delete</Button>
-                </Popconfirm>
-              </Space>
-            </Form.Item>
-          </Form>
         </div>
       </div>
     );
   }
+  return (
+    <div className="client">
+      <div className="content-title">
+        <Title className="big-title">
+          <span>Client</span>
+        </Title>
+        <div>
+          <Button className="go-back-btn" type="link" onClick={() => navigate(-1)}>
+            <ArrowLeftOutlined /> Back
+          </Button>
+          {id && (
+            <Switch
+              className="switch-client"
+              checkedChildren="Active"
+              unCheckedChildren="Inactive"
+              checked={active}
+              onChange={toggleActivation}
+            />
+          )}
+        </div>
+      </div>
+
+      <div className="content-body">
+        <Form
+          {...layout}
+          ref={clientForm}
+          layout="vertical"
+          name="basic"
+          initialValues={{ remember: true }}
+          onFinish={onFinish}
+          onFinishFailed={onFinishFailed}
+        >
+          <Row className="columns-wrapper" gutter={[24, 24]}>
+            <Col xs={{ span: 24 }} lg={{ span: 12 }} className="gutter-row">
+              <Card title="General Info" className="two-col" bordered={false}>
+                <Form.Item name="is_company">
+                  <Checkbox
+                    disabled={submitting || !active}
+                    checked={isCompany}
+                    onChange={() => setIsCompany(!isCompany)}
+                  >
+                    This client is a company
+                  </Checkbox>
+                </Form.Item>
+                <Form.Item
+                  label="Name"
+                  name="name"
+                  rules={[
+                    { required: true, message: "Insert Client's name" },
+                    {
+                      type: 'string',
+                      message: 'Invalid name, please use only letters and numbers.',
+                      pattern:
+                        "^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-123456789]+$",
+                    },
+                  ]}
+                >
+                  <Input disabled={submitting || !active} maxLength={25} />
+                </Form.Item>
+                <Form.Item
+                  label="E-mail"
+                  name="email"
+                  rules={[
+                    { required: true, message: 'Insert the e-mail.' },
+                    { type: 'email', message: 'Email not valid.' },
+                  ]}
+                >
+                  <Input disabled={submitting || !active} maxLength={250} />
+                </Form.Item>
+                <Form.Item label="Phone" name="phone_number">
+                  <Input disabled={submitting || !active} maxLength={250} />
+                </Form.Item>
+                <Space wrap>
+                  <Text className="info">This client is associated with:</Text>
+                  <Form.Item label="" name="client_association_id">
+                    <Select
+                      disabled={submitting || !active}
+                      placeholder="Client"
+                      allowClear
+                      style={{ minWidth: 150 }}
+                    >
+                      {clients &&
+                        clients.map((client) => <Option value={client.id}>{client.name}</Option>)}
+                    </Select>
+                  </Form.Item>
+                </Space>
+              </Card>
+            </Col>
+            <Col xs={{ span: 24 }} lg={{ span: 12 }} className="gutter-row">
+              {!isCompany ? (
+                <Card title="Bio Data" className="two-col" bordered={false}>
+                  <Form.Item name="gender" label="Gender">
+                    <Select
+                      disabled={submitting || !active}
+                      placeholder="Select a option"
+                      allowClear
+                    >
+                      <Option value="male">male</Option>
+                      <Option value="female">female</Option>
+                      <Option value="other">other</Option>
+                    </Select>
+                  </Form.Item>
+
+                  <Space wrap>
+                    <Form.Item
+                      label="Date of Birth"
+                      name="date_of_birth"
+                      rules={[{ type: 'date' }]}
+                    >
+                      <DatePicker disabled={submitting || !active} />
+                    </Form.Item>
+                    <Form.Item label="Weight" name="weight" rules={[{ type: 'number' }]}>
+                      <InputNumber disabled={submitting || !active} maxLength={250} />
+                    </Form.Item>
+                    <Form.Item label="Height" name="height" rules={[{ type: 'number' }]}>
+                      <InputNumber disabled={submitting || !active} maxLength={250} />
+                    </Form.Item>
+                  </Space>
+                </Card>
+              ) : (
+                <Card title="Company Info" className="two-col" bordered={false}>
+                  <Form.Item label="Legal Name" name="legal_name">
+                    <Input />
+                  </Form.Item>
+                  <Form.Item
+                    label="Website"
+                    name="website"
+                    rules={[
+                      { type: 'url', warningOnly: true },
+                      { type: 'string', min: 6 },
+                    ]}
+                  >
+                    <Input />
+                  </Form.Item>
+                </Card>
+              )}
+            </Col>
+
+            <Col xs={{ span: 24 }} lg={{ span: 24 }}>
+              <Card title="Default Session Info" bordered={false}>
+                <Space size={24} wrap>
+                  <Form.Item label="Session Type" name="default_session_type">
+                    <Select
+                      disabled={submitting || !active}
+                      placeholder="Select a option"
+                      allowClear
+                      options={sessionType}
+                      onChange={handleTypeChange}
+                    />
+                  </Form.Item>
+                  <Form.Item label="Session Sub Type" name="default_session_sub_type">
+                    <Select
+                      disabled={submitting || !active}
+                      placeholder="Select a option"
+                      allowClear
+                      options={sessionSubTypeOptions}
+                    />
+                  </Form.Item>
+                  <Form.Item
+                    label="Session Duration"
+                    name="session_duration"
+                    rules={[{ type: 'number' }]}
+                  >
+                    <InputNumber disabled={submitting || !active} maxLength={10} addonAfter="min" />
+                  </Form.Item>
+                  <Form.Item label="Price" name="default_price" rules={[{ type: 'number' }]}>
+                    <InputNumber disabled={submitting || !active} maxLength={10} addonAfter="€" />
+                  </Form.Item>
+                  <Form.Item
+                    label="No. Session/Month"
+                    name="sessions_per_month"
+                    rules={[{ type: 'number' }]}
+                  >
+                    <InputNumber disabled={submitting || !active} style={{ width: 120 }} />
+                  </Form.Item>
+                  <Form.Item label="Start Date" name="start_date" rules={[{ type: 'date' }]}>
+                    <DatePicker disabled={submitting || !active} />
+                  </Form.Item>
+                </Space>
+                <Text>
+                  {' '}
+                  <blockquote>
+                    Default information - The data entered in these fields will be used for
+                    automatic filling. The same customer may have sessions with varying information
+                    which can be changed manually.
+                  </blockquote>
+                </Text>
+              </Card>
+            </Col>
+            <Col xs={{ span: 24 }} lg={{ span: 24 }}>
+              <Card className="client-card-big" title="Preferences" bordered={false}>
+                <Form.Item label="Goals" name="goals">
+                  <TextArea disabled={submitting || !active} rows={4} />
+                </Form.Item>
+                <Form.Item label="Likes" name="likes">
+                  <TextArea disabled={submitting || !active} rows={4} />
+                </Form.Item>
+                <Form.Item label="Dislikes" name="dislikes">
+                  <TextArea disabled={submitting || !active} rows={4} />
+                </Form.Item>
+                <Form.Item label="Conditions" name="injuries_conditions">
+                  <TextArea disabled={submitting || !active} rows={4} />
+                </Form.Item>
+              </Card>
+            </Col>
+            <Col xs={{ span: 24 }} lg={{ span: 24 }}>
+              <Card
+                className="client-card-big"
+                title="Legal Information - For Invoicing"
+                bordered={false}
+              >
+                <Row>
+                  <Col xs={{ span: 24 }} lg={{ span: 24 }}>
+                    <Form.Item
+                      label="Address"
+                      name="address"
+                      rules={[
+                        { required: true, message: 'Insert the address' },
+                        { type: 'string', message: 'Insert a valid address' },
+                      ]}
+                    >
+                      <Input.TextArea rows={2} style={{ width: '100%' }} disabled={submitting} />
+                    </Form.Item>
+                  </Col>
+                  <Col xs={{ span: 24 }} lg={{ span: 12 }}>
+                    <Form.Item label="VAT Number" name="vat">
+                      <InputNumber style={{ width: '100%' }} disabled={submitting} />
+                    </Form.Item>
+                  </Col>
+                  <Col xs={{ span: 24 }} lg={{ span: 12 }}>
+                    <Form.Item
+                      label="City"
+                      name="city"
+                      rules={[
+                        { required: true, message: 'Insert the city' },
+                        { type: 'string', message: 'Insert a valid city' },
+                      ]}
+                    >
+                      <Input style={{ width: '100%' }} disabled={submitting} />
+                    </Form.Item>
+                  </Col>
+                  <Col xs={{ span: 24 }} lg={{ span: 12 }}>
+                    <Form.Item
+                      label="Postal Code"
+                      name="postal_code"
+                      rules={[
+                        { required: true, message: 'Insert the postal code' },
+                        {
+                          type: 'string',
+                          message: 'Insert a valid postal code',
+                        },
+                      ]}
+                    >
+                      <Input style={{ width: '100%' }} disabled={submitting} />
+                    </Form.Item>
+                  </Col>
+                  <Col xs={{ span: 24 }} lg={{ span: 12 }}>
+                    <Form.Item
+                      label="Country"
+                      name="country"
+                      rules={[
+                        { required: true, message: 'Insert the country' },
+                        { type: 'string', message: 'Insert a valid country' },
+                      ]}
+                    >
+                      <Select
+                        disabled={submitting}
+                        placeholder="Select a country"
+                        options={contries}
+                        style={{ width: '100%' }}
+                      />
+                    </Form.Item>
+                  </Col>
+                </Row>
+              </Card>
+            </Col>
+          </Row>
+
+          <Form.Item>
+            <Space>
+              <Button type="primary" htmlType="submit" loading={submitting} disabled={!active}>
+                Save
+              </Button>
+              <Popconfirm
+                title="Are you sure you want to delete this CLIENT, all SESSIONS and INVOICES associated?"
+                onConfirm={() => handleDeleteRecord()}
+              >
+                <Button danger>Delete</Button>
+              </Popconfirm>
+            </Space>
+          </Form.Item>
+        </Form>
+      </div>
+    </div>
+  );
 }

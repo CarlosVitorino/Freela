@@ -1,12 +1,8 @@
-import React from "react";
+import React from 'react';
 
 export default function CardIcon() {
   return (
-    <span
-      role="img"
-      aria-label="user"
-      className="anticon anticon-user ant-menu-item-icon"
-    >
+    <span role="img" aria-label="user" className="anticon anticon-user ant-menu-item-icon">
       <svg
         width="2em"
         height="2em"
@@ -35,30 +31,10 @@ export default function CardIcon() {
           d="M20 24H68V64H20V24ZM28 32V56H60V32H28Z"
           fill="black"
         />
-        <path
-          fillRule="evenodd"
-          clipRule="evenodd"
-          d="M34 34H26V30H34V34Z"
-          fill="#FFF500"
-        />
-        <path
-          fillRule="evenodd"
-          clipRule="evenodd"
-          d="M62 58H58V54H62V58Z"
-          fill="#FFF500"
-        />
-        <path
-          fillRule="evenodd"
-          clipRule="evenodd"
-          d="M54 58H50V54H54V58Z"
-          fill="#FFF500"
-        />
-        <path
-          fillRule="evenodd"
-          clipRule="evenodd"
-          d="M62 46H26V42H62V46Z"
-          fill="#FFF500"
-        />
+        <path fillRule="evenodd" clipRule="evenodd" d="M34 34H26V30H34V34Z" fill="#FFF500" />
+        <path fillRule="evenodd" clipRule="evenodd" d="M62 58H58V54H62V58Z" fill="#FFF500" />
+        <path fillRule="evenodd" clipRule="evenodd" d="M54 58H50V54H54V58Z" fill="#FFF500" />
+        <path fillRule="evenodd" clipRule="evenodd" d="M62 46H26V42H62V46Z" fill="#FFF500" />
       </svg>
     </span>
   );

@@ -1,16 +1,21 @@
-import React, { useState, useEffect, useRef } from "react";
-import { useLocation } from "react-router-dom";
-import { ArrowLeftOutlined } from "@ant-design/icons";
-import { Typography, Form, Input, Button, notification, Spin, Row, Col } from "antd";
-import { PasswordInput } from "antd-password-input-strength";
+import React, { useState, useEffect, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
+import { ArrowLeftOutlined } from '@ant-design/icons';
+import { Typography, Form, Input, Button, notification, Spin, Row, Col } from 'antd';
+import { PasswordInput } from 'antd-password-input-strength';
 
-import _service from "@netuno/service-client";
+import _service from '@netuno/service-client';
 
-import "./index.less";
+import './index.less';
 
 const { Title } = Typography;
 const layout = {
-  wrapperCol: { xs: { span: 12 }, sm: { span: 12 }, md: { span: 24 }, lg: { span: 24 } },
+  wrapperCol: {
+    xs: { span: 12 },
+    sm: { span: 12 },
+    md: { span: 24 },
+    lg: { span: 24 },
+  },
   style: { marginBotton: 10, marginTop: 10 },
 };
 export default function Profile(props) {
@@ -20,7 +25,12 @@ export default function Profile(props) {
   const [form] = Form.useForm();
 
   const layout = {
-    wrapperCol: { xs: { span: 24 }, sm: { span: 24 }, md: { span: 24 }, lg: { span: 12 } },
+    wrapperCol: {
+      xs: { span: 24 },
+      sm: { span: 24 },
+      md: { span: 24 },
+      lg: { span: 12 },
+    },
   };
 
   useEffect(() => {
@@ -30,26 +40,26 @@ export default function Profile(props) {
   function onFetchProfile() {
     setLoading(true);
     _service({
-      method: "GET",
-      url: "user",
+      method: 'GET',
+      url: 'user',
       success: (response) => {
         setLoading(false);
-          if (response.json.data && response.json.data.length > 0) {
-            const data = response.json.data[0]
-            form.current.setFieldsValue(data);
-          } else {
-            notification["warning"]({
-              message: "An error has occurred while parsing the user data",
-              description: response.json.error,
-            });
-            setLoading(false);
-          }
+        if (response.json.data && response.json.data.length > 0) {
+          const data = response.json.data[0];
+          form.current.setFieldsValue(data);
+        } else {
+          notification.warning({
+            message: 'An error has occurred while parsing the user data',
+            description: response.json.error,
+          });
+          setLoading(false);
+        }
       },
       fail: () => {
         setLoading(false);
-        notification["error"]({
-          message: "An error has occurred while loading the user data",
-          description: "An error has occurred while loading the data, please try again.",
+        notification.error({
+          message: 'An error has occurred while loading the user data',
+          description: 'An error has occurred while loading the data, please try again.',
         });
       },
     });
@@ -59,8 +69,8 @@ export default function Profile(props) {
     setSubmitting(true);
     const { name, username, password, email, old_password } = values;
     _service({
-      method: "PUT",
-      url: "user",
+      method: 'PUT',
+      url: 'user',
       data: {
         name,
         username,
@@ -70,42 +80,43 @@ export default function Profile(props) {
       },
       success: (response) => {
         if (response.json.result) {
-          notification["success"]({
-            message: "Profile",
-            description: "Os dados do seu perfil foram alterados com sucesso.",
+          notification.success({
+            message: 'Profile',
+            description: 'Os dados do seu perfil foram alterados com sucesso.',
           });
           setSubmitting(false);
           form.current.setFieldsValue({
-            password: "",
-            password_confirm: "",
-            old_password: "",
+            password: '',
+            password_confirm: '',
+            old_password: '',
           });
         } else {
-          if (response.json.error == "wrong_password") {
-            notification["warning"]({
-              message: "Wrong password",
-              description: "Your current password is wrong",
+          if (response.json.error == 'wrong_password') {
+            notification.warning({
+              message: 'Wrong password',
+              description: 'Your current password is wrong',
             });
           } else {
-            notification["warning"]({
-              message: "User not found",
+            notification.warning({
+              message: 'User not found',
               description: response.json.error,
             });
           }
 
           setSubmitting(false);
           form.current.setFieldsValue({
-            password: "",
-            password_confirm: "",
-            old_password: "",
+            password: '',
+            password_confirm: '',
+            old_password: '',
           });
         }
       },
       fail: () => {
         setSubmitting(false);
-        notification["error"]({
-          message: "Erro na Edição do Perfil",
-          description: "Ocorreu um erro na edição do seu perfil, por favor contacte-nos através do chat de suporte.",
+        notification.error({
+          message: 'Erro na Edição do Perfil',
+          description:
+            'Ocorreu um erro na edição do seu perfil, por favor contacte-nos através do chat de suporte.',
         });
       },
     });
@@ -120,9 +131,8 @@ export default function Profile(props) {
   }
 
   function onFinishFailed(errorInfo) {
-    console.log("Failed:", errorInfo);
+    console.log('Failed:', errorInfo);
   }
-
 
   return (
     <div>
@@ -146,10 +156,10 @@ export default function Profile(props) {
                 label="Name"
                 name="name"
                 rules={[
-                  { required: true, message: "Insert the name" },
+                  { required: true, message: 'Insert the name' },
                   {
-                    type: "string",
-                    message: "Invalid name, only lowercase and uppercase letters.",
+                    type: 'string',
+                    message: 'Invalid name, only lowercase and uppercase letters.',
                     pattern:
                       "^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$",
                   },
@@ -161,10 +171,10 @@ export default function Profile(props) {
                 label="Username"
                 name="username"
                 rules={[
-                  { required: true, message: "Insert the username" },
+                  { required: true, message: 'Insert the username' },
                   {
-                    type: "string",
-                    message: "Invalid name, only lowercase and uppercase letters.",
+                    type: 'string',
+                    message: 'Invalid name, only lowercase and uppercase letters.',
                     pattern:
                       "^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$",
                   },
@@ -176,22 +186,27 @@ export default function Profile(props) {
                 label="E-mail"
                 name="email"
                 rules={[
-                  { type: "email", message: "O e-mail inserido não é válido." },
-                  { required: true, message: "Insira o e-mail." },
+                  { type: 'email', message: 'O e-mail inserido não é válido.' },
+                  { required: true, message: 'Insira o e-mail.' },
                 ]}
               >
                 <Input disabled={submitting} />
               </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} lg={{ span: 12 }}>
-              <Form.Item label="Old Password" name="old_password" rules={[{ type: "string" }]}>
+              <Form.Item label="Old Password" name="old_password" rules={[{ type: 'string' }]}>
                 <Input.Password />
               </Form.Item>
               <Form.Item
                 label="New Password"
                 name="password"
                 rules={[
-                  { type: "string", message: "Password should be between 8 to 25 characters.", min: 8, max: 25 },
+                  {
+                    type: 'string',
+                    message: 'Password should be between 8 to 25 characters.',
+                    min: 8,
+                    max: 25,
+                  },
                 ]}
               >
                 <PasswordInput />
@@ -200,14 +215,22 @@ export default function Profile(props) {
                 label="Confirm new Password"
                 name="password_confirm"
                 rules={[
-                  { required: passwordRequired, message: "Enter the new password again." },
-                  { type: "string", message: "Password should be between 8 to 25 characters.", min: 8, max: 25 },
+                  {
+                    required: passwordRequired,
+                    message: 'Enter the new password again.',
+                  },
+                  {
+                    type: 'string',
+                    message: 'Password should be between 8 to 25 characters.',
+                    min: 8,
+                    max: 25,
+                  },
                   ({ getFieldValue }) => ({
                     validator(_, value) {
-                      if (!value || getFieldValue("password") === value) {
+                      if (!value || getFieldValue('password') === value) {
                         return Promise.resolve();
                       }
-                      return Promise.reject("The passwords are not the same.");
+                      return Promise.reject('The passwords are not the same.');
                     },
                   }),
                 ]}

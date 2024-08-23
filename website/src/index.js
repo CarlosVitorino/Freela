@@ -10,13 +10,13 @@ const root = createRoot(rootElement);
 
 root.render(
   <React.StrictMode>
-    <Suspense fallback={""}>
+    <Suspense fallback="">
       <Router>
         <App />
       </Router>
     </Suspense>
   </React.StrictMode>,
-  document.getElementById('root')
+  document.getElementById('root'),
 );
 
 // If you want to start measuring performance in your app, pass a function

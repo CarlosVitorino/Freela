@@ -1,12 +1,8 @@
-import React from "react";
+import React from 'react';
 
 export default function ExitIcon() {
   return (
-    <span
-      role="img"
-      aria-label="user"
-      className="anticon anticon-user ant-menu-item-icon"
-    >
+    <span role="img" aria-label="user" className="anticon anticon-user ant-menu-item-icon">
       <svg
         width="2em"
         height="2em"
@@ -34,16 +30,8 @@ export default function ExitIcon() {
           strokeWidth="4"
           strokeLinejoin="round"
         />
-        <path
-          d="M60.9705 27.0295L27.0293 60.9707"
-          stroke="black"
-          strokeWidth="8"
-        />
-        <path
-          d="M27.0295 27.0295L60.9707 60.9707"
-          stroke="black"
-          strokeWidth="8"
-        />
+        <path d="M60.9705 27.0295L27.0293 60.9707" stroke="black" strokeWidth="8" />
+        <path d="M27.0295 27.0295L60.9707 60.9707" stroke="black" strokeWidth="8" />
       </svg>
     </span>
   );

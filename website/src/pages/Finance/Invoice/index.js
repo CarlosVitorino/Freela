@@ -1,13 +1,26 @@
-import React, { useEffect, useRef, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { ArrowLeftOutlined } from "@ant-design/icons";
-import { Button, Card, Col, DatePicker, Form, notification, Row, Select, Space, Spin, Table, Typography } from "antd";
+import React, { useEffect, useRef, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { ArrowLeftOutlined } from '@ant-design/icons';
+import {
+  Button,
+  Card,
+  Col,
+  DatePicker,
+  Form,
+  notification,
+  Row,
+  Select,
+  Space,
+  Spin,
+  Table,
+  Typography,
+} from 'antd';
 
-import moment from "moment";
-import _auth from "@netuno/auth-client";
-import _service from "@netuno/service-client";
+import moment from 'moment';
+import _auth from '@netuno/auth-client';
+import _service from '@netuno/service-client';
 
-import "./index.less";
+import './index.less';
 
 const { Title } = Typography;
 const { Text } = Typography;
@@ -26,31 +39,31 @@ export default function Invoice(props) {
   const { Option } = Select;
   const columns = [
     {
-      title: "Client",
-      dataIndex: "client_name",
-      key: "client_name",
+      title: 'Client',
+      dataIndex: 'client_name',
+      key: 'client_name',
       width: 230,
     },
     {
-      title: "Price",
-      dataIndex: "price",
-      key: "price",
+      title: 'Price',
+      dataIndex: 'price',
+      key: 'price',
       render: (text) => <>{text} €</>,
     },
     {
-      title: "Date",
-      dataIndex: "date",
-      key: "date",
+      title: 'Date',
+      dataIndex: 'date',
+      key: 'date',
     },
     {
-      title: "Duration",
-      dataIndex: "duration",
-      key: "duration",
+      title: 'Duration',
+      dataIndex: 'duration',
+      key: 'duration',
     },
     {
-      title: "Type",
-      dataIndex: "session_type",
-      key: "session_type",
+      title: 'Type',
+      dataIndex: 'session_type',
+      key: 'session_type',
       width: 130,
     },
   ];
@@ -62,12 +75,12 @@ export default function Invoice(props) {
       lg: { span: 24 },
     },
   };
-  const colStyle = { padding: "8px 10px" };
+  const colStyle = { padding: '8px 10px' };
 
   useEffect(() => {
     if (location?.state?.ids) onFetchSessions();
   }, [location]);
-  
+
   useEffect(() => {
     onFetchClients();
   }, []);
@@ -75,9 +88,9 @@ export default function Invoice(props) {
   const onFetchSessions = () => {
     setLoading(true);
     _service({
-      method: "POST",
-      url: "session/list",
-      data: { sessionIds: location?.state?.ids.join(", ") },
+      method: 'POST',
+      url: 'session/list',
+      data: { sessionIds: location?.state?.ids.join(', ') },
       success: (response) => {
         setLoading(false);
         if (response.json.result) {
@@ -86,10 +99,10 @@ export default function Invoice(props) {
           response.json.data.forEach((session) => {
             totalValue += session.price;
           });
-          setTotalValue(Math.round(totalValue * 100) / 100 + "€");
+          setTotalValue(`${Math.round(totalValue * 100) / 100}€`);
         } else {
-          notification["warning"]({
-            message: "There was an error loading data",
+          notification.warning({
+            message: 'There was an error loading data',
             description: response.json.error,
           });
           setLoading(false);
@@ -97,9 +110,9 @@ export default function Invoice(props) {
       },
       fail: () => {
         setLoading(false);
-        notification["error"]({
-          message: "There was an error fetching data",
-          description: "There was an error fetching data, please contact your boyfriend.",
+        notification.error({
+          message: 'There was an error fetching data',
+          description: 'There was an error fetching data, please contact your boyfriend.',
         });
       },
     });
@@ -108,15 +121,15 @@ export default function Invoice(props) {
   const onFetchClients = () => {
     setLoading(true);
     _service({
-      method: "GET",
-      url: "client",
+      method: 'GET',
+      url: 'client',
       success: (response) => {
         setLoading(false);
         if (response.json.result) {
           setClientsData(response.json.data);
         } else {
-          notification["warning"]({
-            message: "Data not loaded",
+          notification.warning({
+            message: 'Data not loaded',
             description: response.json.error,
           });
           setLoading(false);
@@ -124,13 +137,13 @@ export default function Invoice(props) {
       },
       fail: () => {
         setLoading(false);
-        notification["error"]({
-          message: "Session error",
-          description: "Error loading data, please login again.",
+        notification.error({
+          message: 'Session error',
+          description: 'Error loading data, please login again.',
         });
 
         _auth.logout();
-        navigate("/login");
+        navigate('/login');
       },
     });
   };
@@ -138,28 +151,27 @@ export default function Invoice(props) {
   const onFinish = (values) => {
     setSubmitting(true);
     const total_amount = JSON.parse(JSON.stringify(totalValue));
-    values["pay_day"] = values["pay_day"].format("YYYY-MM-DD");
-    values["created_at"] = moment().format("YYYY-MM-DD");
-    values["billing_period"] =
-      values["billing_period"][0].format("YYYY-MM-DD") + " - " + values["billing_period"][1].format("YYYY-MM-DD");
-    values["sessions"] = location?.state?.ids.toString();
-    const valueStr = total_amount.replace("€", "");
-    values["total_amount"] = parseFloat(valueStr);
+    values.pay_day = values.pay_day.format('YYYY-MM-DD');
+    values.created_at = moment().format('YYYY-MM-DD');
+    values.billing_period = `${values.billing_period[0].format('YYYY-MM-DD')} - ${values.billing_period[1].format('YYYY-MM-DD')}`;
+    values.sessions = location?.state?.ids.toString();
+    const valueStr = total_amount.replace('€', '');
+    values.total_amount = parseFloat(valueStr);
 
     _service({
-      method: "PUT",
-      url: "invoice",
+      method: 'PUT',
+      url: 'invoice',
       data: values,
       success: (response) => {
         if (response.json.result) {
-          notification["success"]({
-            message: "Invoice Created",
-            description: "New invoice created successfully.",
+          notification.success({
+            message: 'Invoice Created',
+            description: 'New invoice created successfully.',
           });
           navigate(-1);
         } else {
-          notification["warning"]({
-            message: "Invoice not created",
+          notification.warning({
+            message: 'Invoice not created',
             description: response.json.error,
           });
           setSubmitting(false);
@@ -168,16 +180,16 @@ export default function Invoice(props) {
       fail: (err) => {
         console.log(err);
         setSubmitting(false);
-        notification["error"]({
-          message: "Error!",
-          description: "There was an error, please contact the support.",
+        notification.error({
+          message: 'Error!',
+          description: 'There was an error, please contact the support.',
         });
       },
     });
   };
 
   const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
+    console.log('Failed:', errorInfo);
   };
 
   if (loading) {
@@ -185,121 +197,124 @@ export default function Invoice(props) {
       <div className="loading-wrapper">
         <div className="content-title">
           <div aria-live="polite" aria-busy={loading}>
-            {loading && <div class="loader"></div>}
+            {loading && <div className="loader" />}
           </div>
         </div>
       </div>
     );
-  } else {
-    return (
-      <div className="invoice">
-        <div className="content-title">
-          <Button className="go-back-btn" type="link" onClick={() => navigate(-1)}>
-            <ArrowLeftOutlined /> Back
-          </Button>
-          <Title className="big-title">
-            <span>Invoice</span>
-          </Title>
-        </div>
-        <div className="content-body">
-          <Form
-            {...layout}
-            ref={invoiceForm}
-            layout="vertical"
-            name="basic"
-            onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
-          >
-            <div className="extra--invoice-fields">
-              <Row>
-                <Col xs={{ span: 24 }} lg={{ span: 12 }}>
-                  <Card className="invoice-card-left" title="Billing Information" bordered={false}>
-                    <Row>
-                      <Col xs={{ span: 24 }} lg={{ span: 12 }} style={colStyle}>
-                        <Form.Item
-                          label="Billing Period"
-                          name="billing_period"
-                          rules={[
-                            {
-                              type: "array",
-                              required: true,
-                              message: "Please select time!",
-                            },
-                          ]}
-                        >
-                          <RangePicker />
-                        </Form.Item>
-                      </Col>
-                      <Col xs={{ span: 12 }} lg={{ span: 7 }} style={colStyle}>
-                        <Form.Item label="Invoice Pay Day" name="pay_day" rules={[{ type: "date", required: true }]}>
-                          <DatePicker />
-                        </Form.Item>
-                      </Col>
-                      <Col xs={{ span: 12 }} lg={{ span: 5 }} style={colStyle}>
-                        <Form.Item label="Total Amount" name="total_amount">
-                          <Title level={3} className="total-value" strong>
-                            {totalValue ? totalValue : " - "}
-                          </Title>
-                        </Form.Item>
-                      </Col>
-                    </Row>
-                  </Card>
-                </Col>
-                <Col xs={{ span: 24 }} lg={{ span: 12 }}>
-                  <Card className="invoice-card-right" title="Invoice Destination" bordered={false}>
-                    <Form.Item label="Client" name="client">
-                      <Select placeholder="Select client" allowClear>
-                        {clientsData
-                          ? clientsData.map((clientData) => <Option key={clientData.id}>{clientData.name}</Option>)
-                          : ""}
-                      </Select>
-                    </Form.Item>
-                  </Card>
-                </Col>
-              </Row>
-            </div>
-            <Card className="invoice-card-big" title="Selected Sessions" bordered={false}>
-              <Table
-                dataSource={sessionsData}
-                columns={columns}
-                scroll={{ x: "" }}
-                summary={(pageData) => {
-                  let totalValue = 0;
-
-                  pageData.forEach(({ price }) => {
-                    totalValue += price;
-                  });
-
-                  return (
-                    <>
-                      <Table.Summary.Row>
-                        <Table.Summary.Cell>
-                          <Text strong>Total</Text>
-                        </Table.Summary.Cell>
-                        <Table.Summary.Cell>
-                          <Text strong type="danger">
-                            {Math.round(totalValue * 100) / 100 + "€"}
-                          </Text>
-                        </Table.Summary.Cell>
-                      </Table.Summary.Row>
-                    </>
-                  );
-                }}
-              />
-            </Card>
-            <div>
-              <Form.Item>
-                <Space style={{ marginTop: 16 }}>
-                  <Button type="primary" htmlType="submit" loading={submitting}>
-                    Save
-                  </Button>
-                  <Button onClick={() => navigate(-1)}>Cancel</Button>
-                </Space>
-              </Form.Item>
-            </div>
-          </Form>
-        </div>
-      </div>
-    );
   }
+  return (
+    <div className="invoice">
+      <div className="content-title">
+        <Button className="go-back-btn" type="link" onClick={() => navigate(-1)}>
+          <ArrowLeftOutlined /> Back
+        </Button>
+        <Title className="big-title">
+          <span>Invoice</span>
+        </Title>
+      </div>
+      <div className="content-body">
+        <Form
+          {...layout}
+          ref={invoiceForm}
+          layout="vertical"
+          name="basic"
+          onFinish={onFinish}
+          onFinishFailed={onFinishFailed}
+        >
+          <div className="extra--invoice-fields">
+            <Row>
+              <Col xs={{ span: 24 }} lg={{ span: 12 }}>
+                <Card className="invoice-card-left" title="Billing Information" bordered={false}>
+                  <Row>
+                    <Col xs={{ span: 24 }} lg={{ span: 12 }} style={colStyle}>
+                      <Form.Item
+                        label="Billing Period"
+                        name="billing_period"
+                        rules={[
+                          {
+                            type: 'array',
+                            required: true,
+                            message: 'Please select time!',
+                          },
+                        ]}
+                      >
+                        <RangePicker />
+                      </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 12 }} lg={{ span: 7 }} style={colStyle}>
+                      <Form.Item
+                        label="Invoice Pay Day"
+                        name="pay_day"
+                        rules={[{ type: 'date', required: true }]}
+                      >
+                        <DatePicker />
+                      </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 12 }} lg={{ span: 5 }} style={colStyle}>
+                      <Form.Item label="Total Amount" name="total_amount">
+                        <Title level={3} className="total-value" strong>
+                          {totalValue || ' - '}
+                        </Title>
+                      </Form.Item>
+                    </Col>
+                  </Row>
+                </Card>
+              </Col>
+              <Col xs={{ span: 24 }} lg={{ span: 12 }}>
+                <Card className="invoice-card-right" title="Invoice Destination" bordered={false}>
+                  <Form.Item label="Client" name="client">
+                    <Select placeholder="Select client" allowClear>
+                      {clientsData
+                        ? clientsData.map((clientData) => (
+                            <Option key={clientData.id}>{clientData.name}</Option>
+                          ))
+                        : ''}
+                    </Select>
+                  </Form.Item>
+                </Card>
+              </Col>
+            </Row>
+          </div>
+          <Card className="invoice-card-big" title="Selected Sessions" bordered={false}>
+            <Table
+              dataSource={sessionsData}
+              columns={columns}
+              scroll={{ x: '' }}
+              summary={(pageData) => {
+                let totalValue = 0;
+
+                pageData.forEach(({ price }) => {
+                  totalValue += price;
+                });
+
+                return (
+                  <Table.Summary.Row>
+                    <Table.Summary.Cell>
+                      <Text strong>Total</Text>
+                    </Table.Summary.Cell>
+                    <Table.Summary.Cell>
+                      <Text strong type="danger">
+                        {`${Math.round(totalValue * 100) / 100}€`}
+                      </Text>
+                    </Table.Summary.Cell>
+                  </Table.Summary.Row>
+                );
+              }}
+            />
+          </Card>
+          <div>
+            <Form.Item>
+              <Space style={{ marginTop: 16 }}>
+                <Button type="primary" htmlType="submit" loading={submitting}>
+                  Save
+                </Button>
+                <Button onClick={() => navigate(-1)}>Cancel</Button>
+              </Space>
+            </Form.Item>
+          </div>
+        </Form>
+      </div>
+    </div>
+  );
 }

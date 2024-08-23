@@ -20,6 +20,6 @@ const themeConfig = {
   layoutTriggerColor: '#002140',
   layoutZeroTriggerHeight: '64px',
   layoutZeroTriggerWidth: '70px',
-}
+};
 
-export default themeConfig
+export default themeConfig;

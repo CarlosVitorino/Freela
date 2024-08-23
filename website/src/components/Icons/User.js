@@ -1,12 +1,8 @@
-import React from "react";
+import React from 'react';
 
 export default function UserIcon() {
   return (
-    <span
-      role="img"
-      aria-label="user"
-      className="anticon anticon-user ant-menu-item-icon"
-    >
+    <span role="img" aria-label="user" className="anticon anticon-user ant-menu-item-icon">
       <svg
         width="2em"
         height="2em"

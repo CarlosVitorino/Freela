@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Navigate, useLocation, useNavigate, Link } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { Navigate, useLocation, useNavigate, Link } from 'react-router-dom';
 import {
   Typography,
   Space,
@@ -13,17 +13,21 @@ import {
   Tooltip,
   DatePicker,
   Modal,
-} from "antd";
-import { DeleteOutlined, CheckSquareFilled, MinusSquareFilled, FilePdfOutlined } from "@ant-design/icons";
+} from 'antd';
+import {
+  DeleteOutlined,
+  CheckSquareFilled,
+  MinusSquareFilled,
+  FilePdfOutlined,
+} from '@ant-design/icons';
 
+import _auth from '@netuno/auth-client';
+import _service from '@netuno/service-client';
+import classNames from 'classnames';
+import moment from 'moment';
+import config from '../../config/config.json';
 
-import config from "../../config/config.json";
-import _auth from "@netuno/auth-client";
-import _service from "@netuno/service-client";
-import classNames from "classnames";
-import moment from "moment";
-
-import "./index.less";
+import './index.less';
 
 const { Title, Text } = Typography;
 
@@ -39,41 +43,41 @@ export default function Finance(props) {
 
   const columns = [
     {
-      title: "Intervener",
-      dataIndex: "name",
-      key: "name",
+      title: 'Intervener',
+      dataIndex: 'name',
+      key: 'name',
     },
     {
-      title: "Billing Info",
-      dataIndex: "description",
-      key: "description",
+      title: 'Billing Info',
+      dataIndex: 'description',
+      key: 'description',
     },
     {
-      title: "Pay Day",
-      dataIndex: "pay_day",
-      key: "pay_day",
+      title: 'Pay Day',
+      dataIndex: 'pay_day',
+      key: 'pay_day',
     },
     {
-      title: "Paid at",
-      dataIndex: "date",
-      key: "date",
+      title: 'Paid at',
+      dataIndex: 'date',
+      key: 'date',
     },
     {
-      title: "Amount",
-      dataIndex: "total_amount",
-      key: "total_amount",
+      title: 'Amount',
+      dataIndex: 'total_amount',
+      key: 'total_amount',
       render: (_, record) => {
-        return record.total_amount + "€";
+        return `${record.total_amount}€`;
       },
     },
     {
-      title: "Status",
-      dataIndex: "status",
-      key: "status",
+      title: 'Status',
+      dataIndex: 'status',
+      key: 'status',
       render: (_, record) =>
         financeData.length >= 1 ? (
           <>
-            {record.status_code === "waiting_payment" ? (
+            {record.status_code === 'waiting_payment' ? (
               <Tooltip title="Waiting Payment - click to change">
                 <Button
                   type="link"
@@ -92,15 +96,15 @@ export default function Finance(props) {
                 />
               </Tooltip>
             )}
-            {record.status}{" "}
+            {record.status}{' '}
           </>
         ) : (
           record.status
         ),
     },
     {
-      title: "Operation",
-      dataIndex: "operation",
+      title: 'Operation',
+      dataIndex: 'operation',
       render: (_, record) =>
         financeData.length >= 1 ? (
           <Space>
@@ -127,16 +131,16 @@ export default function Finance(props) {
   const onFetchFinance = () => {
     setLoading(true);
     _service({
-      method: "GET",
-      url: "finance",
+      method: 'GET',
+      url: 'finance',
       success: (response) => {
         setLoading(false);
         if (response.json.result) {
           setFinanceData(response.json.data);
           setFinanceDataFiltered(response.json.data);
         } else {
-          notification["warning"]({
-            message: "Data not loaded",
+          notification.warning({
+            message: 'Data not loaded',
             description: response.json.error,
           });
           setLoading(false);
@@ -144,38 +148,38 @@ export default function Finance(props) {
       },
       fail: () => {
         setLoading(false);
-        notification["error"]({
-          message: "Session error",
-          description: "Error loading data, please login again.",
+        notification.error({
+          message: 'Session error',
+          description: 'Error loading data, please login again.',
         });
         _auth.logout();
-        navigate("/login");
+        navigate('/login');
       },
     });
   };
 
   const handleStatusChange = (data) => {
-    const paidAt = data.paidAt ? data.paidAt.format("YYYY-MM-DD") : null;
+    const paidAt = data.paidAt ? data.paidAt.format('YYYY-MM-DD') : null;
     setLoading(true);
     _service({
-      method: "PUT",
-      url: "finance/toggle",
+      method: 'PUT',
+      url: 'finance/toggle',
       data: {
-        status: data.status_code === "waiting_payment" ? "paid" : "waiting_payment",
+        status: data.status_code === 'waiting_payment' ? 'paid' : 'waiting_payment',
         invoiceId: data.id,
-        paidAt: paidAt,
+        paidAt,
       },
       success: (response) => {
         if (response.json.result) {
-          notification["success"]({
-            message: "Status updated!",
-            description: "Status updated successfully.",
+          notification.success({
+            message: 'Status updated!',
+            description: 'Status updated successfully.',
           });
           onFetchFinance();
           setLoading(false);
         } else {
-          notification["warning"]({
-            message: "Status toggle error!",
+          notification.warning({
+            message: 'Status toggle error!',
             description: response.json.error,
           });
           setLoading(false);
@@ -183,9 +187,9 @@ export default function Finance(props) {
       },
       fail: () => {
         setLoading(false);
-        notification["error"]({
-          message: "Error!",
-          description: "There was an error, please contact the support.",
+        notification.error({
+          message: 'Error!',
+          description: 'There was an error, please contact the support.',
         });
       },
     });
@@ -194,22 +198,22 @@ export default function Finance(props) {
   const handleDeleteRecord = (record) => {
     setLoading(true);
     _service({
-      method: "DELETE",
-      url: "finance",
+      method: 'DELETE',
+      url: 'finance',
       data: {
         id: record.id,
       },
       success: (response) => {
         if (response.json.result) {
-          notification["success"]({
-            message: "Status updated!",
-            description: "Status updated successfully.",
+          notification.success({
+            message: 'Status updated!',
+            description: 'Status updated successfully.',
           });
           onFetchFinance();
           setLoading(false);
         } else {
-          notification["warning"]({
-            message: "Status toggle error!",
+          notification.warning({
+            message: 'Status toggle error!',
             description: response.json.error,
           });
           setLoading(false);
@@ -217,9 +221,9 @@ export default function Finance(props) {
       },
       fail: () => {
         setLoading(false);
-        notification["error"]({
-          message: "Error!",
-          description: "There was an error, please contact the support.",
+        notification.error({
+          message: 'Error!',
+          description: 'There was an error, please contact the support.',
         });
       },
     });
@@ -228,22 +232,22 @@ export default function Finance(props) {
   const fetchPdf = (id) => {
     setLoading(true);
     _service({
-      method: "GET",
-      url: "invoice/pdf?id=" + id,
+      method: 'GET',
+      url: `invoice/pdf?id=${id}`,
       blob: true,
       success: (response) => {
         const { blob } = response;
         if (blob) {
           const file = window.URL.createObjectURL(blob);
-          window.open(file, "_blank");
+          window.open(file, '_blank');
         }
         setLoading(false);
       },
       fail: () => {
         setLoading(false);
-        notification["error"]({
-          message: "Error!",
-          description: "There was an error, please contact the support.",
+        notification.error({
+          message: 'Error!',
+          description: 'There was an error, please contact the support.',
         });
       },
     });
@@ -267,15 +271,16 @@ export default function Finance(props) {
   };
 
   const filter = (e) => {
-    const value = e.target.value;
+    const { value } = e.target;
     if (!value) {
       setFinanceDataFiltered(financeData);
     } else {
-      let filteredData = financeData.filter((finance) => {
+      const filteredData = financeData.filter((finance) => {
         let exist = false;
-        for (var prop in finance) {
+        for (const prop in finance) {
           if (Object.prototype.hasOwnProperty.call(finance, prop)) {
-            if (finance[prop].toString().toLowerCase().indexOf(value.toLowerCase()) !== -1) exist = true;
+            if (finance[prop].toString().toLowerCase().indexOf(value.toLowerCase()) !== -1)
+              exist = true;
           }
         }
         return exist;
@@ -290,49 +295,52 @@ export default function Finance(props) {
         <div className="loading-wrapper">
           <div className="content-title">
             <div aria-live="polite" aria-busy={loading}>
-              {loading && <div class="loader"></div>}
+              {loading && <div className="loader" />}
             </div>
           </div>
         </div>
       );
-    } else {
-      return (
-        <div className="finance">
-          <div className="content-title">
-            <Title className="big-title">
-              <span>Finance</span>
-            </Title>
-          </div>
-          <div className={classNames("content-body", "content-table")}>
-            <Card>
-              <div className="actions-n-filters">
-                <Space style={{ marginBottom: 16 }}>
-                  <Button type="primary">
-                    <Link to="/finance/expense">Add Expense</Link>
-                  </Button>
-                  <Input placeholder="Search..." onChange={filter} />
-                </Space>
-              </div>
-              <div className="content-table">
-                <Table dataSource={financeDataFiltered} columns={columns} scroll={{ x: "" }} size="small" />
-              </div>
-            </Card>
-            <Modal
-              title="Please enter the payment date"
-              visible={isModalVisible}
-              onOk={handleOk}
-              onCancel={handleCancel}
-            >
-              <Space>
-                <Text>Payment Date:</Text>
-                <DatePicker value={paidAt} onChange={(date) => setPaidAt(date)} />
-              </Space>
-            </Modal>
-          </div>
-        </div>
-      );
     }
-  } else {
-    return <Navigate to="/login" />;
+    return (
+      <div className="finance">
+        <div className="content-title">
+          <Title className="big-title">
+            <span>Finance</span>
+          </Title>
+        </div>
+        <div className={classNames('content-body', 'content-table')}>
+          <Card>
+            <div className="actions-n-filters">
+              <Space style={{ marginBottom: 16 }}>
+                <Button type="primary">
+                  <Link to="/finance/expense">Add Expense</Link>
+                </Button>
+                <Input placeholder="Search..." onChange={filter} />
+              </Space>
+            </div>
+            <div className="content-table">
+              <Table
+                dataSource={financeDataFiltered}
+                columns={columns}
+                scroll={{ x: '' }}
+                size="small"
+              />
+            </div>
+          </Card>
+          <Modal
+            title="Please enter the payment date"
+            visible={isModalVisible}
+            onOk={handleOk}
+            onCancel={handleCancel}
+          >
+            <Space>
+              <Text>Payment Date:</Text>
+              <DatePicker value={paidAt} onChange={(date) => setPaidAt(date)} />
+            </Space>
+          </Modal>
+        </div>
+      </div>
+    );
   }
+  return <Navigate to="/login" />;
 }

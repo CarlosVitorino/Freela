@@ -1,25 +1,17 @@
-import React, { useState, useEffect } from "react";
-import { Navigate } from "react-router-dom";
-import {
-  Typography,
-  Statistic,
-  Row,
-  Col,
-  Card,
-  notification,
-  Divider,
-} from "antd";
-import { ArrowUpOutlined, ArrowDownOutlined } from "@ant-design/icons";
-import { Column, Pie, Sunburst } from "@ant-design/plots";
-import { isMobile } from "react-device-detect";
+import React, { useState, useEffect } from 'react';
+import { Navigate } from 'react-router-dom';
+import { Typography, Statistic, Row, Col, Card, notification, Divider } from 'antd';
+import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
+import { Column, Pie, Sunburst } from '@ant-design/plots';
+import { isMobile } from 'react-device-detect';
 
-import moment from "moment";
-import classNames from "classnames";
+import moment from 'moment';
+import classNames from 'classnames';
 
-import _auth from "@netuno/auth-client";
-import _service from "@netuno/service-client";
+import _auth from '@netuno/auth-client';
+import _service from '@netuno/service-client';
 
-import "./index.less";
+import './index.less';
 
 const { Title, Paragraph, Link } = Typography;
 const layout = {
@@ -31,39 +23,39 @@ const layout = {
   // },
   style: { marginBotton: 10, marginTop: 10 },
 };
-const colStyle = { padding: "8px 0px" };
+const colStyle = { padding: '8px 0px' };
 
 const colors = [
-  "#F94144",
-  "#F3722C",
-  "#F8961E",
-  "#F9844A",
-  "#F9C74F",
-  "#90BE6D",
-  "#43AA8B",
-  "#4D908E",
-  "#577590",
-  "#277DA1",
-  "#C200FB",
-  "#D704B2",
-  "#E2068D",
-  "#EC0868",
-  "#F41C34",
-  "#FC2F00",
-  "#F45608",
-  "#EC7D10",
-  "#F69D0D",
-  "#FFBC0A",
-  "#2d00f7",
-  "#6a00f4",
-  "#8900f2",
-  "#a100f2",
-  "#b100e8",
-  "#bc00dd",
-  "#d100d1",
-  "#db00b6",
-  "#e500a4",
-  "#f20089",
+  '#F94144',
+  '#F3722C',
+  '#F8961E',
+  '#F9844A',
+  '#F9C74F',
+  '#90BE6D',
+  '#43AA8B',
+  '#4D908E',
+  '#577590',
+  '#277DA1',
+  '#C200FB',
+  '#D704B2',
+  '#E2068D',
+  '#EC0868',
+  '#F41C34',
+  '#FC2F00',
+  '#F45608',
+  '#EC7D10',
+  '#F69D0D',
+  '#FFBC0A',
+  '#2d00f7',
+  '#6a00f4',
+  '#8900f2',
+  '#a100f2',
+  '#b100e8',
+  '#bc00dd',
+  '#d100d1',
+  '#db00b6',
+  '#e500a4',
+  '#f20089',
 ];
 export default function Dashboard(props) {
   const [monthData, setMonthData] = useState([]);
@@ -84,15 +76,15 @@ export default function Dashboard(props) {
     setMonthLoading(true);
 
     _service({
-      method: "POST",
-      url: "dashboard/month",
+      method: 'POST',
+      url: 'dashboard/month',
       success: (response) => {
         setMonthLoading(false);
         if (response.json.result) {
           setMonthData(response.json.data);
         } else {
-          notification["warning"]({
-            message: "There was an error loading data",
+          notification.warning({
+            message: 'There was an error loading data',
             description: response.json.error,
           });
           setMonthLoading(false);
@@ -100,9 +92,9 @@ export default function Dashboard(props) {
       },
       fail: (error) => {
         setMonthLoading(false);
-        notification["error"]({
-          message: "Error!",
-          description: "There was an error, please contact the support.",
+        notification.error({
+          message: 'Error!',
+          description: 'There was an error, please contact the support.',
         });
       },
     });
@@ -112,8 +104,8 @@ export default function Dashboard(props) {
     setAnualLoading(true);
 
     _service({
-      method: "POST",
-      url: "dashboard/year",
+      method: 'POST',
+      url: 'dashboard/year',
       success: (response) => {
         setAnualLoading(false);
         if (response.json.result) {
@@ -121,10 +113,10 @@ export default function Dashboard(props) {
           setPieData(response.json.data.top5Clients);
           setColumnsData(response.json.data.dataByMonth);
           setSunburstData(response.json.data.sunburst);
-          setProfit(response.json.data.profit)
+          setProfit(response.json.data.profit);
         } else {
-          notification["warning"]({
-            message: "There was an error loading data",
+          notification.warning({
+            message: 'There was an error loading data',
             description: response.json.error,
           });
           setAnualLoading(false);
@@ -132,9 +124,9 @@ export default function Dashboard(props) {
       },
       fail: (error) => {
         setAnualLoading(false);
-        notification["error"]({
-          message: "Error!",
-          description: "There was an error, please contact the support.",
+        notification.error({
+          message: 'Error!',
+          description: 'There was an error, please contact the support.',
         });
       },
     });
@@ -142,10 +134,10 @@ export default function Dashboard(props) {
 
   const configColumn = {
     data: columnsData,
-    stack: true,    
+    stack: true,
     colorField: 'type',
-    xField: "month",
-    yField: "revenue",
+    xField: 'month',
+    yField: 'revenue',
     label: {
       text: 'revenue',
       textBaseline: 'bottom',
@@ -158,15 +150,15 @@ export default function Dashboard(props) {
     },
     yAxis: {
       title: {
-        text: "Revenue",
+        text: 'Revenue',
         autoRotate: true,
       },
     },
     slider: {
-      x : {
+      x: {
         start: !isMobile ? 0 : 0.5,
         end: 1,
-      }
+      },
     },
     interaction: {
       elementHighlightByColor: {
@@ -178,9 +170,9 @@ export default function Dashboard(props) {
       inactive: { opacity: 0.5 },
     },
     scale: {
-      type:'band',
+      type: 'band',
       color: {
-        palette: ["#30b2bc", "#ffbe0b", "#ff006e", "#3a86ff", "#8338ec", "#fb5607"],
+        palette: ['#30b2bc', '#ffbe0b', '#ff006e', '#3a86ff', '#8338ec', '#fb5607'],
         offset: (t) => t * 0.8 + 0.1,
       },
     },
@@ -188,16 +180,16 @@ export default function Dashboard(props) {
 
   const configPie = {
     appendPadding: 10,
-    data: {value: pieData},
-    angleField: "value",
-    colorField: "client",
+    data: { value: pieData },
+    angleField: 'value',
+    colorField: 'client',
     innerRadius: 0.2,
     labels: [
       {
         text: (d) => {
-          //debugger;
-          return  `${((d.value / profit) * 100).toFixed(0)}%`
-       },
+          // debugger;
+          return `${((d.value / profit) * 100).toFixed(0)}%`;
+        },
         style: {
           fontSize: 12,
           dy: 12,
@@ -212,7 +204,7 @@ export default function Dashboard(props) {
     },
     scale: {
       color: {
-        palette: ["#30b2bc", "#ffbe0b", "#ff006e", "#3a86ff", "#8338ec", "#fb5607"],
+        palette: ['#30b2bc', '#ffbe0b', '#ff006e', '#3a86ff', '#8338ec', '#fb5607'],
         offset: (t) => t * 0.8 + 0.1,
       },
     },
@@ -225,17 +217,17 @@ export default function Dashboard(props) {
     },
     interactions: [
       {
-        type: "element-active",
+        type: 'element-active',
       },
     ],
   };
   const configSunburst = {
     appendPadding: 10,
-    data: {value: sunburstData},
+    data: { value: sunburstData },
     innerRadius: 0.2,
     scale: {
       color: {
-        palette: ["#30b2bc", "#ffbe0b", "#ff006e", "#3a86ff", "#8338ec", "#fb5607"],
+        palette: ['#30b2bc', '#ffbe0b', '#ff006e', '#3a86ff', '#8338ec', '#fb5607'],
         offset: (t) => t * 0.8 + 0.1,
       },
     },
@@ -252,11 +244,11 @@ export default function Dashboard(props) {
       },
     },
     animate: {
-      enter: { type: "waveIn"}
+      enter: { type: 'waveIn' },
     },
     interactions: [
       {
-        type: "element-active",
+        type: 'element-active',
       },
     ],
   };
@@ -270,15 +262,15 @@ export default function Dashboard(props) {
               <span>Dashboard</span>
             </Title>
           </div>
-          <div className={classNames("content-body", "empty-dashboard")}>
+          <div className={classNames('content-body', 'empty-dashboard')}>
             <div className="empty-text">
               <article>
                 <Title level={2} style={{ paddingTop: 20, paddingBottom: 20 }}>
                   There is not enough information yet to show your Dashboard
                 </Title>
                 <Paragraph>
-                  To start using freela.biz to streamlines your billing process,
-                  it only takes 3 simple steps:
+                  To start using freela.biz to streamlines your billing process, it only takes 3
+                  simple steps:
                 </Paragraph>
                 <Paragraph>
                   <ul>
@@ -296,48 +288,43 @@ export default function Dashboard(props) {
                     </li>
                     <li>
                       <p>
-                        Create and manage your invoices for each one of your
-                        clients. Check
+                        Create and manage your invoices for each one of your clients. Check
                         <Link href="/finance"> Invoices</Link>.
                       </p>
                     </li>
                   </ul>
                 </Paragraph>
                 <Paragraph>
-                  After you have logged your first session you will be able use
-                  your dashboard to gain insight into your financial performance
-                  and grow your business
+                  After you have logged your first session you will be able use your dashboard to
+                  gain insight into your financial performance and grow your business
                 </Paragraph>
                 <Divider />
                 <Title level={4}>Settings:</Title>
                 <p>
-                  Don't forget to give a look at the{" "}
-                  <Link href="/settings"> Settings</Link> menu for additional
-                  parameterization. There, you will find Session types,
-                  subtypes, suppliers and more.
+                  Don't forget to give a look at the <Link href="/settings"> Settings</Link> menu
+                  for additional parameterization. There, you will find Session types, subtypes,
+                  suppliers and more.
                 </p>
               </article>
             </div>
             <div className="empty-data">
-              <img alt="empty-data" src={"/images/empty-server-1.png"} />
+              <img alt="empty-data" src="/images/empty-server-1.png" />
             </div>
           </div>
         </div>
       );
     }
-    const mMinutes = moment.duration(monthData.totalTime, "minutes").minutes();
+    const mMinutes = moment.duration(monthData.totalTime, 'minutes').minutes();
     const mHours = moment
-      .duration(monthData.totalTime, "minutes")
-      .subtract(moment.duration(mMinutes, "minutes"))
+      .duration(monthData.totalTime, 'minutes')
+      .subtract(moment.duration(mMinutes, 'minutes'))
       .asHours();
     const monthTime = `${mHours}h ${mMinutes}m`;
 
-    const yMinutes = moment
-      .duration(yearData.totalMinutes, "minutes")
-      .minutes();
+    const yMinutes = moment.duration(yearData.totalMinutes, 'minutes').minutes();
     const yHours = moment
-      .duration(yearData.totalMinutes, "minutes")
-      .subtract(moment.duration(yMinutes, "minutes"))
+      .duration(yearData.totalMinutes, 'minutes')
+      .subtract(moment.duration(yMinutes, 'minutes'))
       .asHours();
     const yearTime = `${yHours}h ${yMinutes}m`;
 
@@ -352,7 +339,7 @@ export default function Dashboard(props) {
           <Row {...layout}>
             <Col xs={{ span: 24 }} lg={{ span: 12 }} style={colStyle}>
               <Card className="card-left">
-                <Title level={4}>Made in {moment().format("MMMM")}</Title>
+                <Title level={4}>Made in {moment().format('MMMM')}</Title>
                 <Row {...layout}>
                   <Col xs={{ span: 24 }} lg={{ span: 12 }} style={colStyle}>
                     <Statistic
@@ -364,11 +351,7 @@ export default function Dashboard(props) {
                     />
                   </Col>
                   <Col xs={{ span: 24 }} lg={{ span: 12 }} style={colStyle}>
-                    <Statistic
-                      title="Time Worked "
-                      value={monthTime}
-                      loading={monthLoading}
-                    />
+                    <Statistic title="Time Worked " value={monthTime} loading={monthLoading} />
                   </Col>
                   <Col xs={{ span: 24 }} lg={{ span: 12 }} style={colStyle}>
                     <Statistic
@@ -376,17 +359,9 @@ export default function Dashboard(props) {
                       value={monthData.diffMoney}
                       precision={2}
                       valueStyle={
-                        monthData.diffMoney > 0
-                          ? { color: "#3f8600" }
-                          : { color: "#cf1322" }
+                        monthData.diffMoney > 0 ? { color: '#3f8600' } : { color: '#cf1322' }
                       }
-                      prefix={
-                        monthData.diffMoney > 0 ? (
-                          <ArrowUpOutlined />
-                        ) : (
-                          <ArrowDownOutlined />
-                        )
-                      }
+                      prefix={monthData.diffMoney > 0 ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
                       suffix="€"
                       loading={monthLoading}
                     />
@@ -394,7 +369,7 @@ export default function Dashboard(props) {
                   </Col>
                   <Col xs={{ span: 24 }} lg={{ span: 12 }} style={colStyle}>
                     <Statistic
-                      title={`Total ${moment().format("MMMM")} Estimated`}
+                      title={`Total ${moment().format('MMMM')} Estimated`}
                       value={monthData.estimatedMoney}
                       precision={2}
                       suffix="€"
@@ -407,7 +382,7 @@ export default function Dashboard(props) {
 
             <Col xs={{ span: 24 }} lg={{ span: 12 }} style={colStyle}>
               <Card className="card-right">
-                <Title level={4}>Received in {moment().format("MMMM")}</Title>
+                <Title level={4}>Received in {moment().format('MMMM')}</Title>
                 <Row {...layout}>
                   <Col xs={{ span: 24 }} lg={{ span: 12 }} style={colStyle}>
                     <Statistic
@@ -441,16 +416,10 @@ export default function Dashboard(props) {
                       value={monthData.diffInvoice}
                       precision={2}
                       valueStyle={
-                        monthData.diffInvoice > 0
-                          ? { color: "#3f8600" }
-                          : { color: "#cf1322" }
+                        monthData.diffInvoice > 0 ? { color: '#3f8600' } : { color: '#cf1322' }
                       }
                       prefix={
-                        monthData.diffInvoice > 0 ? (
-                          <ArrowUpOutlined />
-                        ) : (
-                          <ArrowDownOutlined />
-                        )
+                        monthData.diffInvoice > 0 ? <ArrowUpOutlined /> : <ArrowDownOutlined />
                       }
                       suffix="€"
                       loading={monthLoading}
@@ -465,7 +434,7 @@ export default function Dashboard(props) {
             <Col xs={{ span: 24 }} lg={{ span: 24 }} style={colStyle}>
               <Card>
                 <Title level={4}>Revenue by Month</Title>
-                <Column {...configColumn} className="custom-height"/>
+                <Column {...configColumn} className="custom-height" />
               </Card>
             </Col>
           </Row>
@@ -473,20 +442,20 @@ export default function Dashboard(props) {
             <Col xs={{ span: 24 }} lg={{ span: 12 }} style={colStyle}>
               <Card className="card-left">
                 <Title level={4}>Revenue by Type</Title>
-                <Sunburst {...configSunburst} className="custom-height"/>
+                <Sunburst {...configSunburst} className="custom-height" />
               </Card>
             </Col>
             <Col xs={{ span: 24 }} lg={{ span: 12 }} style={colStyle}>
               <Card className="card-right">
                 <Title level={4}>Revenue by Client</Title>
-                <Pie {...configPie} className="custom-height"/>
+                <Pie {...configPie} className="custom-height" />
               </Card>
             </Col>
           </Row>
           <Row {...layout}>
             <Col xs={{ span: 24 }} lg={{ span: 12 }} style={colStyle}>
               <Card className="card-left">
-                <Title level={4}>Finance {moment().format("YYYY")}</Title>
+                <Title level={4}>Finance {moment().format('YYYY')}</Title>
                 <Row {...layout}>
                   <Col xs={{ span: 24 }} lg={{ span: 12 }} style={colStyle}>
                     <Statistic
@@ -517,7 +486,7 @@ export default function Dashboard(props) {
                   </Col>
                   <Col xs={{ span: 24 }} lg={{ span: 12 }} style={colStyle}>
                     <Statistic
-                      title={`Estimated Profit ${moment().format("YYYY")}`}
+                      title={`Estimated Profit ${moment().format('YYYY')}`}
                       value={yearData.estimatedProfitYear}
                       precision={2}
                       suffix="€"
@@ -529,14 +498,10 @@ export default function Dashboard(props) {
             </Col>
             <Col xs={{ span: 24 }} lg={{ span: 12 }} style={colStyle}>
               <Card className="card-right">
-                <Title level={4}>Sessions {moment().format("YYYY")}</Title>
+                <Title level={4}>Sessions {moment().format('YYYY')}</Title>
                 <Row {...layout}>
                   <Col xs={{ span: 24 }} lg={{ span: 12 }} style={colStyle}>
-                    <Statistic
-                      title="Total hours"
-                      value={yearTime}
-                      loading={anualLoading}
-                    />
+                    <Statistic title="Total hours" value={yearTime} loading={anualLoading} />
                   </Col>
                   <Col xs={{ span: 24 }} lg={{ span: 12 }} style={colStyle}>
                     <Statistic
@@ -558,9 +523,7 @@ export default function Dashboard(props) {
                   <Col xs={{ span: 24 }} lg={{ span: 12 }} style={colStyle}>
                     <Statistic
                       title="Average Session Duration"
-                      value={moment
-                        .duration(yearData.mediumSessionDuration, "minutes")
-                        .minutes()}
+                      value={moment.duration(yearData.mediumSessionDuration, 'minutes').minutes()}
                       suffix="min"
                       loading={anualLoading}
                     />
@@ -569,11 +532,9 @@ export default function Dashboard(props) {
               </Card>
             </Col>
           </Row>
-         
         </div>
       </div>
     );
-  } else {
-    return <Navigate to="/login" />;
   }
+  return <Navigate to="/login" />;
 }

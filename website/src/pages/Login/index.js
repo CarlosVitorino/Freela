@@ -1,19 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { Navigate, Link } from "react-router-dom";
-import {
-  Layout,
-  Typography,
-  Form,
-  Input,
-  Button,
-  Checkbox,
-  notification,
-} from "antd";
-import _auth from "@netuno/auth-client";
-import RecoverModal from "./RecoverModal";
-import { ReactSVG } from "react-svg";
+import React, { useState, useEffect } from 'react';
+import { Navigate, Link } from 'react-router-dom';
+import { Layout, Typography, Form, Input, Button, Checkbox, notification } from 'antd';
+import _auth from '@netuno/auth-client';
+import { ReactSVG } from 'react-svg';
+import RecoverModal from './RecoverModal';
 
-import "./index.less";
+import './index.less';
 
 const { Title } = Typography;
 const { Content, Sider } = Layout;
@@ -21,7 +13,6 @@ const { Content, Sider } = Layout;
 export default function Login(props) {
   const [submitting, setSubmitting] = useState(false);
   const [visible, setVisible] = useState(false);
-
 
   useEffect(() => {
     if (_auth.isLogged()) {
@@ -34,9 +25,9 @@ export default function Login(props) {
     setSubmitting(true);
     const { username, password, remember } = values;
     if (remember) {
-      localStorage.setItem("login", JSON.stringify(values));
+      localStorage.setItem('login', JSON.stringify(values));
     } else {
-      localStorage.removeItem("login");
+      localStorage.removeItem('login');
     }
     _auth.login({
       username,
@@ -46,108 +37,94 @@ export default function Login(props) {
       },
       fail: () => {
         setSubmitting(false);
-        notification["error"]({
-          message: "Login Inválido",
-          description: "Por favor verifique as credenciais inseridas.",
+        notification.error({
+          message: 'Login Inválido',
+          description: 'Por favor verifique as credenciais inseridas.',
         });
       },
     });
   }
 
   function onFinishFailed(errorInfo) {
-    console.log("Failed:", errorInfo);
+    console.log('Failed:', errorInfo);
   }
 
   let initialValues = { remember: true };
-  if (localStorage.getItem("login") != null) {
-    initialValues = JSON.parse(localStorage.getItem("login"));
+  if (localStorage.getItem('login') != null) {
+    initialValues = JSON.parse(localStorage.getItem('login'));
   }
 
   if (_auth.isLogged()) {
     return <Navigate to="/dashboard" />;
-  } else {
-    return (
-      <Layout className="layout login-layout">
-        <Content className="login-container">
-          <div className="form-wrapper">
-            <div className="content-body">
-              <Title>Login</Title>
-              <Form
-                layout="vertical"
-                name="basic"
-                initialValues={initialValues}
-                onFinish={onFinish}
-                onFinishFailed={onFinishFailed}
-              >
-                <Form.Item
-                  label="Username"
-                  name="username"
-                  rules={[{ required: true, message: "Insert your username." }]}
-                >
-                    <Input disabled={submitting} />
-                </Form.Item>
-
-                <Form.Item
-                  label="Password"
-                  name="password"
-                  rules={[{ required: true, message: "Insert your password." }]}
-                >
-                  <Input.Password disabled={submitting} />
-                </Form.Item>
-
-                <Form.Item name="remember" valuePropName="checked">
-                  <Checkbox>Remember me</Checkbox>
-                </Form.Item>
-
-                <Form.Item>
-                  <Button
-                    loading={submitting}
-                    type="primary"
-                    className="login-btn"
-                    htmlType="submit"
-                  >
-                    Login
-                  </Button>
-                </Form.Item>
-
-                <Form.Item style={{ textAlign: "center" }}>
-                  <Button type="link" onClick={() => setVisible(!visible)}>
-                    Did you forget your password?
-                  </Button>
-                  {visible && (
-                    <RecoverModal
-                      onClose={() => {
-                        setVisible(false);
-                      }}
-                    />
-                  )}
-                </Form.Item>
-
-                <hr />
-                <span>
-                  <p>or</p>
-                </span>
-                <Link to="/register">
-                  <Button
-                    loading={submitting}
-                    type="default"
-                    className={"register-btn"}
-                  >
-                    Create Account
-                  </Button>
-                </Link>
-              </Form>
-            </div>
-          </div>
-        </Content>
-        <Sider className="sider-wrapper" width={"50%"}>
-          <img
-            className="sider-login"
-            alt="sider-login"
-            src="/images/login.png"
-          />
-        </Sider>
-      </Layout>
-    );
   }
+  return (
+    <Layout className="layout login-layout">
+      <Content className="login-container">
+        <div className="form-wrapper">
+          <div className="content-body">
+            <Title>Login</Title>
+            <Form
+              layout="vertical"
+              name="basic"
+              initialValues={initialValues}
+              onFinish={onFinish}
+              onFinishFailed={onFinishFailed}
+            >
+              <Form.Item
+                label="Username"
+                name="username"
+                rules={[{ required: true, message: 'Insert your username.' }]}
+              >
+                <Input disabled={submitting} />
+              </Form.Item>
+
+              <Form.Item
+                label="Password"
+                name="password"
+                rules={[{ required: true, message: 'Insert your password.' }]}
+              >
+                <Input.Password disabled={submitting} />
+              </Form.Item>
+
+              <Form.Item name="remember" valuePropName="checked">
+                <Checkbox>Remember me</Checkbox>
+              </Form.Item>
+
+              <Form.Item>
+                <Button loading={submitting} type="primary" className="login-btn" htmlType="submit">
+                  Login
+                </Button>
+              </Form.Item>
+
+              <Form.Item style={{ textAlign: 'center' }}>
+                <Button type="link" onClick={() => setVisible(!visible)}>
+                  Did you forget your password?
+                </Button>
+                {visible && (
+                  <RecoverModal
+                    onClose={() => {
+                      setVisible(false);
+                    }}
+                  />
+                )}
+              </Form.Item>
+
+              <hr />
+              <span>
+                <p>or</p>
+              </span>
+              <Link to="/register">
+                <Button loading={submitting} type="default" className="register-btn">
+                  Create Account
+                </Button>
+              </Link>
+            </Form>
+          </div>
+        </div>
+      </Content>
+      <Sider className="sider-wrapper" width="50%">
+        <img className="sider-login" alt="sider-login" src="/images/login.png" />
+      </Sider>
+    </Layout>
+  );
 }
