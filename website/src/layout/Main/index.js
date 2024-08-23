@@ -1,9 +1,18 @@
-import React, { useEffect, useState } from "react";
-import { Switch, Route, useLocation, Link, Redirect } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { Switch, Route, useLocation, Link, Navigate } from 'react-router-dom';
 
 import { ConfigProvider, Layout, Menu, Button } from 'antd';
-import { PieChartOutlined, UserOutlined, LogoutOutlined, MenuOutlined, EditOutlined, TeamOutlined, SkinOutlined, WalletOutlined } from '@ant-design/icons';
-import { ReactSVG } from 'react-svg'
+import {
+  PieChartOutlined,
+  UserOutlined,
+  LogoutOutlined,
+  MenuOutlined,
+  EditOutlined,
+  TeamOutlined,
+  SkinOutlined,
+  WalletOutlined,
+} from '@ant-design/icons';
+import { ReactSVG } from 'react-svg';
 
 import antLocale_ptPT from 'antd/lib/locale/pt_PT';
 import classNames from 'classnames';
@@ -31,7 +40,6 @@ const { Header, Content, Sider, Footer } = Layout;
 const { SubMenu } = Menu;
 
 export default function Main(props) {
-
   const location = useLocation();
 
   const [headerButtonMode, setHeaderButtonMode] = useState('login');
@@ -43,7 +51,7 @@ export default function Main(props) {
   useEffect(() => {
     setHeaderButtonMode(location.pathname);
     setMenu(location.pathname);
-    !logo &&  setLogo(<ReactSVG  className="logo" alt="logo"  src="images/mytime-logo-3.svg" />)
+    !logo && setLogo(<ReactSVG className="logo" alt="logo" src="images/mytime-logo-3.svg" />);
   }, [location]);
 
   function onLogout() {
@@ -51,36 +59,37 @@ export default function Main(props) {
   }
 
   function onCollapse() {
-    if(!collapsed) {
-      setLogo(<ReactSVG  className="logo logo-small" alt="logo"  src="images/mytime-logo-mini-3.svg" />)
+    if (!collapsed) {
+      setLogo(
+        <ReactSVG className="logo logo-small" alt="logo" src="images/mytime-logo-mini-3.svg" />,
+      );
     } else {
-      setLogo(<ReactSVG  className="logo" alt="logo"  src="images/mytime-logo-3.svg" />)
+      setLogo(<ReactSVG className="logo" alt="logo" src="images/mytime-logo-3.svg" />);
     }
-    setCollapsed(!collapsed)
+    setCollapsed(!collapsed);
   }
 
   return (
     <ConfigProvider locale={antLocale_ptPT}>
-      <Layout className={'page ' + classNames({ 'auth ': _auth.isLogged()}) + classNames({ 'collapsed ': collapsed }, !_auth.isLogged() && ' page-login') }>
-        {_auth.isLogged() &&
+      <Layout
+        className={`page ${classNames({
+          'auth ': _auth.isLogged(),
+        })}${classNames({ 'collapsed ': collapsed }, !_auth.isLogged() && ' page-login')}`}
+      >
+        {_auth.isLogged() && (
           <Sider
-            onBreakpoint={mobile => {
-              setSideMenuMobileMode(mobile)
+            onBreakpoint={(mobile) => {
+              setSideMenuMobileMode(mobile);
             }}
-            collapsedWidth={sideMenuMobileMode ? '0' : '80'}
-            breakpoint={"md"}
+            collapsedWidth={sideMenuMobileMode ? '0' : '100'}
+            breakpoint="lg"
             collapsible
             collapsed={collapsed}
             onCollapse={onCollapse}
-            onBreakpoint={broken => {
-              console.log(broken);
-            }}
             trigger={<MenuOutlined />}
             theme="light"
           >
-            <div className="logo-container">
-              {logo}
-            </div>
+            <div className="logo-container">{logo}</div>
             <Menu selectedKeys={[menu]} mode="inline">
               <Menu.Item key="/dashboard" icon={<PieChartOutlined />}>
                 <Link to="/dashboard">Dashboard</Link>
@@ -90,32 +99,34 @@ export default function Main(props) {
               </Menu.Item>
               <Menu.Item key="/sessions" icon={<SkinOutlined />}>
                 <Link to="/sessions">Sessions</Link>
-              </Menu.Item>              
+              </Menu.Item>
               <Menu.Item key="/finance" icon={<WalletOutlined />}>
                 <Link to="/finance">Finance</Link>
               </Menu.Item>
             </Menu>
           </Sider>
-        }
+        )}
         <Layout>
-          <Header className={classNames({ 'auth ': _auth.isLogged() }) + classNames({ 'collapsed ': collapsed })}>
-            { !_auth.isLogged() &&
-              <div className="logo-container">
-                {logo}
-              </div>
+          <Header
+            className={
+              classNames({ 'auth ': _auth.isLogged() }) + classNames({ 'collapsed ': collapsed })
             }
+          >
+            {!_auth.isLogged() && <div className="logo-container">{logo}</div>}
             <Menu mode="horizontal">
-              {headerButtonMode === '/login' ?
-                ""
-                : headerButtonMode === '/register' ?
-                  <Link to="/login">
-                    <Button type="primary">Iniciar sessão</Button>
-                  </Link>
-                  : _auth.isLogged() &&
-                  <SubMenu key={"profile"} className="profile-menu" icon={<UserOutlined />}>
+              {headerButtonMode === '/login' ? (
+                ''
+              ) : headerButtonMode === '/register' ? (
+                <Link to="/login">
+                  <Button type="primary">Iniciar sessão</Button>
+                </Link>
+              ) : (
+                _auth.isLogged() && (
+                  <SubMenu key="profile" className="profile-menu" icon={<UserOutlined />}>
                     <Menu.Item key="1">
                       <Link to="/profile">
-                        <EditOutlined />&nbsp;&nbsp;&nbsp;Editar Perfil
+                        <EditOutlined />
+                        &nbsp;&nbsp;&nbsp;Editar Perfil
                       </Link>
                     </Menu.Item>
                     <Menu.Item key="2">
@@ -126,17 +137,14 @@ export default function Main(props) {
                       </Link>
                     </Menu.Item>
                   </SubMenu>
-              }
+                )
+              )}
             </Menu>
           </Header>
           <Content className={classNames({ 'auth ': _auth.isLogged() })}>
             <Switch>
               <Route exact path="/">
-                {_auth.isLogged() ?
-                  <Redirect to="/dashboard" />
-                  :
-                  <Redirect to="/login" />
-                }
+                {_auth.isLogged() ? <Navigate to="/dashboard" /> : <Navigate to="/login" />}
               </Route>
               <Route path="/dashboard" component={Dashboard} />
               <Route path="/clients" component={Clients} />
@@ -153,9 +161,7 @@ export default function Main(props) {
               <Route component={NotFoundPage} />
             </Switch>
           </Content>
-          {!_auth.isLogged() &&
-            <Footer>© sitana.pt 2021</Footer>
-          }
+          {/*! _auth.isLogged() && <Footer>© sitana.pt 2023</Footer> */}
         </Layout>
       </Layout>
     </ConfigProvider>
