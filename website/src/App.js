@@ -111,7 +111,6 @@ const App = () => {
           <Sider
             className="menu-side"
             onBreakpoint={(breakpoint) => {
-              console.log(breakpoint);
               setSideMenuMobileMode(breakpoint);
             }}
             collapsedWidth={isMobile ? "60" : "100"}

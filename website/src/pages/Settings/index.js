@@ -152,7 +152,7 @@ export default function Settings(props) {
   };
 
   const callback = (key) => {
-    console.log(key);
+    //console.log(key);
   };
 
   if (_auth.isLogged()) {

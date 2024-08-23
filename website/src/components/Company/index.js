@@ -43,7 +43,6 @@ export default function Company(props) {
           const data = response.json.data;
           setImage("data/" + data.logo);
           setCompanyId(data.id);
-          console.log(data);
           form.current.setFieldsValue(data);
         } else {
           notification["warning"]({
@@ -137,7 +136,6 @@ export default function Company(props) {
   };
 
   const handleChange = (info) => {
-    console.log(info.file.status);
     if (info.file.status === "uploading") {
       getBase64(info.file.originFileObj, (imageUrl) => {
         setImage(imageUrl);

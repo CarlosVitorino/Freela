@@ -618,7 +618,6 @@ class Session extends React.Component {
         let exist = false;
         for (var prop in sessionData) {
           if (Object.prototype.hasOwnProperty.call(sessionData, prop)) {
-            console.log(sessionData[prop]);
             if (sessionData[prop].toString().indexOf(queryFilter) !== -1) exist = true;
           }
         }
@@ -663,7 +662,6 @@ class Session extends React.Component {
 
   rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
-      console.log(`selectedRowKeys: ${selectedRowKeys}`, "selectedRows: ", selectedRows);
       this.setState({ selectedSessions: selectedRowKeys });
     },
   };

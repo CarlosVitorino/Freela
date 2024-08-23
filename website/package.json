@@ -38,7 +38,10 @@
   "scripts": {
     "start": "NODE_OPTIONS=--openssl-legacy-provider craco start",
     "build": "craco build",
-    "test": "craco test"
+    "test": "craco test",
+    "prepare": "husky install",
+    "lint": "eslint './src/**/*.{js,jsx,ts,tsx}'",
+    "lint-fix": "eslint './src/**/*.{js,jsx,ts,tsx}' --fix"
   },
   "eslintConfig": {
     "extends": [
@@ -58,8 +61,31 @@
       "last 1 safari version"
     ]
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,json,css,scss,md}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  },
   "devDependencies": {
+    "@babel/eslint-parser": "^7.25.1",
+    "@babel/preset-react": "^7.24.7",
     "craco-esbuild": "^0.6.1",
+    "eslint": "^8.57.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-jsx-a11y": "^6.9.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "eslint-plugin-react": "^7.35.0",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "husky": "^8.0.0",
+    "lint-staged": "^15.2.9",
+    "prettier": "^3.3.3",
     "source-map-loader": "^5.0.0"
   }
 }
